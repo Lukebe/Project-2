@@ -1,5 +1,14 @@
-.landing-container{
-    margin:auto;
-    text-align: center;
-    padding-top: 20px;
+.landing-container >.row{
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+.landing-background-carousel{
+    z-index: -2;
+    position:absolute;
+    width: 90%;
+    margin-left: 10%;
+    margin-right: 10%;
+    display:flex;
+    justify-content: center;
 }
