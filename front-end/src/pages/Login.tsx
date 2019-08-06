@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
-import Axios from 'axios';
+import * as APICall from '../utils/APICall';
 import { Button, Form } from "react-bootstrap";
+import { IAuthState, IAppState } from '../reducers';
+import { startRedirect, finishRedirect } from '../actions/Authentication.action';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
 
-export default class Login extends Component <any,any>{
+export interface IAuthProps {
+    //data from state store
+    auth: IAuthState,
+    //Action creators from the dispatcher
+    startRedirect: () => void;
+    finishRedirect: () => void;
+}
+export class Login extends Component <IAuthProps,any>{
 
     constructor(props: any) {
         super(props);
@@ -14,7 +25,6 @@ export default class Login extends Component <any,any>{
 
         this.handleUpdate = this.handleUpdate.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleLink = this.handleLink.bind(this);
         this.handleRequest = this.handleRequest.bind(this);
     }
 
@@ -23,9 +33,6 @@ export default class Login extends Component <any,any>{
         this.handleRequest();
     }
 
-    handleLink() {
-        this.props.history.push('/');
-    }
 
     handleUpdate(event:any) {
         this.setState({
@@ -34,27 +41,29 @@ export default class Login extends Component <any,any>{
     }
 
     async handleRequest() {
-        const url =``;
-        try {
-            let response = await Axios.post(url, {
-                    username: this.state.username,
-                    password: this.state.password
-                });
-
-            console.log(response.status);
-            console.log('returned data:', response);
-
-            this.handleLink();
-            
-        } catch (e) {
-            console.log(`Axios request failed: ${e}`);
-            alert("Invalid Credentials");
-        }
+        const response = await APICall.POST('/login', {
+            username: this.state.username,
+            password: this.state.password
+        });
+        //If there is an error, APICall methods will return an Error class instance.
+        //This checks if there is an error and alerts message if there is.
+        const message = await response instanceof Error ? response.message : response;
+        alert(message);
+        this.props.startRedirect();
+        this.props.finishRedirect();
+        //if(response instanceof Error){
+        //    alert(response.message);
+        //} else {
+        //    alert(response);
+        //}
     }
 
     render() {
         return (
             <div className="Login">
+                {this.props.auth.redirect.readyToRedirect ? 
+                    <Redirect to = {this.props.auth.redirect.route}/>
+                 : null}
                 <h2>Login</h2>
                 <Form onSubmit = {this.handleSubmit}>
                     <Form.Group controlId="username">
@@ -87,3 +96,15 @@ export default class Login extends Component <any,any>{
         )
     }
 }
+const mapStateToProps = (state : IAppState) => {
+    return {
+        auth: state.auth
+    }
+}
+//This object definition will be used to map action creators to properties
+const mapDispatchToProps = {
+    startRedirect: startRedirect,
+    finishRedirect: finishRedirect,
+
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
