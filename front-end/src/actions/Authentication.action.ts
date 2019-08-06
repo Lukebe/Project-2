@@ -5,6 +5,9 @@ in capitals instead of camelCase.
 */
 export const LOGIN_SUCCESSFUL = 'LOGIN_SUCCESSFUL';
 export const TOGGLE_AUTH_STATUS = 'TOGGLE_AUTH_STATUS';
+export const SET_REDIRECT = 'SET_REDIRECT';
+export const START_REDIRECT = 'START_REDIRECT';
+export const FINISH_REDIRECT = 'FINISH_REDIRECT';
 /* The following functions are directly called as "action creators" in the code. The one below would be referred by
 this.props.loginSuccessful in a component. The purpose of these functions is to "dispatch" actions. These actions are
 defined as the constants above ^. An action creator will always dispatch an object with a property of "type", which contains
@@ -24,6 +27,18 @@ export const loginSuccessful = (data: any) => (dispatch: any) => {
 }
 export function toggleAuthStatus() {
   return { type: TOGGLE_AUTH_STATUS }
+}
+export const setRedirect = (route: string) => (dispatch: any) => {
+    dispatch({
+        payload: {route},
+        type: SET_REDIRECT,
+    })
+}
+export const startRedirect = () => (dispatch: any) => {
+    dispatch({type: START_REDIRECT });
+}
+export function finishRedirect() {
+    return { type: FINISH_REDIRECT }
 }
 //This is an example of an action creator that is asynchronous. Asynchronous redux functions are handled
 //by redux thunk and return an asynchronous dispatch function.

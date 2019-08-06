@@ -1,14 +1,20 @@
 //Importing the "actions"
 import {
     LOGIN_SUCCESSFUL,
-    TOGGLE_AUTH_STATUS
+    TOGGLE_AUTH_STATUS,
+    SET_REDIRECT,
+    START_REDIRECT,
+    FINISH_REDIRECT,
   } from '../actions/Authentication.action';
   import {IAuthState} from './index';
 //This defines the initial state in redux. It defines the state according to the interface it is based upon.
 //In this case, IAuthState is defined in /reducers/index.ts. The initial state is the state that the application
 //should have when the program begins and before any actions are called.
 const initialState : IAuthState = {
-      isVerified : false,
+      redirect: {
+        readyToRedirect: false,
+        route: ''
+      },
       userProfile: {userId: 0,firstName: 'loading',lastName: 'loading',email: 'loading',
        userName: 'loading', role: {roleId: 0, role: 'loading'}},
       isFetching : false,
@@ -25,6 +31,12 @@ const initialState : IAuthState = {
           return { ...state, userProfile : action.payload, isVerified: true, isFetching: false}
         case TOGGLE_AUTH_STATUS:
             return {...state, isVerified: false }
+        case SET_REDIRECT:
+            return {...state, redirect: {...state.redirect, route: action.payload.route}}
+        case START_REDIRECT:
+            return {...state, redirect: {...state.redirect, readyToRedirect: true}}
+        case FINISH_REDIRECT:
+            return {...state, redirect: {...state.redirect, readyToRedirect: false}}
         default: break;
 
     }
