@@ -1,0 +1,64 @@
+.login-container{
+    background: burlywood;
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 100%;
+    height: 100%;
+}
+.login-container .page-title {
+    text-align: center;
+    padding: 20px;
+}
+.login-form{
+    padding: 10px;
+    margin: auto;
+}
+.login-modal {
+    max-width: 600px;
+    height: 600px;
+    margin: auto !important;
+}
+.login-modal > .modal-content{
+    padding: 1rem;
+}
+.login-modal > .modal-content > .modal-header > h2{
+    display: inline;
+    text-align: center;
+}
+.login-modal-bottom-links {
+    padding: 1.2rem 1rem 0 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+@media only screen and (max-width: 500px) {
+    .login-modal{
+        width: 100%;
+        height: 100%;
+        margin: 0 !important;
+    }
+    .login-modal > .modal-content {
+        border: 0;
+        border-radius: 0;
+        height: 100%;
+    }
+    .login-modal > .modal-content > .modal-body {
+        flex: 0;
+    }
+    .login-form{
+        padding: 0px;
+        background: none;
+    }
+    .login-modal-bottom-links {
+        flex-direction: column;
+    }
+    .login-modal-bottom-links > a {
+        text-align: center;
+        padding-bottom: 0.4rem;
+    }
+    .login-modal-bottom-links > p {
+        text-align: center;
+    }
+
+}
