@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import * as APICall from '../utils/APICall';
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Spinner, Modal } from "react-bootstrap";
 import { IAuthState, IAppState } from '../reducers';
 import { startRedirect, finishRedirect } from '../actions/Authentication.action';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
-
+import './Login.css';
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
@@ -13,16 +13,24 @@ export interface IAuthProps {
     startRedirect: () => void;
     finishRedirect: () => void;
 }
-export class Login extends Component <IAuthProps,any>{
+export interface IComponentProps {
+    updateCallback : Function;
+}
+interface IState {
+    isFetching : boolean;
+    username: string;
+    password: string;
+}
+type IProps = IComponentProps & IAuthProps;
+export class Login extends Component <IProps,IState>{
 
     constructor(props: any) {
         super(props);
-
         this.state = {
+            isFetching: false,
             username: "",
             password: "",
         };
-
         this.handleUpdate = this.handleUpdate.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleRequest = this.handleRequest.bind(this);
@@ -35,12 +43,15 @@ export class Login extends Component <IAuthProps,any>{
 
 
     handleUpdate(event:any) {
-        this.setState({
+        this.setState({...this.state,
             [event.target.id]: event.target.value
         });
     }
-
+    handleClose = () => {
+        this.props.updateCallback();
+    }
     async handleRequest() {
+        this.setState({...this.state, isFetching: true});
         const response = await APICall.POST('/login', {
             username: this.state.username,
             password: this.state.password
@@ -48,6 +59,7 @@ export class Login extends Component <IAuthProps,any>{
         //If there is an error, APICall methods will return an Error class instance.
         //This checks if there is an error and alerts message if there is.
         const message = await response instanceof Error ? response.message : response;
+        const setTheState = await response ? this.setState({...this.state, isFetching: false}) : null;
         alert(message);
         this.props.startRedirect();
         this.props.finishRedirect();
@@ -60,39 +72,51 @@ export class Login extends Component <IAuthProps,any>{
 
     render() {
         return (
-            <div className="Login">
+
+            <Modal show={true} onHide={() => {this.handleClose()}}
+                dialogClassName="login-modal"
+                animation centered keyboard
+                size = "lg">
+                <Modal.Header closeLabel = "Close" closeButton><h2> Login </h2> </Modal.Header>
                 {this.props.auth.redirect.readyToRedirect ? 
                     <Redirect to = {this.props.auth.redirect.route}/>
                  : null}
-                <h2>Login</h2>
-                <Form onSubmit = {this.handleSubmit}>
+                 <Modal.Body>
+                <Form className = 'login-form' onSubmit = {this.handleSubmit}>
                     <Form.Group controlId="username">
-                        <Form.Label>Username</Form.Label>
                         <Form.Control 
                             required
                             autoFocus
+                            size = "lg"
                             type="text" 
-                            placeholder="Enter username" 
+                            placeholder="Username" 
                             value={this.state.username}
                             onChange={this.handleUpdate}/>
                     </Form.Group>
                     <Form.Group controlId="password">
-                        <Form.Label>Password</Form.Label>
                         <Form.Control 
                             required
                             type="password" 
+                            size = "lg"
                             placeholder="Password" 
                             value={this.state.password}
                             onChange={this.handleUpdate}/>
                     </Form.Group>
+                    </Form>
+                    </Modal.Body>
                     <Button variant="primary" 
                             type="submit"
-                            size="lg" 
-                            block>
+                            size="lg"
+                            block
+                            onClick = {this.handleSubmit}>
                         Login
                     </Button>
-                </Form>
-            </div>
+                    {this.state.isFetching  ? <Spinner animation = "border" variant = "dark"/> : null}
+                    <div className = "login-modal-bottom-links">
+                    <a className = "forgot-password" href= "#">Forgot Password?</a>
+                    <p>Don't have an account? <a href= "#">Sign Up</a></p>
+                    </div>
+                </Modal>
         )
     }
 }

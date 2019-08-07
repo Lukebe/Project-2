@@ -1,18 +1,25 @@
 .landing-container >.row{
     display: flex;
     justify-content: center;
-    margin: 20px;
+    margin: 2rem;
     color: white;
 }
 .landing-container{
     background-color: #00000055;
     font-family: Verdana, Geneva, Tahoma, sans-serif !important;
+    min-height: 90%;
 }
 .landing-container > .row > h1{
     padding-top: 3rem;
     font-size: 4em;
     width:100%;
     text-align:center;
+}
+.landing-container > .row > .border-right{
+    border-right: 2px solid gray;
+    margin-right: 3em;
+    padding-left: 2em;
+    padding-right: 3em;
 }
 .landing-container > .row > .hr-light{
     border-top: 1px solid #fff;
@@ -26,11 +33,9 @@
     padding-right: 6em;
     text-align: center;
 }
-.landing-container > .landing-buttons {
+.landing-container > .row > .col > .landing-button{
     display:flex;
     justify-content: space-evenly;
-}
-.landing-container > .landing-buttons > button{
     width: 19em;
     height: 7em;
     margin-bottom: 2em;
@@ -40,8 +45,10 @@
     box-shadow: inset 2px 2px #888888;
     transition:background-color 500ms, color 500ms;
     border-color: black;
+    margin: 1em auto;
+
 }
-.landing-container > .landing-buttons > button:hover{
+.landing-container > .row > .col > .landing-button:hover{
     background-color:whitesmoke !important;
     color: black;
 }
@@ -63,23 +70,47 @@
     height:100%;
     background-image:url('https://www.toptal.com/designers/subtlepatterns/patterns/vertical-waves.png');
 }
+@media only screen and (max-width: 1066px) {
+    .landing-background-carousel{
+        z-index:0;
+        position: static;
+    }
+    .landing-container {
+        background-color: #000000bb;
+    }
+    .landing-container > .row > .col > .landing-description {
+        color: #ddd;
+        padding-left: 2em;
+        padding-right: 2em;
+        text-align: center;
+    }
+    .landing-container > .row > .col > .landing-button{
+        height: 6em;
+        border-radius: 10px;
+    }
+    .landing-container > .row > .col {
+        margin:0 auto;
+        padding-left: 0 !important;
+    }
+    .landing-container > .row > .border-right {
+        padding-right: 1rem !important;
+
+    }
+    .landing-container {
+        margin: 1rem auto !important;
+        padding: 0 !important;
+
+    }
+}
 @media only screen and (max-width: 600px) {
-.landing-background-carousel{
-    z-index:0;
-    position: static;
-}
-.landing-container {
-    background-color: #000000bb;
-}
-.landing-container > .row > .landing-description {
-    color: #ddd;
-    padding-left: 2em;
-    padding-right: 2em;
-}
-.landing-container > .landing-buttons > button{
-    width: 21em;
-    height: 6em;
-    margin-bottom: 1em;
-    border-radius: 10px;
+
+.landing-container > .row > .border-right {
+    border-bottom: 2px solid gray;
+    border-right: 0 !important;
+    padding-top: 2em;
+    padding-right: 0;
+    margin-bottom: 2em;
+    margin-right: 0;
+    padding-left: 0;
 }
 }
