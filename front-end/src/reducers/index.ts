@@ -6,10 +6,13 @@ import { authReducer } from "./Authentication.reducer";
 //format below.
 export interface IAuthState {
     lostConnection: boolean,
-    isVerified : boolean, 
     userProfile : {userId : number, userName: string, firstName : string,
          lastName: string, email: string, role: {roleId : number, role: string}},
     isFetching : boolean,
+    redirect: {
+        readyToRedirect : boolean,
+        route: string,
+    }
 };
 
 //Access to authorization information should be state.auth....

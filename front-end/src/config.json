@@ -1,0 +1,16 @@
+{
+    "backend": {
+        "serverURL": "http://localhost:5000"
+    },
+    "messages": {
+        "noAccess" : "You do not have access to this resource",
+        "internalServerError" : "Could not complete request. Internal Server Error.",
+        "badRequest" : "Could not complete request. Passed parameters were invalid.",
+        "notFound" : "Could not complete request. Resource could not be found.",
+        "invalidCredentials": "Invalid Username or Password.",
+        "noServerResponse": "Could not connect to server.",
+        "badToken" : "Bad Token"
+    },
+    "information": {
+    }
+}

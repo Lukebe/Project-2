@@ -1,4 +1,6 @@
-.app-container{
-  background-image: url('https://www.toptal.com/designers/subtlepatterns/patterns/interlaced.png');
+#root{
   z-index:-2;
+  min-height: 100%;
+  width: 100%;
+  position:absolute;
 }
