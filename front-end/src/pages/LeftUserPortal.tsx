@@ -4,14 +4,6 @@ import * as APICall from '../utils/APICall';
 import ActiveJobs from './ActiveJobs';
 
 export default class LeftUserPortal extends Component <any, any>{
-    constructor(props: any) {
-        super(props);
-
-        this.state = {
-            data: []
-        }
-
-    }
 
     componentDidMount(){
         
@@ -38,7 +30,6 @@ export default class LeftUserPortal extends Component <any, any>{
                 <React.Fragment>
                     <h3>Active Jobs</h3> 
                     <ActiveJobs />
-                    
                 </React.Fragment>
             </div>
         );
