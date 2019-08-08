@@ -5,6 +5,7 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import store from './Store';
 import { Provider } from 'react-redux';
+import JobsCreated from './pages/makerportal/JobsCreated';
 
 const App: React.FC = () => {
   return (
@@ -17,7 +18,8 @@ const App: React.FC = () => {
           */
           }
           <Route exact path = "/" component={Landing} />   
-          <Route exact path = "/login" component={Login} />   
+          <Route exact path = "/login" component={Login} />  
+          <Route exact path = "/makerportal/jobscreated" component = {JobsCreated} />
 
         </Switch>
       </HashRouter>
