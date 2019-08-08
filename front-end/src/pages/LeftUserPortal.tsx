@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Axios from 'axios';
 import * as APICall from '../utils/APICall';
 import ActiveJobs from './ActiveJobs';
 
