@@ -61,6 +61,7 @@ export class Login extends Component <IProps,IState>{
         const message = await response instanceof Error ? response.message : response;
         const setTheState = await response ? this.setState({...this.state, isFetching: false}) : null;
         alert(message);
+        const data = await response
         this.props.startRedirect();
         this.props.finishRedirect();
         //if(response instanceof Error){
