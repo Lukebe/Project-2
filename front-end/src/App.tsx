@@ -7,6 +7,7 @@ import UserPortal from './pages/UserPortal';
 import store from './Store';
 import { Provider } from 'react-redux';
 import JobsCreated from './pages/makerportal/JobsCreated';
+import { MakerPortal } from './pages/makerportal';
 
 const App: React.FC = () => {
   return (
@@ -20,7 +21,7 @@ const App: React.FC = () => {
           }
           <Route exact path = "/" component={Landing} />   
           <Route exact path = "/login" component={Login} />  
-          <Route exact path = "/makerportal/jobscreated" component = {JobsCreated} />
+          <Route exact path = "/makerportal" component = {MakerPortal} />
           <Route exact path = "/userportal" component={UserPortal} />
 
         </Switch>

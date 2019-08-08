@@ -1,5 +1,4 @@
 .login-container{
-    background: burlywood;
     display:flex;
     justify-content: center;
     flex-direction: column;
@@ -18,9 +17,12 @@
     max-width: 600px;
     height: 600px;
     margin: auto !important;
+    background: rgb(32, 32, 32);
+    text-color: white;
 }
 .login-modal > .modal-content{
     padding: 1rem;
+    background-color: transparent !important;
 }
 .login-modal > .modal-content > .modal-header > h2{
     display: inline;
