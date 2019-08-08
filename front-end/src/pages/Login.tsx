@@ -110,9 +110,8 @@ export class Login extends Component <IProps,IState>{
                             size="lg"
                             block
                             onClick = {this.handleSubmit}>
-                        Login
+                        Login {this.state.isFetching  ? <Spinner animation = "border" variant = "dark"/> : null}
                     </Button>
-                    {this.state.isFetching  ? <Spinner animation = "border" variant = "dark"/> : null}
                     <div className = "login-modal-bottom-links">
                     <a className = "forgot-password" href= "#">Forgot Password?</a>
                     <p>Don't have an account? <a href= "#">Sign Up</a></p>
