@@ -49,6 +49,7 @@ export class Login extends Component <IAuthProps,any>{
         //This checks if there is an error and alerts message if there is.
         const message = await response instanceof Error ? response.message : response;
         alert(message);
+        const data = await response
         this.props.startRedirect();
         this.props.finishRedirect();
         //if(response instanceof Error){

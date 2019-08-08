@@ -3,6 +3,7 @@ import './App.css';
 import {Switch, Route, HashRouter} from 'react-router-dom';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
+import UserPortal from './pages/UserPortal';
 import store from './Store';
 import { Provider } from 'react-redux';
 
@@ -17,7 +18,8 @@ const App: React.FC = () => {
           */
           }
           <Route exact path = "/" component={Landing} />   
-          <Route exact path = "/login" component={Login} />   
+          <Route exact path = "/login" component={Login} /> 
+          <Route exact path = "/userportal" component={UserPortal} />
 
         </Switch>
       </HashRouter>

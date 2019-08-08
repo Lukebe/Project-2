@@ -1,0 +1,13 @@
+.container{
+    border: 5px solid red;
+}
+
+.card{
+    text-align: center;
+    padding: -4px;
+    margin: 2px;
+}
+
+.cardbody{
+    font-size: 12px;
+}
