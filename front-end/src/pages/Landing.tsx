@@ -6,16 +6,18 @@ import landing2 from '../resources/images/landing2.jpg';
 import landing3 from '../resources/images/landing3.jpg';
 import landing4 from '../resources/images/landing4.jpg';
 import landing5 from '../resources/images/landing5.jpg';
+import iconWhite from '../resources/images/icon/icon-white-2.png';
 import { IAuthState, IAppState } from '../reducers';
 import { setRedirect } from '../actions/Authentication.action';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
-import Login from './Login'
+import Login from './Login';
+import IsMobile from '../utils/IsMobile';
 interface IState {
     buttonClicked : boolean,
     loginDialogOpen : boolean,
+    logoKShow: boolean,
 }
-
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
@@ -28,6 +30,7 @@ export class Landing extends React.Component<IAuthProps,IState>{
         this.state = {
             buttonClicked: false,
             loginDialogOpen: false,
+            logoKShow: true,
         }
     }
     handleModalClose = (event: any) =>   {
@@ -36,6 +39,15 @@ export class Landing extends React.Component<IAuthProps,IState>{
     handleButtonClick = (event: any) => {
         this.props.setRedirect(event.target.name);
         this.setState({...this.state, loginDialogOpen: true});
+    }
+    componentDidMount() {
+        if(!IsMobile()){
+            setTimeout(() => {
+                this.setState({...this.state, logoKShow: false});
+            },2500);
+        } else {
+            this.setState({...this.state, logoKShow: false});
+        }
     }
     render() {
         return(
@@ -82,7 +94,10 @@ export class Landing extends React.Component<IAuthProps,IState>{
             <Container className = "landing-container">
                 
                 <Row>
-                    <h1>Kutsies</h1>
+                    <h1><span className = 'cut-container'>
+                        <img src = {iconWhite}/></span>{this.state.logoKShow ?
+                    <span className = 'hide-later'>K</span> : null}
+                    utsies</h1>
                     <hr className = 'hr-light'/>
                 </Row>
                 <Row noGutters><Col className = "border-right"><p className = 'landing-description'>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
