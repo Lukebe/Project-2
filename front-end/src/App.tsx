@@ -28,11 +28,8 @@ const App: React.FC = () => {
           <Route exact path="/" component={Landing} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/userportal" component={UserPortal} />
-          <Route exact path = "/" component={Landing} />  
            <Route exact path="/postJob" component={PostJob} />
-          <Route exact path = "/login" component={Login} />  
           <Route exact path = "/makerportal" component = {MakerPortal} />
-          <Route exact path = "/userportal" component={UserPortal} />
         </Switch>
       </HashRouter>
     </Provider>
