@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PetServices {
-	PetRepository petRepository;
+public class UserServices {
+	UserRepository userRepository;
 	
 	@Autowired
-	public void PetService (PetRepository petRepository) {
-		this.petRepository = petRepository;
+	public void UserService (UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
-	
 }

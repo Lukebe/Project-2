@@ -19,11 +19,11 @@ const App: React.FC = () => {
               This should be the only switch in the application.
             */
           }
-          <Route exact path = "/" component={Landing} />  
+          <Route exact path="/" component={Landing} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/userportal" component={UserPortal} />
            <Route exact path="/postJob" component={PostJob} />
-          <Route exact path = "/login" component={Login} />  
           <Route exact path = "/makerportal" component = {MakerPortal} />
-          <Route exact path = "/userportal" component={UserPortal} />
         </Switch>
       </HashRouter>
     </Provider>
