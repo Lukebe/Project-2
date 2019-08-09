@@ -1,5 +1,4 @@
 .login-container{
-    background: burlywood;
     display:flex;
     justify-content: center;
     flex-direction: column;
@@ -15,22 +14,64 @@
     margin: auto;
 }
 .login-modal {
-    max-width: 600px;
-    height: 600px;
-    margin: auto !important;
+    background: rgb(32, 32, 32);
+    max-width: 550px;
 }
 .login-modal > .modal-content{
     padding: 1rem;
+    background-color: transparent !important;
+}
+.login-modal > .modal-content > .modal-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 0;
 }
 .login-modal > .modal-content > .modal-header > h2{
     display: inline;
+    color: white;
     text-align: center;
+    justify-content: center;
+}
+.login-modal > .modal-content > .modal-header > .material-icons {
+    font-size: 42px !important;
+    cursor: pointer;
+    color: white;
+}
+.login-modal-backdrop {
+    opacity: .5;
+}
+.login-modal > .modal-content > .modal-footer {
+    display: block !important;
+    padding : 0;
+    border-top: 0;
+}
+.login-modal > .modal-content > .modal-footer > .modal-form-button {
+    width: 100%;
+    display: block;
+    height: 3em;
+    justify-content: center;
+}
+.login-modal > .modal-content > .modal-header > .material-icons:hover {
+    color: #888;
 }
 .login-modal-bottom-links {
     padding: 1.2rem 1rem 0 1rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+.login-modal-bottom-links > p {
+    color: #ffffffcc;
+}
+.login-modal-bottom-links a {
+    font-weight: 500;
+    color: #ffffffcc;
+}
+.login-modal-bottom-links a:hover {
+    text-decoration: underline;
+}
+.modal-form-spinner {
+    margin-left: .5em;
 }
 @media only screen and (max-width: 500px) {
     .login-modal{

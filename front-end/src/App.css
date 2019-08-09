@@ -1,7 +1,11 @@
 #root{
-  background-image: url('https://www.toptal.com/designers/subtlepatterns/patterns/interlaced.png');
   z-index:-2;
   min-height: 100%;
   width: 100%;
   position:absolute;
+}
+.main-footer {
+  z-index:-2;
+  background-color: #000;
+  color: #9b9b9b;
 }

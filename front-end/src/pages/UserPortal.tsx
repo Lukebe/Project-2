@@ -14,8 +14,7 @@ export default class AllUsers extends Component <any, any>{
 
     render() {
         return(
-            <div>
-                <React.Fragment>
+                <>
                      <Container>
                          <Row>
                              <Col xs={4} className="container"><JobsAccepted /></Col>
@@ -28,9 +27,8 @@ export default class AllUsers extends Component <any, any>{
                              </Col>
                          </Row>
                      </Container>
-                    
-                </React.Fragment>
-            </div>
+
+                </>
         );
     }
 }
