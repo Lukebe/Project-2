@@ -19,7 +19,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.revature.Application;
 
-@SpringBootApplication
 public class Launcher {
 
 static SessionFactory sessionFactory;

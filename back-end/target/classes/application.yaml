@@ -1,0 +1,30 @@
+#  YAML : Yet Another Markup Language
+spring:
+  profiles:
+    active:
+    - express
+
+    
+---
+
+spring:
+  profiles: express
+  
+server:
+  port: 3333
+  
+---
+
+spring:
+  profiles: tomcat
+
+server:
+  port: 0
+  
+      
+# Spring Profiles
+# Spring Applications can be run with specific profiles
+# A profile can change the manner in which the application operates
+# For instance, configuration can be added and only activated when a given
+# profile is considered active
+
