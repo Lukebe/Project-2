@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import JobsAccepted from './LeftUserPortal';
+import LeftUserPortal from './LeftUserPortal';
+import RightUserPortal from './RightUserPortal'
 import './UserPortal.css';
 
 export default class AllUsers extends Component <any, any>{
@@ -18,15 +19,9 @@ export default class AllUsers extends Component <any, any>{
                 <React.Fragment>
                      <Container>
                          <Row>
-                             <Col xs={4} className="container"><JobsAccepted /></Col>
-                             <Col className="container">
-                                 <h3>Component Nav</h3>
-                                 <p>Search Jobs</p>
-                                 <p>Promoted Jobs</p>
-                                 <p>My Jobs</p>
-                                 <p>Account Info</p>
-                             </Col>
-                         </Row>
+                             <Col xs={4} className="container"><LeftUserPortal /></Col>
+                             <Col className="container"><RightUserPortal /></Col>
+                         </Row> 
                      </Container>
                     
                 </React.Fragment>

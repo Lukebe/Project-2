@@ -3,7 +3,7 @@ import './App.css';
 import {Switch, Route, HashRouter} from 'react-router-dom';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
-import UserPortal from './pages/UserPortal';
+import UserPortal from './pages/userportal/UserPortal';
 import store from './Store';
 import { Provider } from 'react-redux';
 import JobsCreated from './pages/makerportal/JobsCreated';

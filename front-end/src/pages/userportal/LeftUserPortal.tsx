@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
-import * as APICall from '../utils/APICall';
+import * as APICall from '../../utils/APICall';
 import ActiveJobs from './ActiveJobs';
 
 export default class LeftUserPortal extends Component <any, any>{
