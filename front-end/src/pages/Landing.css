@@ -9,6 +9,7 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif !important;
     min-height: 80%;
     margin-top: 5%;
+    margin-bottom:4%;
     border: 0 !important;
 }
 .landing-container > .row > h1{
@@ -16,6 +17,9 @@
     font-size: 4em;
     width:100%;
     text-align:center;
+    font-family: 'Kalam', cursive;
+    font-weight: 400;
+
 }
 .landing-container > .row > h1 > .cut-container{
     width:4.5rem;
@@ -23,8 +27,8 @@
     padding-bottom: .2em;
     position: relative;
     z-index: 2;
-    left: -100%;
-    top: -100%;
+    left: 0%;
+    top: -300%;
     -webkit-animation: slide 1.0s forwards;
     -webkit-animation-delay: 1s;
     animation: slide 1.0s forwards;
@@ -64,7 +68,7 @@
     padding-right: 6em;
     text-align: center;
 }
-.landing-container > .row > .col > .landing-button{
+.landing-button{
     display:flex;
     justify-content: space-evenly;
     width: 19em;
@@ -85,7 +89,7 @@
     -webkit-transition-duration: 0.3s;
     transition-duration: 0.3s;
   }
-  .landing-container > .row > .col > .landing-button:before {
+.landing-button:before {
     content: "";
     position: absolute;
     z-index: -1;
@@ -104,14 +108,12 @@
     -webkit-transition-timing-function: ease-out;
     transition-timing-function: ease-out;
   }
-  .landing-container > .row > .col > .landing-button:hover,
-  .landing-container > .row > .col > .landing-button:active {
+.landing-button:hover, .landing-button:active {
     color: white;
     outline: none !important;
     border: 0 !important;
   }
-  .landing-container > .row > .col > .landing-button:hover:before,
-  .landing-container > .row > .col > .landing-button:active:before {
+.landing-button:hover:before, .landing-button:active:before {
     -webkit-transform: scale(2);
     transform: scale(2);
   }
