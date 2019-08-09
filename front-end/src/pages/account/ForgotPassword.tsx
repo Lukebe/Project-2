@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as APICall from '../../utils/APICall';
-import { Button, Form, Spinner, Modal } from "react-bootstrap";
+import { Button, Form, Spinner, Modal, Alert } from "react-bootstrap";
 import { IAuthState, IAppState, IAccountState } from '../../reducers';
 import { startRedirect, finishRedirect } from '../../actions/Authentication.action';
 import { connect } from 'react-redux';
@@ -23,6 +23,8 @@ export interface IComponentProps {
 interface IState {
     isFetching : boolean;
     emailAddress : string;
+    validated : boolean;
+    isValidationError : boolean;
 }
 type IProps = IComponentProps & IReduxProps;
 export class Login extends Component <IProps,IState>{
@@ -32,6 +34,8 @@ export class Login extends Component <IProps,IState>{
         this.state = {
             isFetching: false,
             emailAddress: '',
+            validated: false,
+            isValidationError: false,
         };
         this.handleUpdate = this.handleUpdate.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -40,14 +44,19 @@ export class Login extends Component <IProps,IState>{
 
     handleSubmit(event:any) {  
         event.preventDefault();
+        if (event.currentTarget.checkValidity() === false) {
+            event.stopPropagation();
+            this.setState({...this.state, validated: true, isValidationError: true});
+            return;
+        }
         this.handleRequest();
     }
 
 
     handleUpdate(event:any) {
-        this.setState({...this.state,
-            [event.target.id]: event.target.value
-        });
+        this.state.isValidationError ?
+        this.setState({...this.state, isValidationError: false, [event.target.id]: event.target.value})
+        : this.setState({...this.state, [event.target.id]: event.target.value});
     }
     handleClose = () => {
         this.props.updateCallback();
@@ -83,29 +92,33 @@ export class Login extends Component <IProps,IState>{
                 <h2> Forgot Password </h2>  <i className="large material-icons" onClick = {this.handleClose}>close</i>
                 </Modal.Header>
                 <Modal.Body>
-                <Form className = 'login-form' onSubmit = {this.handleSubmit}>
-                    <Form.Group controlId="email-address">
+                {this.state.isValidationError ?
+                    <Alert key="validation-error" variant="danger">
+                    Please enter a valid email address
+                    </Alert> : null }
+                <Form noValidate validated = {this.state.validated}
+                className = 'login-form' onSubmit = {this.handleSubmit}>
+                    <Form.Group controlId="emailAddress">
                         <Form.Control 
                             required
                             autoFocus
                             size = "lg"
-                            type="text" 
+                            type="email" 
                             placeholder="Email Address" 
                             value={this.state.emailAddress}
                             onChange={this.handleUpdate}/>
                     </Form.Group>
+                    <Button
+                            type="submit"
+                            size="lg"
+                            block
+                            className = "landing-button modal-form-button">
+                        Reset Password {this.state.isFetching  ? <Spinner className = "modal-form-spinner"
+                        animation = "border" variant = "light"/> : null}
+                    </Button>
                     </Form>
                     </Modal.Body>
                     <Modal.Footer>
-                    <Button variant="primary" 
-                            type="submit"
-                            size="lg"
-                            className = "landing-button modal-form-button"
-                            block
-                            onClick = {this.handleSubmit}>
-                        Reset Password {this.state.isFetching  ? <Spinner className = "modal-form-spinner" 
-                        animation = "border" variant = "light"/> : null}
-                    </Button>
                     </Modal.Footer>
                 </Modal>
         )

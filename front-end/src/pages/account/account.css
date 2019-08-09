@@ -1,10 +1,29 @@
 .login-form{
-    padding: 10px;
+    padding: 10px 0px 10px 10px;
     margin: auto;
 }
+.login-form > .form-group > .form-control:focus {
+    border-color: #81868a;
+    box-shadow: 0 0 0 0.3rem rgba(119, 124, 128, 0.596);
+}
+.login-form > .form-group > .invalid-feedback {
+    color: lightcoral;
+}
+.login-form > .form-group > .text-muted {
+    color: #888 !important;
+}
 .login-modal {
-    background: rgb(32, 32, 32);
+    background: rgb(42, 42, 42);
+    height: auto;
     max-width: 550px;
+    max-height: 50em !important;
+    min-height: 100px !important;
+    position: relative;
+    top: 50%;
+    transform: translateY(-55%);
+}
+.login-modal::before {
+    height: 100%;
 }
 .login-modal > .modal-content{
     padding: 1rem;
@@ -27,24 +46,27 @@
     color: white;
 }
 .login-modal-backdrop {
-    opacity: .5;
+    opacity: .75;
+    background-color:black; 
 }
 .login-modal > .modal-content > .modal-footer {
     display: block !important;
     padding : 0;
     border-top: 0;
 }
-.login-modal > .modal-content > .modal-footer > .modal-form-button {
+.login-modal > .modal-content > .modal-body > .login-form > .modal-form-button {
     width: 100%;
     display: block;
     height: 3em;
     justify-content: center;
+    margin-top: 30px;
+    margin-bottom:0;
 }
 .login-modal > .modal-content > .modal-header > .material-icons:hover {
     color: #888;
 }
 .login-modal-bottom-links {
-    padding: 1.2rem 1rem 0 1rem;
+    padding: 0 1rem 0 1rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -62,11 +84,17 @@
 .modal-form-spinner {
     margin-left: .5em;
 }
+
 @media only screen and (max-width: 500px) {
     .login-modal{
         width: 100%;
         height: 100%;
         margin: 0 !important;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        transform: none;
+        overflow: hidden;
     }
     .login-modal > .modal-content {
         border: 0;

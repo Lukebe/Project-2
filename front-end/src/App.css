@@ -3,9 +3,86 @@
   min-height: 100%;
   width: 100%;
   position:absolute;
+  overflow-x: hidden;
 }
 .main-footer {
+  padding-top: 1.2em;
   z-index:-2;
   background-color: #000;
   color: #9b9b9b;
+}
+.main-footer > .row > .col-sm-12 > a {
+  color: #9b9b9b;
+  margin-left: 1em;
+  font-family: 'Kalam', cursive;
+  font-weight: 400;
+  font-size: 2.2rem;
+  transition: color .75s ease;
+}
+.main-footer > .row > .col-sm-12 > .phone-number > a {
+  color: #9b9b9b;
+  transition: color .75s ease;
+}
+
+.main-footer > .row > .col-sm-12 > .nav-black > .navbar-nav > a {
+  color: #9b9b9b;
+  display: block;
+  font-size: 1.0rem;
+  transition: color .75s ease;
+  margin-left: 0.7rem;
+  margin-right: 0.7rem;
+}
+.main-footer > .row > .col-sm-12 > .nav-black{
+  justify-content: center !important;
+}
+.main-footer > .row > .col-sm-12 > .nav-black > .navbar-nav > a:hover,
+.main-footer > .row > .col-sm-12 > a:hover,
+.main-footer > .row > .col-sm-12 > .phone-number > a:hover {
+  color: white;
+  text-decoration:none;
+}
+.main-footer > .footer-nav {
+  display: flex;
+  justify-content: space-between;
+}
+.main-footer > .row > .col-sm-12:nth-child(3){
+  display: flex;
+  justify-content: flex-end;
+  padding: .5em 1.5em;
+}
+.main-footer > .row > .col-sm-12:nth-child(3) > .address {
+  margin-right: 1em;
+}
+.main-footer > .row > .col-sm-12:nth-child(3) > i {
+  margin-right: .3em;
+}
+@media only screen and (max-width: 600px) {
+  .main-footer {
+    margin-top: 1rem;
+  }
+  .main-footer > .footer-nav > .col-sm-12 > .nav-black > .navbar-nav {
+    display: flex;
+    flex-direction: column;
+  }
+  .main-footer > .row > .col-sm-12 > .nav-black > .navbar-nav > a {
+    font-size: 1.1rem;
+  }
+  .main-footer > .footer-nav > .col-sm-12{
+    display: flex;
+    justify-content: center;
+  }
+  .main-footer > .row > .col-sm-12 > a {
+    font-size: 2.0rem;
+    margin-left:0;
+  }
+  .main-footer > .row > .col-sm-12:nth-child(3){
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+  }
+}
+@media only screen and (min-width: 601px) and (max-width: 1050px) {
+  .main-footer > .row > .col-sm-12 > .nav-black{
+    justify-content: flex-start !important;
+  }
 }
