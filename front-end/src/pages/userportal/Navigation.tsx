@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 export default class LeftUserPortal extends Component <any, any>{
 
@@ -9,9 +10,9 @@ export default class LeftUserPortal extends Component <any, any>{
                 <Navbar bg="light">
                     <Navbar.Brand>Kutsies</Navbar.Brand>
                     <Nav className="mr-auto">
-                        <Nav.Link >Home</Nav.Link>
-                        <Nav.Link >Search</Nav.Link>
-                        <Nav.Link >My Jobs</Nav.Link>
+                        <Nav.Link as={ Link } to="/">Home</Nav.Link>
+                        <Nav.Link as={ Link } to="/userportal/search">Search</Nav.Link>
+                        <Nav.Link as={ Link } to="/userportal/myjobs">My Jobs</Nav.Link>
                     </Nav>
                     <Navbar.Collapse className="justify-content-end">
                         <Navbar.Text>
@@ -21,5 +22,5 @@ export default class LeftUserPortal extends Component <any, any>{
                 </Navbar>
             </React.Fragment>
         );
-    }
+    } 
 }

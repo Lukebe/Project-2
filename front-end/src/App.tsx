@@ -2,12 +2,11 @@ import React from 'react';
 import './App.css';
 import { Switch, Route, HashRouter } from 'react-router-dom';
 import Landing from './pages/Landing';
-import UserPortal from './pages/userportal/UserPortal';
 import PostJob from './pages/PostJob';
 import Login from './pages/account/Login';
+import UserPortal from './pages/userportal/UserPortal';
 import store from './Store';
 import { Provider } from 'react-redux';
-import JobsCreated from './pages/makerportal/JobsCreated';
 import { MakerPortal } from './pages/makerportal';
 
 const App: React.FC = () => {
