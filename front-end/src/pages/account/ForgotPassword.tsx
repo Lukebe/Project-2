@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
-import * as APICall from '../utils/APICall';
+import * as APICall from '../../utils/APICall';
 import { Button, Form, Spinner, Modal } from "react-bootstrap";
-import { IAuthState, IAppState } from '../reducers';
-import { startRedirect, finishRedirect } from '../actions/Authentication.action';
+import { IAuthState, IAppState, IAccountState } from '../../reducers';
+import { startRedirect, finishRedirect } from '../../actions/Authentication.action';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
-import './Login.css';
-export interface IAuthProps {
+import './account.css';
+import { openForgetPassword, openLogin, openSignup } from '../../actions/AccountModal.action';
+export interface IReduxProps {
     //data from state store
-    auth: IAuthState,
+    auth: IAuthState;
+    accountModal: IAccountState;
     //Action creators from the dispatcher
+    openLogin: () => void;
+    openForgotPassword: () => void;
+    openSignup: () => void;
     startRedirect: () => void;
     finishRedirect: () => void;
 }
@@ -18,18 +22,16 @@ export interface IComponentProps {
 }
 interface IState {
     isFetching : boolean;
-    username: string;
-    password: string;
+    emailAddress : string;
 }
-type IProps = IComponentProps & IAuthProps;
+type IProps = IComponentProps & IReduxProps;
 export class Login extends Component <IProps,IState>{
 
     constructor(props: any) {
         super(props);
         this.state = {
             isFetching: false,
-            username: "",
-            password: "",
+            emailAddress: '',
         };
         this.handleUpdate = this.handleUpdate.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -53,8 +55,7 @@ export class Login extends Component <IProps,IState>{
     async handleRequest() {
         this.setState({...this.state, isFetching: true});
         const response = await APICall.POST('/login', {
-            username: this.state.username,
-            password: this.state.password
+            email: this.state.emailAddress
         });
         //If there is an error, APICall methods will return an Error class instance.
         //This checks if there is an error and alerts message if there is.
@@ -75,58 +76,52 @@ export class Login extends Component <IProps,IState>{
         return (
 
             <Modal show={true} onHide={() => {this.handleClose()}}
-                dialogClassName="login-modal"
-                animation centered keyboard
+                dialogClassName="login-modal" backdrop backdropClassName = "login-modal-backdrop"
+                animation = {false} centered keyboard
                 size = "lg">
-                <Modal.Header closeLabel = "Close" closeButton><h2> Login </h2> </Modal.Header>
-                {this.props.auth.redirect.readyToRedirect ? 
-                    <Redirect to = {this.props.auth.redirect.route}/>
-                 : null}
-                 <Modal.Body>
+                <Modal.Header closeLabel = "Close">  <i onClick = {this.props.openLogin} className="large material-icons">arrow_back</i>
+                <h2> Forgot Password </h2>  <i className="large material-icons" onClick = {this.handleClose}>close</i>
+                </Modal.Header>
+                <Modal.Body>
                 <Form className = 'login-form' onSubmit = {this.handleSubmit}>
-                    <Form.Group controlId="username">
+                    <Form.Group controlId="email-address">
                         <Form.Control 
                             required
                             autoFocus
                             size = "lg"
                             type="text" 
-                            placeholder="Username" 
-                            value={this.state.username}
-                            onChange={this.handleUpdate}/>
-                    </Form.Group>
-                    <Form.Group controlId="password">
-                        <Form.Control 
-                            required
-                            type="password" 
-                            size = "lg"
-                            placeholder="Password" 
-                            value={this.state.password}
+                            placeholder="Email Address" 
+                            value={this.state.emailAddress}
                             onChange={this.handleUpdate}/>
                     </Form.Group>
                     </Form>
                     </Modal.Body>
+                    <Modal.Footer>
                     <Button variant="primary" 
                             type="submit"
                             size="lg"
+                            className = "landing-button modal-form-button"
                             block
                             onClick = {this.handleSubmit}>
-                        Login {this.state.isFetching  ? <Spinner animation = "border" variant = "dark"/> : null}
+                        Reset Password {this.state.isFetching  ? <Spinner className = "modal-form-spinner" 
+                        animation = "border" variant = "light"/> : null}
                     </Button>
-                    <div className = "login-modal-bottom-links">
-                    <a className = "forgot-password" href= "#">Forgot Password?</a>
-                    <p>Don't have an account? <a href= "#">Sign Up</a></p>
-                    </div>
+                    </Modal.Footer>
                 </Modal>
         )
     }
 }
 const mapStateToProps = (state : IAppState) => {
     return {
-        auth: state.auth
+        auth: state.auth,
+        accountModal : state.accountModal,
     }
 }
 //This object definition will be used to map action creators to properties
 const mapDispatchToProps = {
+    openLogin: openLogin,
+    openForgotPassword: openForgetPassword,
+    openSignup: openSignup,
     startRedirect: startRedirect,
     finishRedirect: finishRedirect,
 
