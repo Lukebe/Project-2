@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
-<<<<<<< HEAD:front-end/src/pages/userportal/LeftUserPortal.tsx
-import Axios from 'axios';
 import * as APICall from '../../utils/APICall';
-=======
-import * as APICall from '../utils/APICall';
->>>>>>> c2bbfcb0ab8510009672514ba67562800d6757d3:front-end/src/pages/LeftUserPortal.tsx
 import ActiveJobs from './ActiveJobs';
 
 export default class LeftUserPortal extends Component <any, any>{
