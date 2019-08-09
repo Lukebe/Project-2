@@ -116,7 +116,16 @@
 .landing-button:hover:before, .landing-button:active:before {
     -webkit-transform: scale(2);
     transform: scale(2);
+    border: 0 !important;
+    outline: 0 !important;
   }
+.landing-button:focus {
+    box-shadow: none;
+}
+.landing-button:active {
+    box-shadow: 0 0 0 .1rem rgb(130, 47, 255) !important;
+
+}
 .landing-background-carousel{
     z-index: -1;
     position    :absolute;
@@ -191,10 +200,11 @@
     }
     .landing-container > .row > .border-right {
         padding-right: 1rem !important;
+        padding-bottom: 1rem;
 
     }
     .landing-container {
-        margin: 1rem auto !important;
+        margin: 1rem auto 0 auto !important;
         padding: 0 !important;
 
     }
@@ -202,13 +212,19 @@
 @media only screen and (max-width: 600px) {
 
 .landing-container > .row > .border-right {
-    border-bottom: 2px solid gray;
+    border-bottom: 1px solid gray;
     border-right: 0 !important;
     padding-top: 2em;
     padding-right: 0;
     margin-bottom: 2em;
     margin-right: 0;
     padding-left: 0;
+}
+.landing-container > .row:first-child {
+    margin: 0 !important;
+}
+.landing-container > .no-gutters {
+    margin: 0 !important;
 }
 .landing-container > .row > h1 > .cut-container{
     left: 0;
