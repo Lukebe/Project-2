@@ -4,3 +4,8 @@
   width: 100%;
   position:absolute;
 }
+.main-footer {
+  z-index:-2;
+  background-color: #000;
+  color: #9b9b9b;
+}

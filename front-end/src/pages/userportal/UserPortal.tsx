@@ -15,17 +15,15 @@ export default class AllUsers extends Component <any, any>{
 
     render() {
         return(
-            <div>
-                <React.Fragment>
+                <>
                      <Container>
                          <Row>
                              <Col xs={4} className="container"><LeftUserPortal /></Col>
                              <Col className="container"><RightUserPortal /></Col>
                          </Row> 
                      </Container>
-                    
-                </React.Fragment>
-            </div>
+
+                </>
         );
     }
 }

@@ -4,7 +4,7 @@ import { Navbar, Nav } from 'react-bootstrap';
 export default class LeftUserPortal extends Component <any, any>{
 
     render() {
-        return(
+        return(  
             <React.Fragment>
                 <Navbar bg="light">
                     <Navbar.Brand>Kutsies</Navbar.Brand>
