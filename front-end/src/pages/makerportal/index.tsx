@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { Button, Form, Spinner, Modal, Container, Col, Row } from "react-bootstrap";
 import { connect } from 'react-redux';
-import {Job} from '../../models/Job';
 import { IAuthState, IAppState } from '../../reducers';
-import JobsCreated from './JobsCreated';
-import { Switch, Route } from 'react-router-dom';
+import { Footer } from '../../components/Footer';
+import './Maker.css';
+import { loginSuccessful } from '../../actions/Authentication.action';
+import PopularEvents from './PopularEvents';
+import MyEvents from './MyEvents';
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
+    loginSuccessful : () => void;
     //Action creators from the dispatcher
 }
 export interface IComponentProps {
@@ -16,7 +19,7 @@ interface IState {
     isFetching : boolean;
 }
 type IProps = IComponentProps & IAuthProps;
-export class MakerPortal extends Component <IProps,IState>{
+class MakerPortal extends Component <IAuthProps,IState>{
 
     constructor(props: any) {
         super(props);
@@ -30,20 +33,19 @@ export class MakerPortal extends Component <IProps,IState>{
             <>
             <Container>
                 <Row>
-                    <Col style = {{textAlign: 'center'}}>
-                        My events
-
+                    <Col sm={12} lg = {12} >
+                        Hello {this.props.auth.userProfile.getFullName()}
+                        <MyEvents/>
                     </Col>
-                </Row>
-                <Row>
-                    <Col>
-                    Popular events in the area
+                    <Col sm = {12} lg = {6}>
+                    <PopularEvents/>
                     </Col>
-                    <Col>
-                    New Job Listing
+                    <Col sm = {12} lg = {6}>
+                    <h2>New Job Listing</h2>
                     </Col>
                 </Row>
             </Container>
+            <Footer/>
             </>
         )
     }
@@ -55,6 +57,6 @@ const mapStateToProps = (state : IAppState) => {
 }
 //This object definition will be used to map action creators to properties
 const mapDispatchToProps = {
-
+    loginSuccessful : loginSuccessful,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MakerPortal);

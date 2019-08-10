@@ -7,7 +7,7 @@ import Login from './pages/account/Login';
 import UserPortal from './pages/userportal/UserPortal';
 import store from './Store';
 import { Provider } from 'react-redux';
-import { MakerPortal } from './pages/makerportal';
+import MakerPortal from './pages/makerportal';
 
 const App: React.FC = () => {
   return (
