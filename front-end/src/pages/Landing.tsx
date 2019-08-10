@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Button, Carousel, Col } from 'react-bootstrap';
+import { Container, Row, Button, Carousel, Col, Spinner, Modal } from 'react-bootstrap';
 import './Landing.css';
 import landing1 from '../resources/images/landing1.jpg';
 import landing2 from '../resources/images/landing2.jpg';
@@ -8,16 +8,16 @@ import landing4 from '../resources/images/landing4.jpg';
 import landing5 from '../resources/images/landing5.jpg';
 import iconWhite from '../resources/images/icon/icon-white-2.png';
 import { IAuthState, IAppState, IAccountState } from '../reducers';
-import { setRedirect } from '../actions/Authentication.action';
+import { setRedirect, startRedirect, finishRedirect } from '../actions/Authentication.action';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
 import Login from './account/Login';
 import IsMobile from '../utils/IsMobile';
 import { Footer } from '../components/Footer';
-import { closeModal, openLogin } from '../actions/AccountModal.action';
+import { closeModal, openLogin, openIsLoggedIn } from '../actions/AccountModal.action';
 import { AccountModalType } from '../reducers/AccountModal.reducer';
 import Signup from './account/Signup';
 import ForgotPassword from './account/ForgotPassword';
+import { Redirect } from 'react-router';
 interface IState {
     buttonClicked : boolean,
     loginDialogOpen : boolean,
@@ -29,8 +29,11 @@ export interface IReduxProps {
     accountModal : IAccountState,
     //Action creators from the dispatcher
     openLogin : () => void;
-    closeModal : () => void;
     setRedirect: (url : string) => void;
+    startRedirect: () => void;
+    finishRedirect: () => void;
+    closeModal: () => void;
+    openIsLoggedIn : () => void;
 }
 export class Landing extends React.Component<IReduxProps,IState>{
     constructor(props: any){
@@ -46,7 +49,16 @@ export class Landing extends React.Component<IReduxProps,IState>{
     }
     handleButtonClick = (event: any) => {
         this.props.setRedirect(event.target.name);
-        this.props.openLogin();
+        if(this.props.auth.userProfile.getUserId()){
+            this.props.openIsLoggedIn();
+            setTimeout(() => {
+                this.props.startRedirect();
+                this.props.finishRedirect();
+                this.props.closeModal();
+            },500);
+        } else {
+            this.props.openLogin();
+        }
     }
     componentDidMount() {
         if(!IsMobile()){
@@ -67,6 +79,24 @@ export class Landing extends React.Component<IReduxProps,IState>{
                 <Signup updateCallback = {this.handleModalClose}/> : null }
                 {this.props.accountModal.selectedModal === AccountModalType.FORGOT_PASSWORD ? 
                 <ForgotPassword updateCallback = {this.handleModalClose}/> : null }
+                {this.props.accountModal.selectedModal === AccountModalType.IS_LOGGED_IN ? 
+                <>
+                    <Modal show  centered backdrop dialogClassName="login-modal"
+                        backdropClassName = "login-modal-backdrop"
+                        size = "sm">
+                        <Modal.Header className = 'custom-redirect-header'>
+                            <h2> Redirecting </h2>
+                        </Modal.Header>
+                        <Modal.Body className = 'custom-redirect-body'>
+                            <p className='is-logged-in-text'>Please wait...</p> 
+                            <Spinner variant = "light" animation = "border"/>
+                        </Modal.Body>
+                    </Modal>
+                    {this.props.auth.redirect.readyToRedirect ? 
+                    <Redirect to = {this.props.auth.redirect.route}/>
+                 : null}
+                </>
+                : null }
             <Carousel controls = {false} indicators = {false} className = "landing-background-carousel">
                     <Carousel.Item>
                         <img
@@ -140,6 +170,9 @@ const mapStateToProps = (state : IAppState) => {
 }
 //This object definition will be used to map action creators to properties
 const mapDispatchToProps = {
+    startRedirect: startRedirect,
+    finishRedirect: finishRedirect,
+    openIsLoggedIn: openIsLoggedIn,
     closeModal: closeModal,
     openLogin: openLogin,
     setRedirect: setRedirect,

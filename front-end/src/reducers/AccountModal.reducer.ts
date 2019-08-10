@@ -3,6 +3,7 @@ import {
     OPEN_FORGET_PASSWORD,
     OPEN_LOGIN,
     OPEN_SIGNUP,
+    IS_LOGGED_IN,
     CLOSE_MODAL,
   } from '../actions/AccountModal.action';
   import {IAccountState} from './index';
@@ -11,6 +12,7 @@ export enum AccountModalType {
     LOGIN,
     SIGNUP,
     FORGOT_PASSWORD,
+    IS_LOGGED_IN,
 }
 //This defines the initial state in redux. It defines the state according to the interface it is based upon.
 //In this case, IAuthState is defined in /reducers/index.ts. The initial state is the state that the application
@@ -31,6 +33,8 @@ const initialState : IAccountState = {
             return {...state, selectedModal: AccountModalType.LOGIN }
         case OPEN_SIGNUP:
             return {...state, selectedModal: AccountModalType.SIGNUP }
+        case IS_LOGGED_IN:
+            return {...state, selectedModal: AccountModalType.IS_LOGGED_IN }
         case CLOSE_MODAL:
             return {...state, selectedModal: AccountModalType.NONE }
         default: break;

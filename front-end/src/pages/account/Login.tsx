@@ -2,15 +2,17 @@ import React, { Component } from 'react';
 import * as APICall from '../../utils/APICall';
 import { Button, Form, Spinner, Modal, Alert } from "react-bootstrap";
 import { IAuthState, IAppState, IAccountState } from '../../reducers';
-import { startRedirect, finishRedirect } from '../../actions/Authentication.action';
+import { startRedirect, finishRedirect, loginSuccessful } from '../../actions/Authentication.action';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import './account.css';
 import { openForgetPassword, openSignup, openLogin, closeModal } from '../../actions/AccountModal.action';
+import { User } from '../../models/User';
 export interface IReduxProps {
     //data from state store
     auth: IAuthState;
     accountModal: IAccountState;
+    loginSuccessful: (data : User) => void;
     openLogin: () => void;
     openForgotPassword: () => void;
     openSignup: () => void;
@@ -74,8 +76,7 @@ export class Login extends Component <IProps,IState>{
         //This checks if there is an error and alerts message if there is.
         const message = await response instanceof Error ? response.message : response;
         const setTheState = await response ? this.setState({...this.state, isFetching: false}) : null;
-        alert(message);
-        const data = await response;
+        this.props.loginSuccessful(new User([1,await this.state.username,'Test','User','test@gmail.com',5.0]))
         this.props.startRedirect();
         this.props.closeModal();
         this.props.finishRedirect();
@@ -134,7 +135,7 @@ export class Login extends Component <IProps,IState>{
                         Login {this.state.isFetching  ? <Spinner className = "modal-form-spinner"
                         animation = "border" variant = "light"/> : null}
                     </Button>
-                    </Form>
+                     </Form> 
                     </Modal.Body>
                     <Modal.Footer>
 
@@ -156,6 +157,7 @@ const mapStateToProps = (state : IAppState) => {
 //This object definition will be used to map action creators to properties
 const mapDispatchToProps = {
     openLogin: openLogin,
+    loginSuccessful: loginSuccessful,
     openForgotPassword: openForgetPassword,
     openSignup: openSignup,
     closeModal: closeModal,

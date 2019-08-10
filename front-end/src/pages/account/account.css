@@ -20,7 +20,7 @@
     min-height: 100px !important;
     position: relative;
     top: 50%;
-    transform: translateY(-55%);
+    transform: translateY(-55%) !important;
 }
 .login-modal::before {
     height: 100%;
@@ -54,6 +54,11 @@
     padding : 0;
     border-top: 0;
 }
+.login-modal > .modal-content > .custom-redirect-header,
+.login-modal > .modal-content > .custom-redirect-body {
+    display:flex;
+    justify-content: center;
+}
 .login-modal > .modal-content > .modal-body > .login-form > .modal-form-button {
     width: 100%;
     display: block;
@@ -64,6 +69,12 @@
 }
 .login-modal > .modal-content > .modal-header > .material-icons:hover {
     color: #888;
+}
+.login-modal > .modal-content > .modal-body > .is-logged-in-text {
+    text-align: center;
+    display: inline;
+    margin-right: 15px;
+    color: white;
 }
 .login-modal-bottom-links {
     padding: 0 1rem 0 1rem;
@@ -93,7 +104,7 @@
         position: fixed;
         top: 0;
         bottom: 0;
-        transform: none;
+        transform: none !important;
         overflow: hidden;
     }
     .login-modal > .modal-content {

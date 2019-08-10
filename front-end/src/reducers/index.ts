@@ -1,14 +1,14 @@
 import { combineReducers } from "redux";
 import { authReducer } from "./Authentication.reducer";
 import { accountModalReducer, AccountModalType } from "./AccountModal.reducer";
+import { User } from "../models/User";
 
 //This is the IAuthState interface defined in the Authentication reducer. This defines the structure
 //of the gloabl authentication state. The initial state in Authentication reducer follows the exact
 //format below.
 export interface IAuthState {
     lostConnection: boolean,
-    userProfile : {userId : number, userName: string, firstName : string,
-         lastName: string, email: string, role: {roleId : number, role: string}},
+    userProfile : User,
     isFetching : boolean,
     redirect: {
         readyToRedirect : boolean,
