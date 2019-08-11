@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import * as APICall from '../../utils/APICall';
-import { Button, Form, Spinner, Modal } from "react-bootstrap";
+import { Button, Form, Spinner, Modal, Alert } from "react-bootstrap";
 import { IAuthState, IAppState, IAccountState } from '../../reducers';
-import { startRedirect, finishRedirect } from '../../actions/Authentication.action';
+import { startRedirect, finishRedirect, loginSuccessful } from '../../actions/Authentication.action';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import './account.css';
-import { openForgetPassword, openSignup, openLogin } from '../../actions/AccountModal.action';
+import { openForgetPassword, openSignup, openLogin, closeModal } from '../../actions/AccountModal.action';
+import { User } from '../../models/User';
 export interface IReduxProps {
     //data from state store
     auth: IAuthState;
     accountModal: IAccountState;
+    loginSuccessful: (data : User) => void;
     openLogin: () => void;
     openForgotPassword: () => void;
     openSignup: () => void;
+    closeModal: () => void;
     startRedirect: () => void;
     finishRedirect: () => void;
 }
@@ -21,6 +24,8 @@ export interface IComponentProps {
     updateCallback : Function;
 }
 interface IState {
+    validated : boolean;
+    isValidationError: boolean;
     isFetching : boolean;
     username: string;
     password: string;
@@ -31,6 +36,8 @@ export class Login extends Component <IProps,IState>{
     constructor(props: any) {
         super(props);
         this.state = {
+            validated: false,
+            isValidationError: false,
             isFetching: false,
             username: "",
             password: "",
@@ -42,14 +49,19 @@ export class Login extends Component <IProps,IState>{
 
     handleSubmit(event:any) {  
         event.preventDefault();
+        if (event.currentTarget.checkValidity() === false) {
+            event.stopPropagation();
+            this.setState({...this.state, validated: true, isValidationError: true});
+            return;
+        }
         this.handleRequest();
     }
 
 
     handleUpdate(event:any) {
-        this.setState({...this.state,
-            [event.target.id]: event.target.value
-        });
+        this.state.isValidationError ?
+        this.setState({...this.state, isValidationError: false, [event.target.id]: event.target.value})
+        : this.setState({...this.state, [event.target.id]: event.target.value});
     }
     handleClose = () => {
         this.props.updateCallback();
@@ -64,9 +76,9 @@ export class Login extends Component <IProps,IState>{
         //This checks if there is an error and alerts message if there is.
         const message = await response instanceof Error ? response.message : response;
         const setTheState = await response ? this.setState({...this.state, isFetching: false}) : null;
-        alert(message);
-        const data = await response
+        this.props.loginSuccessful(new User([1,await this.state.username,'Test','User','test@gmail.com',5.0]))
         this.props.startRedirect();
+        this.props.closeModal();
         this.props.finishRedirect();
         //if(response instanceof Error){
         //    alert(response.message);
@@ -90,11 +102,16 @@ export class Login extends Component <IProps,IState>{
                     <Redirect to = {this.props.auth.redirect.route}/>
                  : null}
                  <Modal.Body>
-                <Form className = 'login-form' onSubmit = {this.handleSubmit}>
+                     {this.state.isValidationError ?
+                    <Alert key="validation-error" variant="danger">
+                    There were errors in your submission
+                    </Alert> : null }
+                <Form className = 'login-form'
+                noValidate validated={this.state.validated}
+                     onSubmit = {this.handleSubmit}>
                     <Form.Group controlId="username">
                         <Form.Control 
                             required
-                            autoFocus
                             size = "lg"
                             type="text" 
                             placeholder="Username" 
@@ -110,18 +127,18 @@ export class Login extends Component <IProps,IState>{
                             value={this.state.password}
                             onChange={this.handleUpdate}/>
                     </Form.Group>
-                    </Form>
-                    </Modal.Body>
-                    <Modal.Footer>
                     <Button variant="primary" 
                             type="submit"
                             size="lg"
                             block
-                            className = "landing-button modal-form-button"
-                            onClick = {this.handleSubmit}>
+                            className = "landing-button modal-form-button">
                         Login {this.state.isFetching  ? <Spinner className = "modal-form-spinner"
                         animation = "border" variant = "light"/> : null}
                     </Button>
+                     </Form> 
+                    </Modal.Body>
+                    <Modal.Footer>
+
                     <div className = "login-modal-bottom-links">
                     <a onClick = {this.props.openForgotPassword} className = "forgot-password" href= "#">Forgot Password?</a>
                     <p>Don't have an account? <a onClick = {this.props.openSignup} href= "#">Sign Up</a></p>
@@ -140,8 +157,10 @@ const mapStateToProps = (state : IAppState) => {
 //This object definition will be used to map action creators to properties
 const mapDispatchToProps = {
     openLogin: openLogin,
+    loginSuccessful: loginSuccessful,
     openForgotPassword: openForgetPassword,
     openSignup: openSignup,
+    closeModal: closeModal,
     startRedirect: startRedirect,
     finishRedirect: finishRedirect,
 

@@ -18,10 +18,7 @@ payload must be defined like the function below, with one parameter (in this cas
 */
 export const loginSuccessful = (data: any) => (dispatch: any) => {
     dispatch({
-        payload: {
-            userId : data.userId, userName : data.userName, firstName: data.firstName, 
-            lastName: data.lastName, email: data.email, role: data.role
-        },
+        payload: data,
         type: LOGIN_SUCCESSFUL
     });
 }

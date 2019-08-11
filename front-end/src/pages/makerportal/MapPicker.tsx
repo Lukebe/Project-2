@@ -1,12 +1,10 @@
+import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import React, { Component } from 'react';
-import { Button, Form, Spinner, Modal, Container, Col, Row } from "react-bootstrap";
 import { connect } from 'react-redux';
 import { IAuthState, IAppState } from '../../reducers';
-import { Footer } from '../../components/Footer';
 import './Maker.css';
 import { loginSuccessful } from '../../actions/Authentication.action';
-import PopularEvents from './PopularEvents';
-import MyEvents from './MyEvents';
+import { Modal } from "react-bootstrap";
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
@@ -19,7 +17,7 @@ interface IState {
     isFetching : boolean;
 }
 type IProps = IComponentProps & IAuthProps;
-class MakerPortal extends Component <IAuthProps,IState>{
+class MapPicker extends Component <IAuthProps,IState>{
 
     constructor(props: any) {
         super(props);
@@ -30,24 +28,12 @@ class MakerPortal extends Component <IAuthProps,IState>{
 
     render() {
         return (
-            <>
-            <Container>
-                <Row>
-                    <Col sm={12} lg = {12} >
-                        Hello {this.props.auth.userProfile.getFullName()}
-                        <MyEvents/>
-                    </Col>
-                    <Col sm = {12} lg = {6}>
-                    <PopularEvents/>
-                    </Col>
-                    <Col sm = {12} lg = {6}>
-                    <h2>New Job Listing</h2>
-                    </Col>
-                </Row>
-            </Container>
-            <Footer/>
-            </>
-        )
+            <Modal show animation>
+                <Modal.Header><h2>Map Picker</h2></Modal.Header>
+                <Modal.Body>
+<p>Map Picker in Progress</p> 
+                </Modal.Body> 
+            </Modal>     )
     }
 }
 const mapStateToProps = (state : IAppState) => {
@@ -59,4 +45,4 @@ const mapStateToProps = (state : IAppState) => {
 const mapDispatchToProps = {
     loginSuccessful : loginSuccessful,
 }
-export default connect(mapStateToProps, mapDispatchToProps)(MakerPortal);
+export default connect(mapStateToProps, mapDispatchToProps)(MapPicker);
