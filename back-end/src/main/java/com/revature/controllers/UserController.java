@@ -1,20 +1,22 @@
 package com.revature.controllers;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 
+import com.revature.models.User;
 import com.revature.services.UserServices;
 
 @RestController
-@RequestMapping("users")
-@CrossOrigin(allowedHeaders = "*", methods = {RequestMethod.POST})
+@RequestMapping("/teamd")
 public class UserController {
 	
 	private UserServices userServices;
@@ -25,50 +27,27 @@ public class UserController {
 		this.userServices = userServices;
 	}
 	
-	@GetMapping(path="", produces = "text/html")
-	public String allUsers() {
-		MyObject var = new MyObject("jack", "jill");
-		System.out.println(var);
-		return "<!DOCTYPE html><html><head></head><body><h1>Hello!</h1></body></html>";
+	@GetMapping("/users")
+	public List<User> getAllUsers() {
+		System.out.println("here I am");
+		return userServices.getAllUsers();
 	}
-	@ExceptionHandler(HttpClientErrorException.class)
-	public ResponseEntity<String> errorHandler(HttpClientErrorException e) {
-		return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());
-	}
-}
-
-class MyObject {
-	String x;
-	String y;
-
-	public MyObject(String x, String y) {
-		this.x = x;
-		this.y = y;
-		
-	}
-
-	@Override
-	public String toString() {
-		return "MyObject [x=" + x + ", y=" + y + "]";
-	}
-
-	public String getX() {
-		return x;
-	}
-
-	public void setX(String x) {
-		this.x = x;
-	}
-
-	public String getY() {
-		return y;
-	}
-
-	public void setY(String y) {
-		this.y = y;
-	}
-	public MyObject() {
-		super();
-	}
-
+	
+//	@GetMapping("/{id}")
+//	public ResponseEntity<Optional<User>> getById(@PathVariable(value="id") Long userid) {
+//		System.out.println("here I am");
+//		Optional<User> user = userServices.findOne(userid);
+//		return ResponseEntity.ok().body(user);
+//	}
+//	
+//	@PostMapping("")
+//	public void CreateUser(@RequestBody User user) {
+//		User newUser = userServices.createUser(user);
+////		return newUser;
+//	}
+//	
+//	@ExceptionHandler(HttpClientErrorException.class)
+//	public ResponseEntity<String> errorHandler(HttpClientErrorException e) {
+//		return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());
+//	}
 }
