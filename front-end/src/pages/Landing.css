@@ -122,6 +122,11 @@
 .landing-button:focus {
     box-shadow: none;
 }
+.landing-button:disabled:hover, .landing-button:disabled:active {
+    color: black;
+    box-shadow: none;
+
+  }
 .landing-button:active {
     box-shadow: 0 0 0 .1rem rgb(130, 47, 255) !important;
 

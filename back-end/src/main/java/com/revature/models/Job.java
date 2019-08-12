@@ -2,12 +2,15 @@ package com.revature.models;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import com.revature.models.Users;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -18,31 +21,27 @@ public class Job {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int jobId;
-	@OneToOne
+    @ManyToOne
 	private Users userCreated;
 	private String address;
 	private String description;
 	private Date dateCreated;
 	private Date dateAccepted;
 	private Date jobDateTime;
-	@OneToOne
-	private Users userAccepted;
+    @ManyToOne
+    private Users userAccepted;
 	private BigDecimal jobEarnings;
 	@OneToOne
-	@JoinColumn(name = "category_id")
 	private Category category;
 	private Date timeEstimate;
 	@OneToOne
-	@JoinColumn(name = "product_id")
 	private Product product;
 	@OneToOne
-	@JoinColumn(name = "status_id")
 	private Status status;
-	
 	public int getJobId() {
 		return jobId;
 	}
-
+	
 	public void setJobId(int jobId) {
 		this.jobId = jobId;
 	}

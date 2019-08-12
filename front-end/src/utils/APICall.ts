@@ -8,6 +8,12 @@ let requestConfig = {
         }
       }
     }
+export enum RequestState {
+        FETCHING,
+        SUCCESSFUL,
+        ERROR,
+        NOT_ACTIVE,
+}
 /**
  * Used to send a GET request to the API
  * @param route URI to be called after location specified in config. Example (http://localhost:3000/route).
