@@ -1,6 +1,6 @@
 {
     "backend": {
-        "serverURL": "http://localhost:5000"
+        "serverURL": "http://localhost:3333"
     },
     "messages": {
         "noAccess" : "You do not have access to this resource",
