@@ -88,14 +88,15 @@ const PlacesWithStandaloneSearchBox = compose(
     </StandaloneSearchBox>
     <ol>
         {console.log(props.places)}
-    {props.places.map((arr : any) =>
-        <li key={arr.place_id}>
-          {arr.formatted_address}
-          {" at "}
-          ({arr.geometry.location.lat}, {arr.geometry.location.lng})
+    {//props.places.map((arr : any) =>
+        //<li key={arr.place_id}>
+        //  {arr.formatted_address}
+        //  {" at "}
+        //  ({arr.geometry.location.lat}, {arr.geometry.location.lng})
 
-        </li>
-      )}
+        //</li>
+      //) 
+    }
     </ol>
     </div>
     {console.log(props.places)}

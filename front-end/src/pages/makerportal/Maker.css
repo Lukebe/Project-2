@@ -1,0 +1,9 @@
+.makerportal-container{
+    border: 1px solid #eee ;
+    background-color: whitesmoke;
+}
+.accordion >.card .card-header {
+    background-color: rgb(67, 12, 170);
+    color: white;
+    cursor: pointer;
+}
