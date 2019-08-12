@@ -2,31 +2,41 @@ package com.revature.models;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
+import com.revature.models.Users;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.beans.factory.annotation.Autowired;
 @Entity
 @Table(name="jobs")
 public class Job {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int jobId;
-	private User userCreated;
+	@OneToOne
+	private Users userCreated;
 	private String address;
 	private String description;
 	private Date dateCreated;
 	private Date dateAccepted;
 	private Date jobDateTime;
-	private User userAccepted;
+	@OneToOne
+	private Users userAccepted;
 	private BigDecimal jobEarnings;
+	@OneToOne
+	@JoinColumn(name = "category_id")
 	private Category category;
 	private Date timeEstimate;
+	@OneToOne
+	@JoinColumn(name = "product_id")
 	private Product product;
+	@OneToOne
+	@JoinColumn(name = "status_id")
 	private Status status;
 	
 	public int getJobId() {
@@ -37,11 +47,11 @@ public class Job {
 		this.jobId = jobId;
 	}
 
-	public User getUserCreated() {
+	public Users getUserCreated() {
 		return userCreated;
 	}
 
-	public void setUserCreated(User userCreated) {
+	public void setUserCreated(Users userCreated) {
 		this.userCreated = userCreated;
 	}
 
@@ -85,11 +95,11 @@ public class Job {
 		this.jobDateTime = jobDateTime;
 	}
 
-	public User getUserAccepted() {
+	public Users getUserAccepted() {
 		return userAccepted;
 	}
 
-	public void setUserAccepted(User userAccepted) {
+	public void setUserAccepted(Users userAccepted) {
 		this.userAccepted = userAccepted;
 	}
 
@@ -217,8 +227,8 @@ public class Job {
 				+ timeEstimate + "]";
 	}
 
-	public Job(int jobId, User userCreated, String address, String description, Date dateCreated, Date dateAccepted,
-			Date jobDateTime, User userAccepted, BigDecimal jobEarnings, Category category, Date timeEstimate,
+	public Job(int jobId, Users userCreated, String address, String description, Date dateCreated, Date dateAccepted,
+			Date jobDateTime, Users userAccepted, BigDecimal jobEarnings, Category category, Date timeEstimate,
 			Product product, Status status) {
 		super();
 		this.jobId = jobId;
@@ -236,7 +246,7 @@ public class Job {
 		this.status = status;
 	}
 
-	@Autowire
+	@Autowired
 	public Job() {
 		super();
 		// TODO Auto-generated constructor stub
