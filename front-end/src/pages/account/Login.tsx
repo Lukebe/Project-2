@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as APICall from '../../utils/APICall';
+import {RequestState} from '../../utils/APICall';
 import { Button, Form, Spinner, Modal, Alert } from "react-bootstrap";
 import { IAuthState, IAppState, IAccountState } from '../../reducers';
 import { startRedirect, finishRedirect, loginSuccessful } from '../../actions/Authentication.action';
@@ -26,7 +27,11 @@ export interface IComponentProps {
 interface IState {
     validated : boolean;
     isValidationError: boolean;
-    isFetching : boolean;
+    RequestStatus: {
+        status: RequestState,
+        errorMsg: string,
+
+    }
     username: string;
     password: string;
 }
@@ -38,9 +43,13 @@ export class Login extends Component <IProps,IState>{
         this.state = {
             validated: false,
             isValidationError: false,
-            isFetching: false,
             username: "",
             password: "",
+            RequestStatus: {
+                status: RequestState.NOT_ACTIVE,
+                errorMsg: '',
+        
+            }
         };
         this.handleUpdate = this.handleUpdate.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -48,6 +57,8 @@ export class Login extends Component <IProps,IState>{
     }
 
     handleSubmit(event:any) {  
+        this.setState({...this.state, 
+            RequestStatus: {...this.state.RequestStatus, status: RequestState.NOT_ACTIVE}});
         event.preventDefault();
         if (event.currentTarget.checkValidity() === false) {
             event.stopPropagation();
@@ -67,24 +78,30 @@ export class Login extends Component <IProps,IState>{
         this.props.updateCallback();
     }
     async handleRequest() {
-        this.setState({...this.state, isFetching: true});
+        this.setState({...this.state, RequestStatus: 
+            {...this.state.RequestStatus, status: RequestState.FETCHING}});
         const response = await APICall.POST('/login', {
             username: this.state.username,
             password: this.state.password
         });
         //If there is an error, APICall methods will return an Error class instance.
         //This checks if there is an error and alerts message if there is.
-        const message = await response instanceof Error ? response.message : response;
-        const setTheState = await response ? this.setState({...this.state, isFetching: false}) : null;
-        this.props.loginSuccessful(new User([1,await this.state.username,'Test','User','test@gmail.com',5.0]))
-        this.props.startRedirect();
-        this.props.closeModal();
-        this.props.finishRedirect();
-        //if(response instanceof Error){
-        //    alert(response.message);
-        //} else {
-        //    alert(response);
-        //}
+
+        if(await response instanceof Error){
+            this.setState({...this.state, RequestStatus: 
+                {...this.state.RequestStatus,
+                    status: RequestState.ERROR,
+                    errorMsg: response.message}});
+        } else {
+            this.setState({...this.state, RequestStatus: 
+                {...this.state.RequestStatus,
+                    status: RequestState.SUCCESSFUL}});
+            alert(response);
+            this.props.loginSuccessful(new User(response));
+            this.props.startRedirect();
+            this.props.closeModal();
+            this.props.finishRedirect();
+        }
     }
 
     render() {
@@ -105,6 +122,10 @@ export class Login extends Component <IProps,IState>{
                      {this.state.isValidationError ?
                     <Alert key="validation-error" variant="danger">
                     There were errors in your submission
+                    </Alert> : null }
+                    {this.state.RequestStatus.status === RequestState.ERROR ?
+                    <Alert key="request-error" variant="danger">
+                    {this.state.RequestStatus.errorMsg}
                     </Alert> : null }
                 <Form className = 'login-form'
                 noValidate validated={this.state.validated}
@@ -131,8 +152,11 @@ export class Login extends Component <IProps,IState>{
                             type="submit"
                             size="lg"
                             block
+                            disabled = {this.state.RequestStatus.status === RequestState.FETCHING}
                             className = "landing-button modal-form-button">
-                        Login {this.state.isFetching  ? <Spinner className = "modal-form-spinner"
+                        Login 
+                        {this.state.RequestStatus.status === RequestState.FETCHING  ? 
+                        <Spinner className = "modal-form-spinner"
                         animation = "border" variant = "light"/> : null}
                     </Button>
                      </Form> 
