@@ -7,6 +7,7 @@ import './Maker.css';
 import { loginSuccessful } from '../../actions/Authentication.action';
 import PopularEvents from './PopularEvents';
 import MyEvents from './MyEvents';
+import CreateNewJob from './CreateNewJob';
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
@@ -31,7 +32,7 @@ class MakerPortal extends Component <IAuthProps,IState>{
     render() {
         return (
             <>
-            <Container>
+            <Container className = "makerportal-container">
                 <Row>
                     <Col sm={12} lg = {12} >
                         Hello {this.props.auth.userProfile.getFullName()}
@@ -41,7 +42,7 @@ class MakerPortal extends Component <IAuthProps,IState>{
                     <PopularEvents/>
                     </Col>
                     <Col sm = {12} lg = {6}>
-                    <h2>New Job Listing</h2>
+                        <CreateNewJob/>
                     </Col>
                 </Row>
             </Container>

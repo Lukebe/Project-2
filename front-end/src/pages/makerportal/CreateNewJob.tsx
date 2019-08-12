@@ -162,24 +162,6 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                         </Form.Text>
                         </InputGroup> 
                     </Form.Group>
-
-                    <Form.Group controlId="formJobPay">
-                        <Form.Label>Job Pay</Form.Label>
-                        <InputGroup className="mb-3">
-                            <InputGroup.Prepend>
-                                <InputGroup.Text>$</InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <Form.Control required onChange={this.changeHandler} size="lg" type="number" 
-                            step="0.01" min="0" max = "10000" value = {this.state.formFields.jobpay.value}
-                            id = "new-job-jobpay" placeholder = "0.00" name="jobpay"/>
-                        <Form.Control.Feedback type="invalid">
-                            Please provide a valid job pay amount
-                        </Form.Control.Feedback>   
-                        <Form.Text className="text-muted">
-                            Enter any valid number (up to 2 decimal places) between $0.00 and $10000.00.
-                        </Form.Text>
-                        </InputGroup> 
-                    </Form.Group>
                     <Form.Group controlId="formJobDate">
                         <Form.Label>Job Date and Time</Form.Label>
                         <Form.Control required onChange={this.changeHandler} size="lg" type="date" 
