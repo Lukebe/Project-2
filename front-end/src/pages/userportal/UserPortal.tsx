@@ -17,7 +17,7 @@ export default class AllUsers extends Component <any, any>{
     render() {
         return(
                 <>
-                     <Container>
+                     <Container className = "userportal-container">
                          <Row>
                              <Col sm={12} md = {4} lg = {4} className="container"><LeftUserPortal /></Col>
                              <Col sm = {12} md = {8} lg = {8} className="container"><RightUserPortal /></Col>

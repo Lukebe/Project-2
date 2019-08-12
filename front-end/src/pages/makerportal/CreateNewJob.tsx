@@ -14,40 +14,40 @@ import MapPicker from './MapPicker';
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
-    loginSuccessful : () => void;
+    loginSuccessful: () => void;
     //Action creators from the dispatcher
 }
 export interface IComponentProps {
 }
 interface IState {
-    validated : boolean;
+    validated: boolean;
     formFields: any;
     Error: any;
     isLoading: boolean;
     isCreated: boolean;
     creationData: any;
-    isAuthorized:boolean;
+    isAuthorized: boolean;
     isMapModalOpen: boolean;
 }
 type IProps = IComponentProps & IAuthProps;
-class CreateNewJob extends Component <IAuthProps,IState>{
+class CreateNewJob extends Component<IAuthProps, IState>{
 
     constructor(props: any) {
         super(props);
         this.state = {
-            validated : false,
+            validated: false,
             isMapModalOpen: false,
             formFields: {
                 productlocation: {
-                  value: ''
+                    value: ''
                 },
                 dropofflocation: {
                     value: ''
                 },
                 product: {
-                  value: ''
+                    value: ''
                 },
-                jobdate : {
+                jobdate: {
                     value: ''
                 },
                 jobhour: {
@@ -57,13 +57,13 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                     value: ''
                 },
                 jobpay: {
-                  value: ''  
+                    value: ''
                 },
-                description : {
+                description: {
                     value: ''
                 }
             },
-            Error: {isError: false, message: ''},
+            Error: { isError: false, message: '' },
             isLoading: false,
             isCreated: false,
             creationData: [],
@@ -71,38 +71,40 @@ class CreateNewJob extends Component <IAuthProps,IState>{
 
         };
     }
-    handleSubmit = async (event : any) => {
+    handleSubmit = async (event: any) => {
         const form = event.currentTarget;
         event.preventDefault();
         if (form.checkValidity() === false) {
-          event.stopPropagation();
+            event.stopPropagation();
         } else {
-            this.setState({...this.state, isLoading: true});
+            this.setState({ ...this.state, isLoading: true });
             const formData = this.state.formFields;
-            const returnData = await APICall.POST('/reimbursements', 
-                {type: formData.type.value, amount: formData.amount.value, 
-                description: formData.description.value});
-            if(returnData instanceof Error) {
-                this.setState({...this.state, isLoading:false});
+            const returnData = await APICall.POST('/reimbursements',
+                {
+                    type: formData.type.value, amount: formData.amount.value,
+                    description: formData.description.value
+                });
+            if (returnData instanceof Error) {
+                this.setState({ ...this.state, isLoading: false });
             } else {
-                this.setState({...this.state, isLoading:false, creationData: returnData, isCreated:true});
+                this.setState({ ...this.state, isLoading: false, creationData: returnData, isCreated: true });
             }
         }
-        this.setState({...this.state, validated: true});
-      };
+        this.setState({ ...this.state, validated: true });
+    };
     openMap = (event: any) => {
         event.preventDefault();
-        this.setState({...this.state, isMapModalOpen: true})
+        this.setState({ ...this.state, isMapModalOpen: true })
     }
-    changeHandler = (event: any) => {    
+    changeHandler = (event: any) => {
         const name = event.target.name;
         const value = event.target.value;
         this.setState({
             formFields: {
                 ...this.state.formFields,
                 [name]: {
-                ...this.state.formFields[name],
-                value
+                    ...this.state.formFields[name],
+                    value
                 }
             }
         });
@@ -110,40 +112,40 @@ class CreateNewJob extends Component <IAuthProps,IState>{
     render() {
         return (
             <>
-            {this.state.isMapModalOpen ?
-            <MapPicker/> : null}
-            <h2>New Job Listing</h2>
-            <Form noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
+                {this.state.isMapModalOpen ?
+                    <MapPicker /> : null}
+                <h2>New Job Listing</h2>
+                <Form noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
                     <Form.Group controlId="formProductLocation">
                         <Form.Label>Product Location</Form.Label>
-                        <Form.Control required onChange={this.changeHandler} size="lg" type="text" 
-                            value = {this.state.formFields.productlocation.value}
-                            id = "new-job-productlocation" placeholder = "" name="productlocation"/>
+                        <Form.Control required onChange={this.changeHandler} size="lg" type="text"
+                            value={this.state.formFields.productlocation.value}
+                            id="new-job-productlocation" placeholder="" name="productlocation" />
                         <Form.Control.Feedback type="invalid">
                             Please provide a valid address
                         </Form.Control.Feedback>
-                        <p className = "map-select-text">Or select your location <a href = "" onClick = {this.openMap}>on a map</a></p>
-                    </Form.Group>  
+                        <p className="map-select-text">Or select your location <a href="" onClick={this.openMap}>on a map</a></p>
+                    </Form.Group>
                     <Form.Group controlId="formDropoffLocation">
                         <Form.Label>Dropoff Location</Form.Label>
-                        <Form.Control required onChange={this.changeHandler} size="lg" type="text" 
-                            value = {this.state.formFields.dropofflocation.value}
-                            id = "new-job-dropofflocation" placeholder = "" name="dropofflocation"/>
+                        <Form.Control required onChange={this.changeHandler} size="lg" type="text"
+                            value={this.state.formFields.dropofflocation.value}
+                            id="new-job-dropofflocation" placeholder="" name="dropofflocation" />
                         <Form.Control.Feedback type="invalid">
                             Please provide a valid address
                         </Form.Control.Feedback>
-                        <p className = "map-select-text">Or select your location <a href = "" onClick = {this.openMap}>on a map</a></p>
-                    </Form.Group> 
+                        <p className="map-select-text">Or select your location <a href="" onClick={this.openMap}>on a map</a></p>
+                    </Form.Group>
                     <Form.Group controlId="formProduct">
                         <Form.Label>Requested Product</Form.Label>
                         <InputGroup className="mb-3">
-                            <Form.Control required onChange={this.changeHandler} size="lg" type="text" 
-                            value = {this.state.formFields.product.value}
-                            id = "new-job-product" placeholder = "" name="product"/>
-                        <Form.Control.Feedback type="invalid">
-                            Please choose a product
-                        </Form.Control.Feedback>   
-                        </InputGroup> 
+                            <Form.Control required onChange={this.changeHandler} size="lg" type="text"
+                                value={this.state.formFields.product.value}
+                                id="new-job-product" placeholder="" name="product" />
+                            <Form.Control.Feedback type="invalid">
+                                Please choose a product
+                        </Form.Control.Feedback>
+                        </InputGroup>
                     </Form.Group>
                     <Form.Group controlId="formJobPay">
                         <Form.Label>Job Pay</Form.Label>
@@ -151,77 +153,59 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                             <InputGroup.Prepend>
                                 <InputGroup.Text>$</InputGroup.Text>
                             </InputGroup.Prepend>
-                            <Form.Control required onChange={this.changeHandler} size="lg" type="number" 
-                            step="0.01" min="0" max = "10000" value = {this.state.formFields.jobpay.value}
-                            id = "new-job-jobpay" placeholder = "0.00" name="jobpay"/>
-                        <Form.Control.Feedback type="invalid">
-                            Please provide a valid job pay amount
-                        </Form.Control.Feedback>   
-                        <Form.Text className="text-muted">
-                            Enter any valid number (up to 2 decimal places) between $0.00 and $10000.00.
+                            <Form.Control required onChange={this.changeHandler} size="lg" type="number"
+                                step="0.01" min="0" max="10000" value={this.state.formFields.jobpay.value}
+                                id="new-job-jobpay" placeholder="0.00" name="jobpay" />
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid job pay amount
+                        </Form.Control.Feedback>
+                            <Form.Text className="text-muted">
+                                Enter any valid number (up to 2 decimal places) between $0.00 and $10000.00.
                         </Form.Text>
-                        </InputGroup> 
-                    </Form.Group>
-
-                    <Form.Group controlId="formJobPay">
-                        <Form.Label>Job Pay</Form.Label>
-                        <InputGroup className="mb-3">
-                            <InputGroup.Prepend>
-                                <InputGroup.Text>$</InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <Form.Control required onChange={this.changeHandler} size="lg" type="number" 
-                            step="0.01" min="0" max = "10000" value = {this.state.formFields.jobpay.value}
-                            id = "new-job-jobpay" placeholder = "0.00" name="jobpay"/>
-                        <Form.Control.Feedback type="invalid">
-                            Please provide a valid job pay amount
-                        </Form.Control.Feedback>   
-                        <Form.Text className="text-muted">
-                            Enter any valid number (up to 2 decimal places) between $0.00 and $10000.00.
-                        </Form.Text>
-                        </InputGroup> 
+                        </InputGroup>
                     </Form.Group>
                     <Form.Group controlId="formJobDate">
                         <Form.Label>Job Date and Time</Form.Label>
-                        <Form.Control required onChange={this.changeHandler} size="lg" type="date" 
-                            value = {this.state.formFields.jobdate.value}
-                            id = "new-job-jobdate" placeholder = "" name="jobdate"/>
-                        <Form.Control required onChange={this.changeHandler} size="lg" type="number" 
-                            step="1" min="1" max = "23" value = {this.state.formFields.jobhour.value}
-                            id = "new-job-jobhour" placeholder = "12" name="jobhour"/> :
-                        <Form.Control required onChange={this.changeHandler} size="lg" type="number" 
-                            step="1" min="0" max = "59" value = {this.state.formFields.jobminute.value}
-                            id = "new-job-jobminute" placeholder = "00" name="jobminute"/>
+                        <Form.Control required onChange={this.changeHandler} size="lg" type="date"
+                            value={this.state.formFields.jobdate.value}
+                            id="new-job-jobdate" placeholder="" name="jobdate" />
+                        <Form.Control required onChange={this.changeHandler} size="lg" type="number"
+                            step="1" min="1" max="23" value={this.state.formFields.jobhour.value}
+                            id="new-job-jobhour" placeholder="12" name="jobhour" /> :
+                        <Form.Control required onChange={this.changeHandler} size="lg" type="number"
+                            step="1" min="0" max="59" value={this.state.formFields.jobminute.value}
+                            id="new-job-jobminute" placeholder="00" name="jobminute" />
                         <Form.Control.Feedback type="invalid">
                             Please enter some comments about your reimbursement request.
-                        </Form.Control.Feedback>   
-                  </Form.Group>
+                        </Form.Control.Feedback>
+                    </Form.Group>
                     <Form.Group controlId="formGroupDescription">
                         <Form.Label>Comments</Form.Label>
-                        <Form.Control optional onChange={this.changeHandler} as="textarea" rows="4" 
-                                     placeholder = "Drop off at the front gate..." value= {this.state.formFields.description.value}
-                                     name = "description"/>
+                        <Form.Control optional onChange={this.changeHandler} as="textarea" rows="4"
+                            placeholder="Drop off at the front gate..." value={this.state.formFields.description.value}
+                            name="description" />
                         <Form.Control.Feedback type="invalid">
                             Please enter some comments about your reimbursement request.
-                        </Form.Control.Feedback>   
-                  </Form.Group>
+                        </Form.Control.Feedback>
+                    </Form.Group>
                     <Button variant="primary" type="submit">
-                    Submit
+                        Submit
                     </Button>
-                    <span id = 'login-loading-container'>
-                    {this.state.isLoading ?<Spinner variant = 'dark' animation='border'/> : null}
+                    <span id='login-loading-container'>
+                        {this.state.isLoading ? <Spinner variant='dark' animation='border' /> : null}
                     </span>
-            </Form>
+                </Form>
             </>
         )
     }
 }
-const mapStateToProps = (state : IAppState) => {
+const mapStateToProps = (state: IAppState) => {
     return {
         auth: state.auth
     }
 }
 //This object definition will be used to map action creators to properties
 const mapDispatchToProps = {
-    loginSuccessful : loginSuccessful,
+    loginSuccessful: loginSuccessful,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(CreateNewJob);

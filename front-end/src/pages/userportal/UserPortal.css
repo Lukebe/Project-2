@@ -1,5 +1,6 @@
-.container{
-    border: 5px solid red;
+.userportal-container{
+    border: 1px solid #eee;
+    background-color: whitesmoke;
 }
 
 .card{
