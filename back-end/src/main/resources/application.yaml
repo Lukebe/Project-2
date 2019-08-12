@@ -7,7 +7,7 @@ spring:
     name: my-app
   datasource:    username: project2
     password: 190701-revature
-    url: jdbc:postgresql://rev-postgres.cpq4fhgvtmpk.us-east-2.rds.amazonaws.com:5432/project2?user=project2&password=190701-revature
+    url: jdbc:postgresql://rev-postgres.cpq4fhgvtmpk.us-east-2.rds.amazonaws.com:5432/project2
   jpa:
     hibernate:
       ddl-auto: update
