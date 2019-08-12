@@ -6,10 +6,12 @@
     width: 400px;
     line-height: 26px;
     margin-bottom: 10px;
+    float: left;
   }
   
   .flex-container  input {
     height: 20px;
     flex: 0 0 200px;
     margin-left: 10px;
+    float: right;
   }

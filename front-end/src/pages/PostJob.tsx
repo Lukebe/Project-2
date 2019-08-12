@@ -56,6 +56,17 @@ export default class PostJob extends Component<any, any>{
                 <input type="text" name="category" value="Item Category" />
                         </label>
 
+
+
+                        <label>
+
+                            
+                            Time Estimate:
+                <input type="number" name="timeEstimate" value="
+                time Estimate" />
+                        </label>
+
+
                         <label>
 
                             Status:
