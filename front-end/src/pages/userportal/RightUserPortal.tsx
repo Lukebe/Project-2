@@ -10,7 +10,6 @@ export default class LeftUserPortal extends Component <any, any>{
 
     render() {
         return(
-
             <BrowserRouter>
                 <div>
                     <Navigation />
@@ -18,8 +17,7 @@ export default class LeftUserPortal extends Component <any, any>{
                         <Route exact path="/userportal/search" component={Search} />
                         <Route exact path="/userportal/myjobs" component={MyJobs} />
                 </div>
-            </BrowserRouter>
-            
+            </BrowserRouter>      
         );
     }
 }
