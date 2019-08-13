@@ -3,14 +3,12 @@ package com.revature.models;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -21,22 +19,27 @@ public class Job {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int jobId;
-    @ManyToOne
-	private Users userCreated;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_created", referencedColumnName="user_id")
+	private int userCreated;
 	private String address;
 	private String description;
 	private Date dateCreated;
 	private Date dateAccepted;
 	private Date jobDateTime;
-    @ManyToOne
-    private Users userAccepted;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_accepted", referencedColumnName="user_id")
+    private int userAccepted;
 	private BigDecimal jobEarnings;
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category")
 	private Category category;
 	private Date timeEstimate;
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product")
 	private Product product;
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "status")
 	private Status status;
 	public int getJobId() {
 		return jobId;
@@ -46,11 +49,11 @@ public class Job {
 		this.jobId = jobId;
 	}
 
-	public Users getUserCreated() {
+	public int getUserCreated() {
 		return userCreated;
 	}
 
-	public void setUserCreated(Users userCreated) {
+	public void setUserCreated(int userCreated) {
 		this.userCreated = userCreated;
 	}
 
@@ -94,11 +97,11 @@ public class Job {
 		this.jobDateTime = jobDateTime;
 	}
 
-	public Users getUserAccepted() {
+	public int getUserAccepted() {
 		return userAccepted;
 	}
 
-	public void setUserAccepted(Users userAccepted) {
+	public void setUserAccepted(int userAccepted) {
 		this.userAccepted = userAccepted;
 	}
 
@@ -142,20 +145,25 @@ public class Job {
 		this.status = status;
 	}
 
+	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
+		result = prime * result + ((category == null) ? 0 : category.hashCode());
 		result = prime * result + ((dateAccepted == null) ? 0 : dateAccepted.hashCode());
 		result = prime * result + ((dateCreated == null) ? 0 : dateCreated.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((jobDateTime == null) ? 0 : jobDateTime.hashCode());
 		result = prime * result + ((jobEarnings == null) ? 0 : jobEarnings.hashCode());
 		result = prime * result + jobId;
+		result = prime * result + ((product == null) ? 0 : product.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((timeEstimate == null) ? 0 : timeEstimate.hashCode());
-		result = prime * result + ((userAccepted == null) ? 0 : userAccepted.hashCode());
-		result = prime * result + ((userCreated == null) ? 0 : userCreated.hashCode());
+		result = prime * result + userAccepted;
+		result = prime * result + userCreated;
 		return result;
 	}
 
@@ -172,6 +180,11 @@ public class Job {
 			if (other.address != null)
 				return false;
 		} else if (!address.equals(other.address))
+			return false;
+		if (category == null) {
+			if (other.category != null)
+				return false;
+		} else if (!category.equals(other.category))
 			return false;
 		if (dateAccepted == null) {
 			if (other.dateAccepted != null)
@@ -200,20 +213,24 @@ public class Job {
 			return false;
 		if (jobId != other.jobId)
 			return false;
+		if (product == null) {
+			if (other.product != null)
+				return false;
+		} else if (!product.equals(other.product))
+			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
+			return false;
 		if (timeEstimate == null) {
 			if (other.timeEstimate != null)
 				return false;
 		} else if (!timeEstimate.equals(other.timeEstimate))
 			return false;
-		if (userAccepted == null) {
-			if (other.userAccepted != null)
-				return false;
-		} else if (!userAccepted.equals(other.userAccepted))
+		if (userAccepted != other.userAccepted)
 			return false;
-		if (userCreated == null) {
-			if (other.userCreated != null)
-				return false;
-		} else if (!userCreated.equals(other.userCreated))
+		if (userCreated != other.userCreated)
 			return false;
 		return true;
 	}
@@ -226,8 +243,8 @@ public class Job {
 				+ timeEstimate + "]";
 	}
 
-	public Job(int jobId, Users userCreated, String address, String description, Date dateCreated, Date dateAccepted,
-			Date jobDateTime, Users userAccepted, BigDecimal jobEarnings, Category category, Date timeEstimate,
+	public Job(int jobId, int userCreated, String address, String description, Date dateCreated, Date dateAccepted,
+			Date jobDateTime, int userAccepted, BigDecimal jobEarnings, Category category, Date timeEstimate,
 			Product product, Status status) {
 		super();
 		this.jobId = jobId;
