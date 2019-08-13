@@ -27,11 +27,9 @@ public class Users {
 	private String lastname;
 	private String email;
 	private int rating;
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-	private List<Job> jobs;
 	@Autowired
 	public Users(int userId, String username, String password, String firstname, String lastname, String email,
-			int rating, List<Job> jobs) {
+			int rating) {
 		super();
 		this.userId = userId;
 		this.username = username;
@@ -40,7 +38,6 @@ public class Users {
 		this.lastname = lastname;
 		this.email = email;
 		this.rating = rating;
-		this.jobs = jobs;
 	}
 	public int getUserId() {
 		return userId;
@@ -84,19 +81,12 @@ public class Users {
 	public void setRating(int rating) {
 		this.rating = rating;
 	}
-	public List<Job> getJobs() {
-		return jobs;
-	}
-	public void setJobs(List<Job> jobs) {
-		this.jobs = jobs;
-	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-		result = prime * result + ((jobs == null) ? 0 : jobs.hashCode());
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + rating;
@@ -123,11 +113,6 @@ public class Users {
 				return false;
 		} else if (!firstname.equals(other.firstname))
 			return false;
-		if (jobs == null) {
-			if (other.jobs != null)
-				return false;
-		} else if (!jobs.equals(other.jobs))
-			return false;
 		if (lastname == null) {
 			if (other.lastname != null)
 				return false;
@@ -152,7 +137,7 @@ public class Users {
 	@Override
 	public String toString() {
 		return "Users [userId=" + userId + ", username=" + username + ", password=" + password + ", firstname="
-				+ firstname + ", lastname=" + lastname + ", email=" + email + ", rating=" + rating + ", jobs=" + jobs
+				+ firstname + ", lastname=" + lastname + ", email=" + email + ", rating=" + rating
 				+ "]";
 	}
 	public Users() {

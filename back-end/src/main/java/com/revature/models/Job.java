@@ -36,9 +36,10 @@ public class Job {
     @JoinColumn(name = "category")
 	private Category category;
 	private Date timeEstimate;
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne()
+    @JoinColumn(name = "product")
 	private Product product;
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne()
     @JoinColumn(name = "status")
 	private Status status;
 	public int getJobId() {

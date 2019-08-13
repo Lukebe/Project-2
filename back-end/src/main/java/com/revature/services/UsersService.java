@@ -20,6 +20,12 @@ public class UsersService {
 
 		// TODO Auto-generated constructor stub
 	}
+	
+	public UsersService() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public Users createUser(Users user) {
 		// Business Logic
 		// Ensuring the user has the privileges to create this thing

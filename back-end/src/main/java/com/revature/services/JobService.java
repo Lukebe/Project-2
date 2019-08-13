@@ -24,7 +24,6 @@ public class JobService {
 		// Ensuring that the values passed are valid
 		System.out.println("JOB CREATED WITH JID: " + job.getJobId());
 		System.out.println("JOB USER ACCEPTED: " + job.getUserAccepted() + " USER CREATED: " + job.getUserCreated());
-		System.out.println(job.toString());
 		return jobRepository.save(job);
 	}
 	public List<Job> selectAllJobs() {
