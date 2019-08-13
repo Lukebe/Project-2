@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -20,29 +20,26 @@ public class Job {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int jobId;
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_created",
-	joinColumns = @JoinColumn(name = "user_id"),
-	inverseJoinColumns = @JoinColumn(name = "user_created"))
+	@ManyToOne
+	@JoinColumn(name = "user_created_id")
 	private Users userCreated;
 	private String address;
 	private String description;
 	private Date dateCreated;
 	private Date dateAccepted;
 	private Date jobDateTime;
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_accepted",
-	joinColumns = @JoinColumn(name = "user_id"),
-	inverseJoinColumns = @JoinColumn(name = "user_accepted"))  
+	@ManyToOne
+	@JoinColumn(name = "user_accepted_id")
     private Users userAccepted;
 	private BigDecimal jobEarnings;
 	@OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category")
 	private Category category;
 	private Date timeEstimate;
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne()
+    @JoinColumn(name = "product")
 	private Product product;
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne()
     @JoinColumn(name = "status")
 	private Status status;
 	public int getJobId() {
