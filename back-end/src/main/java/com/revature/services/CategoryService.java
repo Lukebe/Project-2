@@ -4,6 +4,9 @@ package com.revature.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -25,15 +28,15 @@ public class CategoryService {
 		System.out.println("CATEGORY CREATED WITH CID: " + category.getCategoryId());
 		return categoryRepository.save(category);
 	}
-	public List<Category> listAll() {
+	public Page<Category> listAll(Pageable pageable) {
 		System.out.println("ALL CATEGORIES SELECTED");
-		return categoryRepository.findAll();
+		return categoryRepository.findAll(pageable);
 	}
 	public Category getById(int id) {
 		System.out.println("CATEGORY SELECTED WITH CID: " + id);
 		return categoryRepository.findById(id)
 				.orElseThrow(() -> 
-					new HttpClientErrorException(HttpStatus.NOT_FOUND));
+				new EmptyResultDataAccessException(0));
 	}
 	public String deleteCategory(int id) {
 		System.out.println("CATEGORY DELETED WITH CID: " + id);
@@ -41,7 +44,7 @@ public class CategoryService {
 			categoryRepository.deleteById(id);
 			return "DELETED CATEGORY WITH CID: " + id;
 		} else {
-			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+			throw new EmptyResultDataAccessException(0);
 		}
 	}
 }

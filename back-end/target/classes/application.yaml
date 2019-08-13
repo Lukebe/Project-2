@@ -19,3 +19,12 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE

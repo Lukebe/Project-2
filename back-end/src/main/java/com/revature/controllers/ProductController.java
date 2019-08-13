@@ -1,6 +1,6 @@
 package com.revature.controllers;
-
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
@@ -23,42 +23,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import com.revature.models.Users;
-import com.revature.services.UsersService;
+
+import com.revature.models.Product;
+import com.revature.services.ProductService;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("products")
 @CrossOrigin(allowedHeaders = "*", methods = {RequestMethod.POST,RequestMethod.GET,RequestMethod.PATCH,RequestMethod.DELETE})
-public class UsersController {
-	UsersService usersService;
+public class ProductController {
+	ProductService productService;
 	@Autowired
-	public UsersController(UsersService usersService) {
-		this.usersService = usersService;
+	public ProductController(ProductService productService) {
+		this.productService = productService;
 	}
 	@PostMapping("")
-	public  Users createUser(@RequestBody Users user) {
-		Users newUser = usersService.createUser(user);
-		return newUser;
+	public  Product createProduct(@RequestBody Product product) {
+		Product newProduct = productService.createProduct(product);
+		return newProduct;
 	}
 	@GetMapping("")
-	public Page<Users> getAllUsers(Pageable pageable) {
-		Page<Users> userList = usersService.listAll(pageable);
-		return userList;
-	}
-	@PatchMapping("")
-	public  Users updateUser(@RequestBody Users user) {
-		Users updatedUser = usersService.updateUser(user.getUserId(), user);
-		return updatedUser;
-	}
-	@DeleteMapping("/{id}")
-	public String deleteUserById(@PathVariable int id) {
-		String result = usersService.deleteUser(id);
-		return result;
+	public Page<Product> getAllProducts(Pageable pageable) {
+		Page<Product> productList = productService.selectAllProducts(pageable);
+		return productList;
 	}
 	@GetMapping("/{id}")
-	public Users getUserById(@PathVariable int id) {
-		Users user = usersService.getById(id);
-		return user;
+	public Product getProductById(@PathVariable int id) {
+		Product product = productService.selectProductById(id);
+		return product;
+	}
+	@PatchMapping("")
+	public  Product updateProduct(@RequestBody Product product) {
+		Product updatedProduct = productService.updateProduct(product.getProductId(), product);
+		return updatedProduct;
+	}
+	@DeleteMapping("/{id}")
+	public String deleteProductById(@PathVariable int id) {
+		String result = productService.deleteProduct(id);
+		return result;
 	}
 	/* EXCEPTION HANDLERS */
 	  @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR) //500

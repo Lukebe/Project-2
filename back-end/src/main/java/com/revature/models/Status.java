@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 @Entity
@@ -13,23 +14,24 @@ public class Status {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int statusId;
-	private StatusType status;
+	@NotNull
+	private String status;
 	@Autowired
 	public Status() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	public Status(int statusId, StatusType status) {
-		super();
+	public int getStatusId() {
+		return statusId;
+	}
+	public void setStatusId(int statusId) {
 		this.statusId = statusId;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
 		this.status = status;
 	}
-
-	@Override
-	public String toString() {
-		return "Status [statusId=" + statusId + ", status=" + status + "]";
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -38,7 +40,6 @@ public class Status {
 		result = prime * result + statusId;
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -48,34 +49,25 @@ public class Status {
 		if (getClass() != obj.getClass())
 			return false;
 		Status other = (Status) obj;
-		if (status != other.status)
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
 			return false;
 		if (statusId != other.statusId)
 			return false;
 		return true;
 	}
-
-	public int getStatusId() {
-		return statusId;
+	@Override
+	public String toString() {
+		return "Status [statusId=" + statusId + ", status=" + status + "]";
 	}
-
-	public void setStatusId(int statusId) {
+	public Status(int statusId, String status) {
+		super();
 		this.statusId = statusId;
-	}
-
-	public StatusType getStatus() {
-		return status;
-	}
-
-	public void setStatus(StatusType status) {
 		this.status = status;
 	}
-
-	public enum StatusType {
-		PENDING,
-		IN_PROGRESS,
-		COMPLETED,
-		CANCELLED
-	}
+	
+	
 
 }

@@ -6,10 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.revature.models.Job;
-import com.revature.models.Users;
+import com.revature.models.Product;
 
 @Repository
-public interface UsersRepository extends JpaRepository<Users, Integer>{
-	public Page<Users> findAll(Pageable pageable);
+public interface ProductRepository extends JpaRepository<Product, Integer>{
+	public Page<Product> findAll(Pageable pageable);
 }
-

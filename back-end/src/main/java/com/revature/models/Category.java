@@ -5,7 +5,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 @Entity
 @Table(name="category")
@@ -13,7 +15,11 @@ public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int categoryId;
+	@Length(min = 2, max = 60)
+	@NotNull
 	private String name;
+	@NotNull
+	@Length(min = 5, max = 200)
 	private String description;
 	public Category(int categoryId, String name, String description) {
 		super();
