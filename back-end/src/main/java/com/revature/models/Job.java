@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -20,23 +21,26 @@ public class Job {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int jobId;
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_created", referencedColumnName="user_id")
-	private int userCreated;
+    @JoinTable(name = "user_created",
+	joinColumns = @JoinColumn(name = "user_id"),
+	inverseJoinColumns = @JoinColumn(name = "user_created"))
+	private Users userCreated;
 	private String address;
 	private String description;
 	private Date dateCreated;
 	private Date dateAccepted;
 	private Date jobDateTime;
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_accepted", referencedColumnName="user_id")
-    private int userAccepted;
+    @JoinTable(name = "user_accepted",
+	joinColumns = @JoinColumn(name = "user_id"),
+	inverseJoinColumns = @JoinColumn(name = "user_accepted"))  
+    private Users userAccepted;
 	private BigDecimal jobEarnings;
 	@OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category")
 	private Category category;
 	private Date timeEstimate;
 	@OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product")
 	private Product product;
 	@OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "status")
@@ -49,11 +53,11 @@ public class Job {
 		this.jobId = jobId;
 	}
 
-	public int getUserCreated() {
+	public Users getUserCreated() {
 		return userCreated;
 	}
 
-	public void setUserCreated(int userCreated) {
+	public void setUserCreated(Users userCreated) {
 		this.userCreated = userCreated;
 	}
 
@@ -97,11 +101,11 @@ public class Job {
 		this.jobDateTime = jobDateTime;
 	}
 
-	public int getUserAccepted() {
+	public Users getUserAccepted() {
 		return userAccepted;
 	}
 
-	public void setUserAccepted(int userAccepted) {
+	public void setUserAccepted(Users userAccepted) {
 		this.userAccepted = userAccepted;
 	}
 
@@ -145,7 +149,15 @@ public class Job {
 		this.status = status;
 	}
 
-	
+
+
+	@Override
+	public String toString() {
+		return "Job [jobId=" + jobId + ", userCreated=" + userCreated + ", address=" + address + ", description="
+				+ description + ", dateCreated=" + dateCreated + ", dateAccepted=" + dateAccepted + ", jobDateTime="
+				+ jobDateTime + ", userAccepted=" + userAccepted + ", jobEarnings=" + jobEarnings + ", category="
+				+ category + ", timeEstimate=" + timeEstimate + ", product=" + product + ", status=" + status + "]";
+	}
 
 	@Override
 	public int hashCode() {
@@ -162,8 +174,8 @@ public class Job {
 		result = prime * result + ((product == null) ? 0 : product.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((timeEstimate == null) ? 0 : timeEstimate.hashCode());
-		result = prime * result + userAccepted;
-		result = prime * result + userCreated;
+		result = prime * result + ((userAccepted == null) ? 0 : userAccepted.hashCode());
+		result = prime * result + ((userCreated == null) ? 0 : userCreated.hashCode());
 		return result;
 	}
 
@@ -228,23 +240,21 @@ public class Job {
 				return false;
 		} else if (!timeEstimate.equals(other.timeEstimate))
 			return false;
-		if (userAccepted != other.userAccepted)
+		if (userAccepted == null) {
+			if (other.userAccepted != null)
+				return false;
+		} else if (!userAccepted.equals(other.userAccepted))
 			return false;
-		if (userCreated != other.userCreated)
+		if (userCreated == null) {
+			if (other.userCreated != null)
+				return false;
+		} else if (!userCreated.equals(other.userCreated))
 			return false;
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "Job [jobId=" + jobId + ", userCreated=" + userCreated + ", address=" + address + ", description="
-				+ description + ", dateCreated=" + dateCreated + ", dateAccepted=" + dateAccepted + ", jobDateTime="
-				+ jobDateTime + ", userAccepted=" + userAccepted + ", jobEarnings=" + jobEarnings + ", timeEstimate="
-				+ timeEstimate + "]";
-	}
-
-	public Job(int jobId, int userCreated, String address, String description, Date dateCreated, Date dateAccepted,
-			Date jobDateTime, int userAccepted, BigDecimal jobEarnings, Category category, Date timeEstimate,
+	public Job(int jobId, Users userCreated, String address, String description, Date dateCreated, Date dateAccepted,
+			Date jobDateTime, Users userAccepted, BigDecimal jobEarnings, Category category, Date timeEstimate,
 			Product product, Status status) {
 		super();
 		this.jobId = jobId;

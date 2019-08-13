@@ -23,6 +23,7 @@ public class JobService {
 		// Ensuring the user has the privileges to create this thing
 		// Ensuring that the values passed are valid
 		System.out.println("JOB CREATED WITH JID: " + job.getJobId());
+		System.out.println("JOB USER ACCEPTED: " + job.getUserAccepted() + " USER CREATED: " + job.getUserCreated());
 		
 		return jobRepository.save(job);
 	}
