@@ -1,17 +1,16 @@
 package com.revature.models;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
@@ -21,15 +20,28 @@ public class Users {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
 	private int userId;
+	@Length(min = 6, max = 50)
+	@NotNull
 	private String username;
+	@Length(min = 6, max = 75)
+	@NotNull
 	private String password;
+	@Length(max = 100)
+	@NotNull
 	private String firstname;
+	@Length(max = 100)
+	@NotNull
 	private String lastname;
+	@Email
+	@NotNull
 	private String email;
-	private int rating;
+	@Range(min = 0, max = 5)
+	@NotNull
+	private double rating;
 	@Autowired
-	public Users(int userId, String username, String password, String firstname, String lastname, String email,
-			int rating) {
+	public Users(int userId, @Length(min = 6, max = 50) String username, @Length(min = 6, max = 75) String password,
+			@Length(max = 100) String firstname, @Length(max = 100) String lastname, @Email String email,
+			@Range(min = 0, max = 5) double rating) {
 		super();
 		this.userId = userId;
 		this.username = username;
@@ -75,10 +87,10 @@ public class Users {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public int getRating() {
+	public double getRating() {
 		return rating;
 	}
-	public void setRating(int rating) {
+	public void setRating(double rating) {
 		this.rating = rating;
 	}
 	@Override
@@ -89,7 +101,9 @@ public class Users {
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + rating;
+		long temp;
+		temp = Double.doubleToLongBits(rating);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + userId;
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
@@ -123,7 +137,7 @@ public class Users {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
-		if (rating != other.rating)
+		if (Double.doubleToLongBits(rating) != Double.doubleToLongBits(other.rating))
 			return false;
 		if (userId != other.userId)
 			return false;
@@ -137,13 +151,14 @@ public class Users {
 	@Override
 	public String toString() {
 		return "Users [userId=" + userId + ", username=" + username + ", password=" + password + ", firstname="
-				+ firstname + ", lastname=" + lastname + ", email=" + email + ", rating=" + rating
-				+ "]";
+				+ firstname + ", lastname=" + lastname + ", email=" + email + ", rating=" + rating + "]";
 	}
 	public Users() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	
 	
 	
 	

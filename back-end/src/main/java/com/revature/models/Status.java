@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 @Entity
@@ -13,6 +14,7 @@ public class Status {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int statusId;
+	@NotNull
 	private String status;
 	@Autowired
 	public Status() {
