@@ -36,12 +36,12 @@ public class ProductService {
 	public Product selectProductById(int id) {
 		System.out.println("PRODUCT SELECTED WITH PID: " + id);
 		return productRepository.findById(id).orElseThrow(() -> 
-		new EmptyResultDataAccessException(0));
+		new HttpClientErrorException(HttpStatus.NOT_FOUND));
 	}
 	public Product updateProduct(int id, Product product) {
 		System.out.println("PRODUCT UPDATED WITH PARAMS: " + product.toString());
 		Product oldProduct = productRepository.findById(id).orElseThrow(() ->
-		new EmptyResultDataAccessException(0));
+		new HttpClientErrorException(HttpStatus.NOT_FOUND));
 		Product newProduct = (Product) Utils.merge(oldProduct, product);
 		//Save the product
 		return productRepository.save(newProduct);
@@ -55,7 +55,7 @@ public class ProductService {
 			productRepository.deleteById(id);
 			return "DELETED PRODUCT WITH PID: " + id;
 		} else {
-			throw new EmptyResultDataAccessException(0);
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
 	}
 
