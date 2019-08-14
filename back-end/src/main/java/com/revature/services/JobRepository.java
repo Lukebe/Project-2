@@ -15,9 +15,9 @@ import com.revature.models.Job;
 public interface JobRepository extends JpaRepository<Job, Integer>, JpaSpecificationExecutor<Job>{
 	public Page<Job> findAllByUserAcceptedUserId(int useraccepted, Pageable pageable);
 	public Page<Job> findAllByUserCreatedUserId(int usercreated, Pageable pageable);
-	public Page<Job> findAllByCategoryCategoryId(int usercreated, Pageable pageable);
-	public Page<Job> findAllByProductProductId(int usercreated, Pageable pageable);
-	public Page<Job> findAllByStatusStatusId(int usercreated, Pageable pageable);
+	public Page<Job> findAllByCategoryCategoryId(int category, Pageable pageable);
+	public Page<Job> findAllByProductProductId(int product, Pageable pageable);
+	public Page<Job> findAllByStatusStatusId(int status, Pageable pageable);
 	public Page<Job> findAll(Pageable pageable);
 	public Page<Job> findAll (Specification<Job> specification, Pageable pageable);
 

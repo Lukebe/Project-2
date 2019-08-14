@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.revature.models.Job;
+import com.revature.models.Product;
 import com.revature.utils.Utils;
 @Service
 public class JobService {
@@ -41,24 +42,40 @@ public class JobService {
 		return jobRepository.findById(id).orElseThrow(() -> 
 		new HttpClientErrorException(HttpStatus.NOT_FOUND));
 	}
-	public Page<Job> selectJobByUserCreatedId(int userCreatedId, Pageable pageable) {
+	public Page<Job> selectJobsByUserCreatedId(int userCreatedId, Pageable pageable) {
 		System.out.println("JOBS SELECTED WITH USER CREATED ID: " + userCreatedId);
 		return jobRepository.findAllByUserCreatedUserId(userCreatedId, pageable);
 	}
-	public Page<Job> selectJobByUserAcceptedId(int userAcceptedId, Pageable pageable) {
+	public Page<Job> selectJobsByUserAcceptedId(int userAcceptedId, Pageable pageable) {
 		System.out.println("JOBS SELECTED WITH USER ACCEPTED ID: " + userAcceptedId);
 		return jobRepository.findAllByUserAcceptedUserId(userAcceptedId, pageable);
+	}
+	public Page<Job> selectJob(int userAcceptedId, Pageable pageable) {
+		System.out.println("JOBS SELECTED WITH USER ACCEPTED ID: " + userAcceptedId);
+		return jobRepository.findAllByUserAcceptedUserId(userAcceptedId, pageable);
+	}
+	public Page<Job> selectJobsByCategoryId(int categoryId, Pageable pageable) {
+		System.out.println("JOBS SELECTED WITH CATEGORY ID: " + categoryId);
+		return jobRepository.findAllByCategoryCategoryId(categoryId, pageable);
+	}
+	public Page<Job> selectJobsByProductId(int productId, Pageable pageable) {
+		System.out.println("JOBS SELECTED WITH PRODUCT ID: " + productId);
+		return jobRepository.findAllByCategoryCategoryId(productId, pageable);
+	}
+	public Page<Job> selectJobsByStatusId(int statusId, Pageable pageable) {
+		System.out.println("JOBS SELECTED WITH STATUS ID: " + statusId);
+		return jobRepository.findAllByCategoryCategoryId(statusId, pageable);
 	}
 	public Job updateJob(int id, Job job) {
 		System.out.println("JOB UPDATED WITH PARAMS: " + job.toString());
 		Job oldJob = jobRepository.findById(id).orElseThrow(() ->
 		new HttpClientErrorException(HttpStatus.NOT_FOUND));
-		Job newJob = (Job) Utils.merge(oldJob, job);
-		//Save the job
-		return jobRepository.save(newJob);
+		Product newProduct = (Product) Utils.merge(oldJob, job);
+		//Save the product
+		return jobRepository.save(newProduct);
 		//Retrieve it again to show joined values correctly
-		//return jobRepository.findById(id).orElseThrow(() ->
-		//new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
+		//return productRepository.findById(id).orElseThrow(() ->
+		//new HttpClientErrorException(HttpStatus.NOT_FOUND));
 	}
 	public String deleteJob(int id) {
 		System.out.println("JOB DELETED WITH JID: " + id);
