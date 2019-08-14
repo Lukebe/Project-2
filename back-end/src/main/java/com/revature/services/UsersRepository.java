@@ -12,6 +12,7 @@ import com.revature.models.Users;
 public interface UsersRepository extends JpaRepository<Users, Integer>, JpaSpecificationExecutor<Users>{
 	public Page<Users> findAll(Pageable pageable);
 	public Page<Users> findAll (Specification<Users> specification, Pageable pageable);
+	public Users findByUsername(String username);
 
 }
 

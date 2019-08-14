@@ -1,6 +1,8 @@
 package com.revature.controllers;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -66,6 +69,20 @@ public class UsersController {
 	public Users getUserById(@PathVariable int id) {
 		Users user = usersService.getById(id);
 		return user;
+	}
+	@PostMapping("/login")
+	public HashMap<String,String> loginUser(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password) {
+		String token = usersService.loginUser(username, password);
+		Users user = usersService.getUserByUsername(username);
+		HashMap<String, String> response = new HashMap<String, String>();
+		response.put("username", user.getUsername());
+		response.put("firstname", user.getFirstname());
+		response.put("lastname", user.getLastname());
+		response.put("email", user.getEmail());
+		response.put("phone", user.getPhone());
+		response.put("rating", String.valueOf(user.getRating()));
+		response.put("token", token);
+		return response;
 	}
     @GetMapping("/search")
     public Page<Users> search(@RequestParam(value = "query") String search, Pageable pageable) {

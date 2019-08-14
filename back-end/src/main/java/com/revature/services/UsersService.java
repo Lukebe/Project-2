@@ -1,27 +1,40 @@
 package com.revature.services;
 
 
+import java.awt.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import com.revature.models.Users;
+import com.revature.security.AuthorizationException;
+import com.revature.security.JwtTokenProvider;
 import com.revature.utils.PasswordEncrypt;
 import com.revature.utils.Utils;
 @Service
-public class UsersService {
+public class UsersService implements UserDetailsService{
+	@Autowired
 	UsersRepository usersRepository;
 	@Autowired
-	public UsersService(UsersRepository usersRepository) {
-		this.usersRepository = usersRepository;
-	}
-	
-	public UsersService() {
-		super();
-	}
+	private JwtTokenProvider jwtTokenProvider;
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
 
 	public Users createUser(Users user) {
 		// Business Logic
@@ -67,5 +80,25 @@ public class UsersService {
 	public Page<Users> performSearch(Specification<Users> spec, Pageable pageable) {
 		return usersRepository.findAll(spec, pageable);
 	}
+	public Users getUserByUsername(String username) {
+		Users user = usersRepository.findByUsername(username);
+        return user;
+	}
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Users user = usersRepository.findByUsername(username);
+        Collection<GrantedAuthority> roleArray = new ArrayList<GrantedAuthority>();
+        roleArray.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(), roleArray);
+    }
+    public String loginUser(String username, String password) {
+        try {
+          authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+          return jwtTokenProvider.createToken(username);
+        } catch (AuthenticationException e) {
+          throw new AuthorizationException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+      }
 
 }
