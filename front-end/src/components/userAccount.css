@@ -1,6 +1,9 @@
 .userAccountDiv{
     background:rgb(23,123,123);
     float: right;
+    width: 100%;
+    height: 100%;
+
 
 }
 
@@ -10,8 +13,9 @@
 }
 
 .userAccountForm{
-
-    width: 1000px;
+    padding-left: 200px;
+    align-content: center;
+  
     padding-right: 200px;
 
 }
