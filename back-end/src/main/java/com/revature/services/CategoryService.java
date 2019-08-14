@@ -4,14 +4,15 @@ package com.revature.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.revature.models.Category;
+import com.revature.models.Job;
 @Service
 public class CategoryService {
 	CategoryRepository categoryRepository;
@@ -36,7 +37,7 @@ public class CategoryService {
 		System.out.println("CATEGORY SELECTED WITH CID: " + id);
 		return categoryRepository.findById(id)
 				.orElseThrow(() -> 
-				new EmptyResultDataAccessException(0));
+				new HttpClientErrorException(HttpStatus.NOT_FOUND));
 	}
 	public String deleteCategory(int id) {
 		System.out.println("CATEGORY DELETED WITH CID: " + id);
@@ -44,7 +45,10 @@ public class CategoryService {
 			categoryRepository.deleteById(id);
 			return "DELETED CATEGORY WITH CID: " + id;
 		} else {
-			throw new EmptyResultDataAccessException(0);
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
+	}
+	public Page<Category> performSearch(Specification<Category> spec, Pageable pageable) {
+		return categoryRepository.findAll(spec, pageable);
 	}
 }

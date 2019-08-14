@@ -1,15 +1,21 @@
 package com.revature.controllers;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,9 +27,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
+import com.revature.filter.GenericFilterBuilder;
 import com.revature.models.Job;
 import com.revature.services.JobService;
 
@@ -72,20 +82,44 @@ public class JobController {
 		Page<Job> jobsList = jobService.selectJobByUserCreatedId(id,pageable);
 		return jobsList;
 	}
+    @GetMapping("/search")
+    public Page<Job> search(@RequestParam(value = "query") String search, Pageable pageable) {
+        GenericFilterBuilder<Job> builder = new GenericFilterBuilder<Job>();
+        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+        Matcher matcher = pattern.matcher(search + ",");
+        while (matcher.find()) {
+            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+        }
+         
+        Specification<Job> spec = builder.build();
+        return jobService.performSearch(spec, pageable);
+    }
 	/* EXCEPTION HANDLERS */
-	  @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR) //500
 	  @ExceptionHandler({SQLException.class,DataAccessException.class})
-	  public String databaseError() {
-	    return "Database Error";
+	  public ResponseEntity<String> databaseError() {
+		  return ResponseEntity
+				  .status(500)
+				  .body("Database Error");
 	  }
-	  @ExceptionHandler(EmptyResultDataAccessException.class)
-	  @ResponseStatus(value=HttpStatus.NOT_FOUND,reason="Resource not found")
-	  public void notFound() { }
-	  
+	  @ExceptionHandler(HttpClientErrorException.class)
+	  public ResponseEntity<String> handleClientError(HttpClientErrorException e) {
+		  return ResponseEntity
+				  .status(e.getStatusCode())
+				  .body(e.getMessage());
+	  }
+	  @ExceptionHandler(HttpServerErrorException.class)
+	  public ResponseEntity<String> handleServerError(HttpServerErrorException e) {
+		  return ResponseEntity
+				  .status(e.getStatusCode())
+				  .body(e.getMessage());
+	  }
 	  @ExceptionHandler({NumberFormatException.class, HttpMessageNotReadableException.class,
-		  ConstraintViolationException.class})
-	  @ResponseStatus(value=HttpStatus.BAD_REQUEST)
-	  public void badRequest() { }
+		  ConstraintViolationException.class,InvalidDataAccessApiUsageException.class})
+	  public ResponseEntity<String> badRequest() {
+		  return ResponseEntity
+				  .status(400)
+				  .body("Bad Parameters");
+	  }
 	  
 
 }

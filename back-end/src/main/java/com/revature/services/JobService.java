@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -38,7 +39,7 @@ public class JobService {
 	public Job selectJobById(int id) {
 		System.out.println("JOB SELECTED WITH JID: " + id);
 		return jobRepository.findById(id).orElseThrow(() -> 
-		new EmptyResultDataAccessException(0));
+		new HttpClientErrorException(HttpStatus.NOT_FOUND));
 	}
 	public Page<Job> selectJobByUserCreatedId(int userCreatedId, Pageable pageable) {
 		System.out.println("JOBS SELECTED WITH USER CREATED ID: " + userCreatedId);
@@ -51,7 +52,7 @@ public class JobService {
 	public Job updateJob(int id, Job job) {
 		System.out.println("JOB UPDATED WITH PARAMS: " + job.toString());
 		Job oldJob = jobRepository.findById(id).orElseThrow(() ->
-		new EmptyResultDataAccessException(0));
+		new HttpClientErrorException(HttpStatus.NOT_FOUND));
 		Job newJob = (Job) Utils.merge(oldJob, job);
 		//Save the job
 		return jobRepository.save(newJob);
@@ -65,8 +66,11 @@ public class JobService {
 			jobRepository.deleteById(id);
 			return "DELETED JOB WITH JID: " + id;
 		} else {
-			throw new EmptyResultDataAccessException(0);
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
+	}
+	public Page<Job> performSearch(Specification<Job> spec, Pageable pageable) {
+		return jobRepository.findAll(spec, pageable);
 	}
 
 
