@@ -35,22 +35,11 @@ public class Users {
 	@Email
 	@NotNull
 	private String email;
+	@Length(min = 9, max = 9)
+	private String phone;
 	@Range(min = 0, max = 5)
 	@NotNull
 	private double rating;
-	@Autowired
-	public Users(int userId, @Length(min = 6, max = 50) String username, @Length(min = 6, max = 75) String password,
-			@Length(max = 100) String firstname, @Length(max = 100) String lastname, @Email String email,
-			@Range(min = 0, max = 5) double rating) {
-		super();
-		this.userId = userId;
-		this.username = username;
-		this.password = password;
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.email = email;
-		this.rating = rating;
-	}
 	public int getUserId() {
 		return userId;
 	}
@@ -87,6 +76,12 @@ public class Users {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 	public double getRating() {
 		return rating;
 	}
@@ -101,6 +96,7 @@ public class Users {
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(rating);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -137,6 +133,11 @@ public class Users {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
+		if (phone == null) {
+			if (other.phone != null)
+				return false;
+		} else if (!phone.equals(other.phone))
+			return false;
 		if (Double.doubleToLongBits(rating) != Double.doubleToLongBits(other.rating))
 			return false;
 		if (userId != other.userId)
@@ -151,15 +152,29 @@ public class Users {
 	@Override
 	public String toString() {
 		return "Users [userId=" + userId + ", username=" + username + ", password=" + password + ", firstname="
-				+ firstname + ", lastname=" + lastname + ", email=" + email + ", rating=" + rating + "]";
+				+ firstname + ", lastname=" + lastname + ", email=" + email + ", phone=" + phone + ", rating=" + rating
+			
+				+ "]";
+	}
+	@Autowired
+	public Users(int userId, @Length(min = 6, max = 50) @NotNull String username,
+			@Length(min = 6, max = 75) @NotNull String password, @Length(max = 100) @NotNull String firstname,
+			@Length(max = 100) @NotNull String lastname, @Email @NotNull String email,
+			@Length(min = 9, max = 9) String phone, @Range(min = 0, max = 5) @NotNull double rating) {
+		super();
+		this.userId = userId;
+		this.username = username;
+		this.password = password;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.email = email;
+		this.phone = phone;
+		this.rating = rating;
 	}
 	public Users() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	
-	
 	
 	
 

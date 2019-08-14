@@ -30,6 +30,10 @@ public class ProductService {
 		System.out.println("ALL PRODUCTS SELECTED");
 		return productRepository.findAll(pageable);
 	}
+	public Page<Product> selectProductByCategoryId(int categoryId,Pageable pageable) {
+		System.out.println("ALL PRODUCTS SELECTED WITH CATEGORY ID: " + categoryId);
+		return productRepository.findAllByCategoryCategoryId(categoryId, pageable);
+	}
 	public Product selectProductById(int id) {
 		System.out.println("PRODUCT SELECTED WITH PID: " + id);
 		return productRepository.findById(id).orElseThrow(() -> 

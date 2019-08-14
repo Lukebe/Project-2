@@ -78,6 +78,11 @@ public class ProductController {
         Specification<Product> spec = builder.build();
         return productService.performSearch(spec, pageable);
     }
+	@GetMapping("/category/{id}")
+	public Page<Product> getProductByCategoryId(@PathVariable int id, Pageable pageable) {
+		Page<Product> product = productService.selectProductByCategoryId(id, pageable);
+		return product;
+	}
 	/* EXCEPTION HANDLERS */
 	  @ExceptionHandler({SQLException.class,DataAccessException.class})
 	  public ResponseEntity<String> databaseError() {

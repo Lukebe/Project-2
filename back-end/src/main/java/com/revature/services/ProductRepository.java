@@ -12,5 +12,5 @@ import com.revature.models.Product;
 public interface ProductRepository extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product>{
 	public Page<Product> findAll(Pageable pageable);
 	public Page<Product> findAll (Specification<Product> specification, Pageable pageable);
-
+	public Page<Product> findAllByCategoryCategoryId(int category, Pageable pageable);
 }
