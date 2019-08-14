@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import com.revature.models.Job;
 import com.revature.models.Product;
 import com.revature.utils.Utils;
 
@@ -57,6 +59,9 @@ public class ProductService {
 		} else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
+	}
+	public Page<Product> performSearch(Specification<Product> spec, Pageable pageable) {
+		return productRepository.findAll(spec, pageable);
 	}
 
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -67,6 +68,9 @@ public class JobService {
 		} else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
+	}
+	public Page<Job> performSearch(Specification<Job> spec, Pageable pageable) {
+		return jobRepository.findAll(spec, pageable);
 	}
 
 
