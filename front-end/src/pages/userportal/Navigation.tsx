@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
+import { UserAccount } from '../../components/userAccount';
+
 
 export default class LeftUserPortal extends Component<any, any>{
 
@@ -25,7 +27,8 @@ export default class LeftUserPortal extends Component<any, any>{
   </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1">My Account</Dropdown.Item>
+                                <Dropdown.Item href="#/userAccount">My Account</Dropdown.Item>
+
                                 //The account page will modify the information stored in the User Class
                                 <Dropdown.Item href="#/action-2">My Jobs</Dropdown.Item>
 
@@ -33,7 +36,9 @@ export default class LeftUserPortal extends Component<any, any>{
                             </Dropdown.Menu>
                         </Dropdown>
                     </Navbar.Collapse>
+
                 </Navbar>
+
             </React.Fragment>
         );
     }

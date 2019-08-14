@@ -3,6 +3,7 @@ import './App.css';
 import { Switch, Route, HashRouter } from 'react-router-dom';
 import Landing from './pages/Landing';
 import PostJob from './pages/PostJob';
+import UserAccount from './components/userAccount';
 import Login from './pages/account/Login';
 import UserPortal from './pages/userportal/UserPortal';
 import store from './Store';
@@ -22,8 +23,9 @@ const App: React.FC = () => {
           <Route exact path="/" component={Landing} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/userportal" component={UserPortal} />
-           <Route exact path="/postJob" component={PostJob} />
-          <Route exact path = "/makerportal" component = {MakerPortal} />
+          <Route exact path="/postJob" component={PostJob} />
+          <Route exact path="/userAccount" component={UserAccount} />
+          <Route exact path="/makerportal" component={MakerPortal} />
         </Switch>
       </HashRouter>
     </Provider>

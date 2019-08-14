@@ -1,0 +1,17 @@
+.userAccountDiv{
+    background:rgb(23,123,123);
+    float: right;
+
+}
+
+.useraccountHeading{
+    text-align: center;
+    font-family: "Times New Roman", Times, serif;
+}
+
+.userAccountForm{
+
+    width: 1000px;
+    padding-right: 200px;
+
+}
