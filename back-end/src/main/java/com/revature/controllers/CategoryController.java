@@ -65,7 +65,7 @@ public class CategoryController {
     @GetMapping("/search")
     public Page<Category> search(@RequestParam(value = "query") String search, Pageable pageable) {
         GenericFilterBuilder<Category> builder = new GenericFilterBuilder<Category>();
-        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>|!)(\\w+?),");
         Matcher matcher = pattern.matcher(search + ",");
         while (matcher.find()) {
             builder.with(matcher.group(1), matcher.group(2), matcher.group(3));

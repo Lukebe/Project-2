@@ -74,23 +74,37 @@ public class JobController {
 	}
 	@GetMapping("/useraccepted/{id}")
 	public Page<Job> getJobsByUserAcceptedId(@PathVariable int id,Pageable pageable) {
-		Page<Job> jobsList = jobService.selectJobByUserAcceptedId(id,pageable);
+		Page<Job> jobsList = jobService.selectJobsByUserAcceptedId(id,pageable);
 		return jobsList;
 	}
 	@GetMapping("/usercreated/{id}")
 	public Page<Job> getJobsByUserCreatedId(@PathVariable int id, Pageable pageable) {
-		Page<Job> jobsList = jobService.selectJobByUserCreatedId(id,pageable);
+		Page<Job> jobsList = jobService.selectJobsByUserCreatedId(id,pageable);
+		return jobsList;
+	}
+	@GetMapping("/category/{id}")
+	public Page<Job> getJobsByCategoryId(@PathVariable int id, Pageable pageable) {
+		Page<Job> jobsList = jobService.selectJobsByCategoryId(id,pageable);
+		return jobsList;
+	}
+	@GetMapping("/product/{id}")
+	public Page<Job> getJobsByProductId(@PathVariable int id, Pageable pageable) {
+		Page<Job> jobsList = jobService.selectJobsByProductId(id, pageable);
+		return jobsList;
+	}
+	@GetMapping("/status/{id}")
+	public Page<Job> getJobsByStatusId(@PathVariable int id, Pageable pageable) {
+		Page<Job> jobsList = jobService.selectJobsByStatusId(id, pageable);
 		return jobsList;
 	}
     @GetMapping("/search")
     public Page<Job> search(@RequestParam(value = "query") String search, Pageable pageable) {
         GenericFilterBuilder<Job> builder = new GenericFilterBuilder<Job>();
-        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>|!)(\\w+?),");
         Matcher matcher = pattern.matcher(search + ",");
         while (matcher.find()) {
             builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
         }
-         
         Specification<Job> spec = builder.build();
         return jobService.performSearch(spec, pageable);
     }
