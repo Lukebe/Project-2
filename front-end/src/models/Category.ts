@@ -1,16 +1,16 @@
 class Category {
-    private id : number;
+    private categoryId : number;
     private name : string;
     private description : string;
 
-    constructor(data : any[]) {
-        this.id = data[0];
-        this.name = data[1];
-        this.description = data[2];
+    constructor(data : any) {
+        this.categoryId = data.categoryId;
+        this.name = data.name;
+        this.description = data.description;
     }
 
-    getId() : number {
-        return this.id;
+    getCategoryId() : number {
+        return this.categoryId;
     }
     getName() : string {
         return this.name;

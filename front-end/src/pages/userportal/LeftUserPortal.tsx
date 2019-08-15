@@ -10,7 +10,7 @@ export default class LeftUserPortal extends Component <any, any>{
 
 
     async handleRequest() {
-        const response = await APICall.GET('/');
+        const response = await APICall.GET('/','');
         //If there is an error, APICall methods will return an Error class instance.
         //This checks if there is an error and alerts message if there is.
         const message = await response instanceof Error ? response.message : response;

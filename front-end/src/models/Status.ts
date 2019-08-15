@@ -2,9 +2,9 @@ class Status {
     private statusId : number;
     private status : string;
 
-    constructor(data : any[]) {
-        this.statusId = data[0];
-        this.status = data[1];
+    constructor(data : any) {
+        this.statusId = data.statusId;
+        this.status = data.status;
     }
 
     getStatusId() : number {
