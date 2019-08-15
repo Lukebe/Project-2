@@ -34,7 +34,7 @@ import com.revature.services.ProductService;
 
 @RestController
 @RequestMapping("products")
-@CrossOrigin(allowedHeaders = "*", methods = {RequestMethod.POST,RequestMethod.GET,RequestMethod.PATCH,RequestMethod.DELETE})
+@CrossOrigin
 public class ProductController {
 	ProductService productService;
 	@Autowired

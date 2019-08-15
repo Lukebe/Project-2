@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import * as APICall from '../../utils/APICall';
-import {RequestState} from '../../utils/APICall';
 import { Button, Form, Spinner, Modal, Alert } from "react-bootstrap";
 import { IAuthState, IAppState, IAccountState } from '../../reducers';
 import { startRedirect, finishRedirect, loginSuccessful } from '../../actions/Authentication.action';
@@ -9,6 +8,7 @@ import { Redirect } from 'react-router';
 import './account.css';
 import { openForgetPassword, openSignup, openLogin, closeModal } from '../../actions/AccountModal.action';
 import { User } from '../../models/User';
+const RequestState = APICall.RequestState;
 export interface IReduxProps {
     //data from state store
     auth: IAuthState;
@@ -28,7 +28,7 @@ interface IState {
     validated : boolean;
     isValidationError: boolean;
     RequestStatus: {
-        status: RequestState,
+        status: APICall.RequestState,
         errorMsg: string,
 
     }
@@ -80,7 +80,7 @@ export class Login extends Component <IProps,IState>{
     async handleRequest() {
         this.setState({...this.state, RequestStatus: 
             {...this.state.RequestStatus, status: RequestState.FETCHING}});
-        const response = await APICall.POST('/login', {
+        let response = await APICall.POST('/users/login', {
             username: this.state.username,
             password: this.state.password
         });
@@ -96,7 +96,6 @@ export class Login extends Component <IProps,IState>{
             this.setState({...this.state, RequestStatus: 
                 {...this.state.RequestStatus,
                     status: RequestState.SUCCESSFUL}});
-            alert(response);
             this.props.loginSuccessful(new User(response));
             this.props.startRedirect();
             this.props.closeModal();

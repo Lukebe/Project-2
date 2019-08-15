@@ -9,7 +9,7 @@ import * as APICall from '../../utils/APICall';
 import { Button, Spinner } from "react-bootstrap";
 import InputGroup from 'react-bootstrap/InputGroup';
 import StandaloneSearchBox from "react-google-maps/lib/components/places/StandaloneSearchBox";
-import MapPicker from './MapPicker';
+import MapPicker from '../../components/MapPicker';
 
 export interface IAuthProps {
     //data from state store
@@ -28,6 +28,7 @@ interface IState {
     creationData: any;
     isAuthorized:boolean;
     isMapModalOpen: boolean;
+    openedLocation: string;
 }
 type IProps = IComponentProps & IAuthProps;
 class CreateNewJob extends Component <IAuthProps,IState>{
@@ -68,6 +69,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
             isCreated: false,
             creationData: [],
             isAuthorized: false,
+            openedLocation: '',
 
         };
     }
@@ -90,9 +92,20 @@ class CreateNewJob extends Component <IAuthProps,IState>{
         }
         this.setState({...this.state, validated: true});
       };
-    openMap = (event: any) => {
+    openMap = (event: any,location: string) => {
         event.preventDefault();
-        this.setState({...this.state, isMapModalOpen: true})
+        this.setState({...this.state, isMapModalOpen: true, openedLocation: location})
+    }
+    closeMap = (address : string) => {
+        console.log(address);
+        console.log(this.state.openedLocation);
+        if(this.state.openedLocation === "productlocation") {
+        this.setState({...this.state, isMapModalOpen: false,
+            formFields: {...this.state.formFields,productlocation: {value: address}}})
+        } else {
+            this.setState({...this.state, isMapModalOpen: false,
+                formFields: {...this.state.formFields,dropofflocation: {value: address}}})
+        }
     }
     changeHandler = (event: any) => {    
         const name = event.target.name;
@@ -107,11 +120,12 @@ class CreateNewJob extends Component <IAuthProps,IState>{
             }
         });
     }
+
     render() {
         return (
             <>
             {this.state.isMapModalOpen ?
-            <MapPicker/> : null}
+            <MapPicker closeCallback = {this.closeMap}/> : null}
             <h2>New Job Listing</h2>
             <Form noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
                     <Form.Group controlId="formProductLocation">
@@ -122,7 +136,9 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                         <Form.Control.Feedback type="invalid">
                             Please provide a valid address
                         </Form.Control.Feedback>
-                        <p className = "map-select-text">Or select your location <a href = "" onClick = {this.openMap}>on a map</a></p>
+                        <a href = "productlocation" about="productlocation" onClick = {(e)=> {this.openMap(e,'productlocation')}}>
+                            <i className = "material-icons large">map</i>
+                        </a>
                     </Form.Group>  
                     <Form.Group controlId="formDropoffLocation">
                         <Form.Label>Dropoff Location</Form.Label>
@@ -132,7 +148,9 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                         <Form.Control.Feedback type="invalid">
                             Please provide a valid address
                         </Form.Control.Feedback>
-                        <p className = "map-select-text">Or select your location <a href = "" onClick = {this.openMap}>on a map</a></p>
+                        <a href = "dropofflocation" about="dropofflocation" onClick = {(e)=> {this.openMap(e,'dropofflocation')}}>
+                            <i className = "material-icons large">map</i>
+                        </a>
                     </Form.Group> 
                     <Form.Group controlId="formProduct">
                         <Form.Label>Requested Product</Form.Label>

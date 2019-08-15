@@ -10,8 +10,6 @@ export default class LeftUserPortal extends Component <any, any>{
             <React.Fragment> 
                 <h1>Featured</h1>
                 <Featured />
-
-                
             </React.Fragment>
         );
     }

@@ -24,17 +24,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+    	 http
+         .sessionManagement()
+             .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    	 http.cors();
+    	http
+		.csrf().disable()
+        .authorizeRequests().antMatchers(HttpMethod.POST, "/users").permitAll()
+        .antMatchers(HttpMethod.POST, "/users/**").permitAll()
+    	.anyRequest().authenticated();
         http
-        .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http
-        //May have to disable for aws deployment
-        		.csrf().disable()
-                .authorizeRequests().antMatchers(HttpMethod.POST, "/users").permitAll()
-                .antMatchers(HttpMethod.POST, "/users/*").permitAll()
-            	.anyRequest().authenticated();
-                http
-                	.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
+        	.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
     }
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     @Override
