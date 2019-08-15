@@ -99,7 +99,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
     closeMap = (address : string) => {
         console.log(address);
         console.log(this.state.openedLocation);
-        if(this.state.openedLocation === "joblocation") {
+        if(this.state.openedLocation === "productlocation") {
         this.setState({...this.state, isMapModalOpen: false,
             formFields: {...this.state.formFields,productlocation: {value: address}}})
         } else {
@@ -136,8 +136,9 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                         <Form.Control.Feedback type="invalid">
                             Please provide a valid address
                         </Form.Control.Feedback>
-                        <p className = "map-select-text">Or select your location {' '}
-                        <a href = "joblocation" about = "joblocation" onClick = {(e)=> {this.openMap(e,'joblocation')}}>on a map</a></p>
+                        <a href = "productlocation" about="productlocation" onClick = {(e)=> {this.openMap(e,'productlocation')}}>
+                            <i className = "material-icons large">map</i>
+                        </a>
                     </Form.Group>  
                     <Form.Group controlId="formDropoffLocation">
                         <Form.Label>Dropoff Location</Form.Label>
@@ -147,8 +148,9 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                         <Form.Control.Feedback type="invalid">
                             Please provide a valid address
                         </Form.Control.Feedback>
-                        <p className = "map-select-text">Or select your location {' '}
-                        <a href = "dropofflocation" about="dropofflocation" onClick = {(e)=> {this.openMap(e,'dropofflocation')}}>on a map</a></p>
+                        <a href = "dropofflocation" about="dropofflocation" onClick = {(e)=> {this.openMap(e,'dropofflocation')}}>
+                            <i className = "material-icons large">map</i>
+                        </a>
                     </Form.Group> 
                     <Form.Group controlId="formProduct">
                         <Form.Label>Requested Product</Form.Label>
