@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Implementation-Title: Project2Backend
-Implementation-Version: 0.9.8-SNAPSHOT
+Implementation-Version: 1.0.0-SNAPSHOT
 Built-By: kylej
 Implementation-Vendor-Id: com.revature
 Build-Jdk: 1.8.0_211

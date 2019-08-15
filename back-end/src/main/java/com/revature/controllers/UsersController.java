@@ -15,8 +15,12 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,6 +39,7 @@ import org.springframework.web.client.HttpServerErrorException;
 
 import com.revature.filter.GenericFilterBuilder;
 import com.revature.models.Users;
+import com.revature.security.JwtTokenProvider;
 import com.revature.services.UsersService;
 
 @RestController
@@ -42,6 +47,10 @@ import com.revature.services.UsersService;
 @CrossOrigin(allowedHeaders = "*", methods = {RequestMethod.POST,RequestMethod.GET,RequestMethod.PATCH,RequestMethod.DELETE})
 public class UsersController {
 	UsersService usersService;
+	@Autowired
+	private JwtTokenProvider jwtTokenProvider;
+	@Autowired
+	private AuthenticationManager authenticationManager;
 	@Autowired
 	public UsersController(UsersService usersService) {
 		this.usersService = usersService;
@@ -75,7 +84,13 @@ public class UsersController {
 	public HashMap<String,String> loginUser(@RequestBody Map<String, String> json) {
 		String username = json.get("username");
 		String password = json.get("password");
-		String token = usersService.loginUser(username, password);
+		String token;
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            token = jwtTokenProvider.createToken(username);
+          } catch (AuthenticationException e) {
+          	throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "Invalid username/password");
+          }
 		Users user = usersService.getUserByUsername(username);
 		System.out.println("User logged in: " + user.getUsername());
 		HashMap<String, String> response = new HashMap<String, String>();

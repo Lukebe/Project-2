@@ -12,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,16 +27,8 @@ import com.revature.utils.Utils;
 public class UsersService implements UserDetailsService{
 	@Autowired
 	UsersRepository usersRepository;
-	@Autowired
-	private JwtTokenProvider jwtTokenProvider;
-	@Autowired
-	private AuthenticationManager authenticationManager;
-
-
+	
 	public Users createUser(Users user) {
-		// Business Logic
-		// Ensuring the user has the privileges to create this thing
-		// Ensuring that the values passed are valid
 		System.out.println("USER CREATED WITH UID: " + user.getUserId());
 		String oldpassword = user.getPassword();
 		user.setPassword(PasswordEncrypt.encrypt(oldpassword));
@@ -91,13 +81,5 @@ public class UsersService implements UserDetailsService{
         return new org.springframework.security.core.userdetails.User(user.getUsername(),
                 user.getPassword(), roleArray);
     }
-    public String loginUser(String username, String password) {
-        try {
-          authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-          return jwtTokenProvider.createToken(username);
-        } catch (AuthenticationException e) {
-        	throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "Invalid username/password");
-        }
-      }
 
 }
