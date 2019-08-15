@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import { Switch, Route, HashRouter } from 'react-router-dom';
 import Landing from './pages/Landing';
-import PostJob from './pages/PostJob';
+import PostJob from './components/PostJob';
 import UserAccount from './components/userAccount';
 import Login from './pages/account/Login';
 import UserPortal from './pages/userportal/UserPortal';
