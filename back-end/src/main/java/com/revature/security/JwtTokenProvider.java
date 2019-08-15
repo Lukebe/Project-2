@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.revature.services.UsersService;
 
@@ -83,7 +84,7 @@ public JwtTokenProvider(UsersService userService) {
       Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
       return true;
     } catch (JwtException | IllegalArgumentException e) {
-      throw new AuthorizationException("Expired or invalid JWT token", HttpStatus.UNAUTHORIZED);
+    	return false;
     }
   }
 

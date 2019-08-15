@@ -22,6 +22,7 @@ public class Users {
 	private int userId;
 	@Length(min = 6, max = 50)
 	@NotNull
+	@Column(unique = true)
 	private String username;
 	@Length(min = 6, max = 75)
 	@NotNull
@@ -35,7 +36,8 @@ public class Users {
 	@Email
 	@NotNull
 	private String email;
-	@Length(min = 9, max = 9)
+	@NotNull
+	@Length(min = 10, max = 10)
 	private String phone;
 	@Range(min = 0, max = 5)
 	@NotNull

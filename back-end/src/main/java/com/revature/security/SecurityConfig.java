@@ -30,8 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
         //May have to disable for aws deployment
         		.csrf().disable()
-                .authorizeRequests().antMatchers(HttpMethod.POST, "/users/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/users").permitAll()
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/users").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/*").permitAll()
             	.anyRequest().authenticated();
                 http
                 	.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));

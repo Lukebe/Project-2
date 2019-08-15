@@ -22,7 +22,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import com.revature.models.Users;
-import com.revature.security.AuthorizationException;
 import com.revature.security.JwtTokenProvider;
 import com.revature.utils.PasswordEncrypt;
 import com.revature.utils.Utils;
@@ -82,7 +81,7 @@ public class UsersService implements UserDetailsService{
 	}
 	public Users getUserByUsername(String username) {
 		Users user = usersRepository.findByUsername(username);
-        return user;
+		return user;
 	}
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -97,7 +96,7 @@ public class UsersService implements UserDetailsService{
           authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
           return jwtTokenProvider.createToken(username);
         } catch (AuthenticationException e) {
-          throw new AuthorizationException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
+        	throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "Invalid username/password");
         }
       }
 

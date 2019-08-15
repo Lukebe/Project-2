@@ -3,6 +3,7 @@ package com.revature.controllers;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,10 +72,14 @@ public class UsersController {
 		return user;
 	}
 	@PostMapping("/login")
-	public HashMap<String,String> loginUser(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password) {
+	public HashMap<String,String> loginUser(@RequestBody Map<String, String> json) {
+		String username = json.get("username");
+		String password = json.get("password");
 		String token = usersService.loginUser(username, password);
 		Users user = usersService.getUserByUsername(username);
+		System.out.println("User logged in: " + user.getUsername());
 		HashMap<String, String> response = new HashMap<String, String>();
+		response.put("userid", String.valueOf(user.getUserId()));
 		response.put("username", user.getUsername());
 		response.put("firstname", user.getFirstname());
 		response.put("lastname", user.getLastname());
@@ -109,6 +114,7 @@ public class UsersController {
 				  .status(e.getStatusCode())
 				  .body(e.getMessage());
 	  }
+	  
 	  @ExceptionHandler(HttpServerErrorException.class)
 	  public ResponseEntity<String> handleServerError(HttpServerErrorException e) {
 		  return ResponseEntity
@@ -117,7 +123,8 @@ public class UsersController {
 	  }
 	  @ExceptionHandler({NumberFormatException.class, HttpMessageNotReadableException.class,
 		  ConstraintViolationException.class,InvalidDataAccessApiUsageException.class})
-	  public ResponseEntity<String> badRequest() {
+	  public ResponseEntity<String> badRequest(Exception ex) {
+		  System.out.println(ex.getMessage());
 		  return ResponseEntity
 				  .status(400)
 				  .body("Bad Parameters");
