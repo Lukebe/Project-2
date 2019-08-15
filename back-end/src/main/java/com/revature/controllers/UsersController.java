@@ -1,16 +1,26 @@
 package com.revature.controllers;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,16 +31,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+
+import com.revature.filter.GenericFilterBuilder;
 import com.revature.models.Users;
+import com.revature.security.JwtTokenProvider;
 import com.revature.services.UsersService;
 
 @RestController
 @RequestMapping("users")
-@CrossOrigin(allowedHeaders = "*", methods = {RequestMethod.POST,RequestMethod.GET,RequestMethod.PATCH,RequestMethod.DELETE})
+@CrossOrigin
 public class UsersController {
 	UsersService usersService;
+	@Autowired
+	private JwtTokenProvider jwtTokenProvider;
+	@Autowired
+	private AuthenticationManager authenticationManager;
 	@Autowired
 	public UsersController(UsersService usersService) {
 		this.usersService = usersService;
@@ -60,18 +79,68 @@ public class UsersController {
 		Users user = usersService.getById(id);
 		return user;
 	}
+	@PostMapping("/login")
+	public HashMap<String,String> loginUser(@RequestBody Map<String, String> json) {
+		String username = json.get("username");
+		String password = json.get("password");
+		String token;
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            token = jwtTokenProvider.createToken(username);
+          } catch (AuthenticationException e) {
+          	throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "Invalid username/password");
+          }
+		Users user = usersService.getUserByUsername(username);
+		System.out.println("User logged in: " + user.getUsername());
+		HashMap<String, String> response = new HashMap<String, String>();
+		response.put("userid", String.valueOf(user.getUserId()));
+		response.put("username", user.getUsername());
+		response.put("firstname", user.getFirstname());
+		response.put("lastname", user.getLastname());
+		response.put("email", user.getEmail());
+		response.put("phone", user.getPhone());
+		response.put("rating", String.valueOf(user.getRating()));
+		response.put("token", token);
+		return response;
+	}
+    @GetMapping("/search")
+    public Page<Users> search(@RequestParam(value = "query") String search, Pageable pageable) {
+        GenericFilterBuilder<Users> builder = new GenericFilterBuilder<Users>();
+        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>|!)(\\w+?),");
+        Matcher matcher = pattern.matcher(search + ",");
+        while (matcher.find()) {
+            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+        }
+         
+        Specification<Users> spec = builder.build();
+        return usersService.performSearch(spec, pageable);
+    }
 	/* EXCEPTION HANDLERS */
-	  @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR) //500
 	  @ExceptionHandler({SQLException.class,DataAccessException.class})
-	  public String databaseError() {
-	    return "Database Error";
+	  public ResponseEntity<String> databaseError() {
+		  return ResponseEntity
+				  .status(500)
+				  .body("Database Error");
 	  }
-	  @ExceptionHandler(EmptyResultDataAccessException.class)
-	  @ResponseStatus(value=HttpStatus.NOT_FOUND,reason="Resource not found")
-	  public void notFound() { }
+	  @ExceptionHandler(HttpClientErrorException.class)
+	  public ResponseEntity<String> handleClientError(HttpClientErrorException e) {
+		  return ResponseEntity
+				  .status(e.getStatusCode())
+				  .body(e.getMessage());
+	  }
 	  
+	  @ExceptionHandler(HttpServerErrorException.class)
+	  public ResponseEntity<String> handleServerError(HttpServerErrorException e) {
+		  return ResponseEntity
+				  .status(e.getStatusCode())
+				  .body(e.getMessage());
+	  }
 	  @ExceptionHandler({NumberFormatException.class, HttpMessageNotReadableException.class,
-		  ConstraintViolationException.class})
-	  @ResponseStatus(value=HttpStatus.BAD_REQUEST)
-	  public void badRequest() { }
+		  ConstraintViolationException.class,InvalidDataAccessApiUsageException.class})
+	  public ResponseEntity<String> badRequest(Exception ex) {
+		  System.out.println(ex.getMessage());
+		  return ResponseEntity
+				  .status(400)
+				  .body("Bad Parameters");
+	  }
 }

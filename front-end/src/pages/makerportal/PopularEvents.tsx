@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import React, { Component } from "react";
 import { withState, withHandlers } from "recompose";
 import { Marker, InfoWindow, GoogleMap, withGoogleMap } from "react-google-maps";
-import { cpus } from "os";
 import testData from './MapTestData';
 //GEOCODE METHOD: https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&address=hello
 const googleMapURL : string = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&libraries=geometry,drawing,places';
@@ -66,8 +65,10 @@ const PlacesWithStandaloneSearchBox = compose(
     <StandaloneSearchBox
       ref={props.onSearchBoxMounted}
       bounds={props.bounds}
-      onPlacesChanged={props.onPlacesChanged}
-    >
+      onPlacesChanged={(e : any) => {     console.log(props.updateCallback);     
+        props.updateCallback(props.places);
+        props.onPlacesChanged(e);
+        }}>
       <input
         type="text"
         placeholder="Search for a location"
@@ -87,7 +88,6 @@ const PlacesWithStandaloneSearchBox = compose(
       />
     </StandaloneSearchBox>
     <ol>
-        {console.log(props.places)}
     {//props.places.map((arr : any) =>
         //<li key={arr.place_id}>
         //  {arr.formatted_address}
@@ -105,9 +105,7 @@ const PlacesWithStandaloneSearchBox = compose(
       center={{ lat: props.places[0]['geometry']['location']['lat'], lng: props.places[0]['geometry']['location']['lng'] }}
       zoom={props.zoom}
       ref={props.onMapMounted}
-      streetView = {false}
       options = {{backgroundColor: 'black',
-                  streetViewControl: false,
                   clickableIcons: true,
                   zoom: 15}}
     >
@@ -134,6 +132,7 @@ export interface IComponentProps {
 }
 interface IState {
     isFetching : boolean;
+    currentPlaces: any;
 }
 type IProps = IComponentProps & IAuthProps;
 class PopularEvents extends Component <IAuthProps,IState>{
@@ -142,13 +141,18 @@ class PopularEvents extends Component <IAuthProps,IState>{
         super(props);
         this.state = {
             isFetching: false,
+            currentPlaces: {},
         };
+    }
+     retrieveInformationFromMap = (obj : any) => {
+      this.setState({...this.state, currentPlaces: obj});
+      alert(obj);
     }
 
     render() {
         return (<>
         <h2>Popular Events</h2>
-<PlacesWithStandaloneSearchBox />
+<PlacesWithStandaloneSearchBox updateCallback = {this.retrieveInformationFromMap} places = {testData}/>
 </>
         )
     }

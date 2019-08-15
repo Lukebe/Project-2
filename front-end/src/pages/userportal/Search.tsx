@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Form, ListGroup, Card, Button } from 'react-bootstrap';
 
-
-export default class LeftUserPortal extends Component <any, any>{
+export default class Search extends Component <any, any>{
     constructor(props: any) {
         super(props);
 

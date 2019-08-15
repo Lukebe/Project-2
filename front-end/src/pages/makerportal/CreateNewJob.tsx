@@ -9,7 +9,7 @@ import * as APICall from '../../utils/APICall';
 import { Button, Spinner } from "react-bootstrap";
 import InputGroup from 'react-bootstrap/InputGroup';
 import StandaloneSearchBox from "react-google-maps/lib/components/places/StandaloneSearchBox";
-import MapPicker from './MapPicker';
+import MapPicker from '../../components/MapPicker';
 
 export interface IAuthProps {
     //data from state store
@@ -28,6 +28,7 @@ interface IState {
     creationData: any;
     isAuthorized: boolean;
     isMapModalOpen: boolean;
+    openedLocation: string;
 }
 type IProps = IComponentProps & IAuthProps;
 class CreateNewJob extends Component<IAuthProps, IState>{
@@ -68,6 +69,7 @@ class CreateNewJob extends Component<IAuthProps, IState>{
             isCreated: false,
             creationData: [],
             isAuthorized: false,
+            openedLocation: '',
 
         };
     }
@@ -90,11 +92,30 @@ class CreateNewJob extends Component<IAuthProps, IState>{
                 this.setState({ ...this.state, isLoading: false, creationData: returnData, isCreated: true });
             }
         }
+<<<<<<< HEAD
         this.setState({ ...this.state, validated: true });
     };
     openMap = (event: any) => {
         event.preventDefault();
         this.setState({ ...this.state, isMapModalOpen: true })
+=======
+        this.setState({...this.state, validated: true});
+      };
+    openMap = (event: any,location: string) => {
+        event.preventDefault();
+        this.setState({...this.state, isMapModalOpen: true, openedLocation: location})
+    }
+    closeMap = (address : string) => {
+        console.log(address);
+        console.log(this.state.openedLocation);
+        if(this.state.openedLocation === "productlocation") {
+        this.setState({...this.state, isMapModalOpen: false,
+            formFields: {...this.state.formFields,productlocation: {value: address}}})
+        } else {
+            this.setState({...this.state, isMapModalOpen: false,
+                formFields: {...this.state.formFields,dropofflocation: {value: address}}})
+        }
+>>>>>>> 5549edf14dfef4eefb28d7334997ed071e092d9e
     }
     changeHandler = (event: any) => {
         const name = event.target.name;
@@ -109,6 +130,7 @@ class CreateNewJob extends Component<IAuthProps, IState>{
             }
         });
     }
+
     render() {
         return (
             <>

@@ -11,7 +11,6 @@ export default class LeftUserPortal extends Component<any, any>{
         return (
             <React.Fragment>
                 <Navbar bg="light">
-                    <Navbar.Brand>Kutsies</Navbar.Brand>
                     <Nav className="mr-auto">
                         <Nav.Link as={Link} to="/">Home</Nav.Link>
                         <Nav.Link as={Link} to="/userportal/search">Search</Nav.Link>

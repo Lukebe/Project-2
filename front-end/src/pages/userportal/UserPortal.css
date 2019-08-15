@@ -16,3 +16,16 @@
 .datetime{
     font-size: 12px;
 }
+
+.cardContainer{
+
+}
+
+.userCardLink{
+    float: right;
+    
+}
+
+.userCardText{
+    float: left;
+}
