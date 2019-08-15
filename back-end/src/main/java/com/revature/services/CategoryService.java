@@ -1,8 +1,6 @@
 package com.revature.services;
 
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,17 +8,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-
 import com.revature.models.Category;
-import com.revature.models.Job;
 @Service
 public class CategoryService {
 	CategoryRepository categoryRepository;
 	@Autowired
 	public CategoryService(CategoryRepository categoryRepository) {
 		this.categoryRepository = categoryRepository;
-
-		// TODO Auto-generated constructor stub
 	}
 	public Category createCategory(Category category) {
 		// Business Logic
