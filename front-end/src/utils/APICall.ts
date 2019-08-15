@@ -1,10 +1,10 @@
 
 import axios from 'axios';
 import config from '../config.json';
-let requestConfig = {
+let requestConfig : any = {
     headers: {
       common: {
-        Authorization: (window.localStorage.getItem('token') || window.sessionStorage.getItem('token')),
+        Authorization: "Bearer " + (window.localStorage.getItem('token') || window.sessionStorage.getItem('token')),
         }
       }
     }
@@ -32,8 +32,7 @@ const GET = async (route: string = '/') => {
  * @returns Axios response data. Either returned as Error class or javascript Object.
  */
 const POST = async (route: string = '/', data : any = {}) => {
-    const configAndBody = {...requestConfig, data};
-    console.log(configAndBody);
+    if(route === '/users/login' || route === '/users') { requestConfig = {}}
     const responseData =  await axios.post(config.backend.serverURL + route, data, requestConfig)
         .then((response :any) => { return response} )
         .catch((error) => { return error.response });
@@ -46,29 +45,32 @@ const POST = async (route: string = '/', data : any = {}) => {
  * @returns Axios response data. Either returned as Error class or javascript Object.
  */
 const PATCH = async (route: string = '/', data : any = {}) => {
-    const configAndBody = {...requestConfig, data}
     const responseData =  await axios.patch(config.backend.serverURL + route, data, requestConfig)
-        .then((response :any) => { return response} )
+        .then((response :any) => { return response})
         .catch((error) => { return error.response });
-    return throwErrorOrReturn(await responseData);
+
 }
 //This function checks the response status code (ex 201) and returns an error if
 //it is not 200 or 201. If it is 200 or 201, returns the response data.
-const throwErrorOrReturn = (response : any) : Error | any => {
-  if(!response){
+const throwErrorOrReturn = (dataResponse : any) => {
+  if(!dataResponse){
     return new Error(config.messages.noServerResponse);
   }
-  switch(response.status){
-    case 200 | 201: 
-        return response.data;
+  switch(dataResponse.status){
     case 400:
-        return new Error(config.messages.badRequest)
+        return new Error(config.messages.badRequest);
     case 401:
         return new Error(config.messages.noAccess);
+    case 403:
+        return new Error(config.messages.badToken);
     case 404:
         return new Error(config.messages.notFound);
     case 500:
         return new Error(config.messages.internalServerError);
+    default:
+        console.log(dataResponse);
+        return dataResponse.data;
   }
 }
+
 export {GET, POST, PATCH};

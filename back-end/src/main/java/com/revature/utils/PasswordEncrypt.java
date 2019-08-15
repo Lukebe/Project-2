@@ -1,7 +1,5 @@
 package com.revature.utils;
 
-import java.security.NoSuchAlgorithmException;
-
 import org.mindrot.jbcrypt.BCrypt;
 
 public class PasswordEncrypt {

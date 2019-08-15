@@ -4,15 +4,17 @@ class User {
     private firstName : string;
     private lastName : string;
     private email : string;
+    private phone : string;
     private rating : number;
 
-    constructor(data : any[]) {
-        this.userId = data[0];
-        this.userName = data[1];
-        this.firstName = data[2];
-        this.lastName = data[3];
-        this.email = data[4];
-        this.rating = data[5];
+    constructor(data : any) {
+        this.userId = data.userid;
+        this.userName = data.username;
+        this.firstName = data.firstname;
+        this.lastName = data.lastname;
+        this.email = data.email;
+        this.phone = data.phone;
+        this.rating = data.rating;
     }
 
     getUserId() : number {
@@ -32,6 +34,9 @@ class User {
     }
     getEmail() : string {
         return this.email;
+    }
+    getPhone() : string {
+        return this.phone;
     }
     getRating() : number {
         return this.rating;

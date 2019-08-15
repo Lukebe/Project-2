@@ -1,39 +1,34 @@
 package com.revature.services;
 
 
-import java.util.List;
+import java.awt.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-
-import com.revature.models.Job;
-import com.revature.models.Product;
 import com.revature.models.Users;
+import com.revature.security.JwtTokenProvider;
 import com.revature.utils.PasswordEncrypt;
 import com.revature.utils.Utils;
 @Service
-public class UsersService {
-	UsersRepository usersRepository;
+public class UsersService implements UserDetailsService{
 	@Autowired
-	public UsersService(UsersRepository usersRepository) {
-		this.usersRepository = usersRepository;
-	}
+	UsersRepository usersRepository;
 	
-	public UsersService() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
 	public Users createUser(Users user) {
-		// Business Logic
-		// Ensuring the user has the privileges to create this thing
-		// Ensuring that the values passed are valid
 		System.out.println("USER CREATED WITH UID: " + user.getUserId());
 		String oldpassword = user.getPassword();
 		user.setPassword(PasswordEncrypt.encrypt(oldpassword));
@@ -74,5 +69,17 @@ public class UsersService {
 	public Page<Users> performSearch(Specification<Users> spec, Pageable pageable) {
 		return usersRepository.findAll(spec, pageable);
 	}
+	public Users getUserByUsername(String username) {
+		Users user = usersRepository.findByUsername(username);
+		return user;
+	}
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Users user = usersRepository.findByUsername(username);
+        Collection<GrantedAuthority> roleArray = new ArrayList<GrantedAuthority>();
+        roleArray.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(), roleArray);
+    }
 
 }
