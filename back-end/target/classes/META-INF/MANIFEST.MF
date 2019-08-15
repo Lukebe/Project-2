@@ -1,6 +1,7 @@
 Manifest-Version: 1.0
-Implementation-Title: Project2Backend
-Implementation-Version: 1.0.0-SNAPSHOT
+Implementation-Title: spring-boot-data-jpa
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: jae
 Implementation-Vendor-Id: com.revature
 Build-Jdk: 1.8.0_221
 Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
