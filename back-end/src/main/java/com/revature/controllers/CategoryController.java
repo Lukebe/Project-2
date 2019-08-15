@@ -33,7 +33,7 @@ import com.revature.services.CategoryService;
 
 @RestController
 @RequestMapping("categories")
-@CrossOrigin(allowedHeaders = "*", methods = {RequestMethod.POST,RequestMethod.GET,RequestMethod.PATCH,RequestMethod.DELETE})
+@CrossOrigin
 public class CategoryController {
 	CategoryService categoryService;
 	@Autowired

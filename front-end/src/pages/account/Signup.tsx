@@ -40,6 +40,7 @@ interface IState {
     firstName: string;
     lastName: string;
     email: string;
+    phone: string;
 }
 type IProps = IComponentProps & IReduxProps;
 export class Login extends Component <IProps,IState>{
@@ -61,6 +62,7 @@ export class Login extends Component <IProps,IState>{
             firstName: "",
             lastName: "",
             email: "",
+            phone: "",
         };
         this.handleUpdate = this.handleUpdate.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -68,6 +70,8 @@ export class Login extends Component <IProps,IState>{
     }
 
     handleSubmit(event:any) {  
+        this.setState({...this.state, 
+            RequestStatus: {...this.state.RequestStatus, status: RequestState.NOT_ACTIVE}});
         event.preventDefault();
         if (event.currentTarget.checkValidity() === false || this.state.password !== this.state.confirmPassword) {
             event.stopPropagation();
@@ -100,6 +104,7 @@ export class Login extends Component <IProps,IState>{
             firstname: this.state.firstName,
             lastname: this.state.lastName,
             email: this.state.email,
+            phone: this.state.phone,
             rating: 0
         });
         //If there is an error, APICall methods will return an Error class instance.
@@ -189,6 +194,16 @@ export class Login extends Component <IProps,IState>{
                             type="email" 
                             placeholder="Email Address" 
                             value={this.state.email}
+                            onChange={this.handleUpdate}/>
+                    </Form.Group>
+                    <Form.Group controlId="phone">
+                        <Form.Control 
+                            required
+                            size = "lg"
+                            type="phone"
+                            maxLength = {30} 
+                            placeholder="Phone Number" 
+                            value={this.state.phone}
                             onChange={this.handleUpdate}/>
                     </Form.Group>
                     <Form.Group controlId="password">

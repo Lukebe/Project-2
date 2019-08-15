@@ -1,11 +1,11 @@
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow } from "react-google-maps"
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { IAuthState, IAppState } from '../../reducers';
-import './Maker.css';
-import { loginSuccessful } from '../../actions/Authentication.action';
+import { IAuthState, IAppState } from '../reducers';
+import '../pages/makerportal/Maker.css';
+import { loginSuccessful } from '../actions/Authentication.action';
 import { Modal } from "react-bootstrap";
-import { withState, withHandlers } from "recompose";
+import { withState, withHandlers, withStateHandlers } from "recompose";
 //GEOCODE METHOD: https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&address=hello
 const googleMapURL : string = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&libraries=geometry,drawing,places';
 const { compose, withProps, lifecycle } = require("recompose");
@@ -19,6 +19,13 @@ const PlacesWithStandaloneSearchBox = compose(
     places : [],
   }),
   withState('zoom', 'onZoomChange', 8),
+  withStateHandlers(() => ({
+    openInfoWindowMarkerId: '',
+  }), {
+    onToggleOpen: ({ openInfoWindowMarkerId }) => (markerId) => ({
+      openInfoWindowMarkerId: markerId,
+    })
+  }),
   withHandlers(() => {
     const refs : any = {
       map: undefined,
@@ -37,16 +44,15 @@ const PlacesWithStandaloneSearchBox = compose(
         onSearchBoxMounted: (ref:any) => {
           refs.searchBox = ref;
         },
+        
         onPlacesChanged: () => {
           let places = refs.searchBox.getPlaces();
            places.forEach((element : any, index: number) => {
               if(isNaN(element.geometry.location.lat)){
-                  console.log(element.geometry.location.lat());
                   places[index].geometry.location.lat = element.geometry.location.lat();
                   places[index].geometry.location.lng = element.geometry.location.lng();
               }
           });
-          console.log(places);
           this.setState({
             places,
           });
@@ -58,7 +64,6 @@ const PlacesWithStandaloneSearchBox = compose(
   withGoogleMap
 )((props : any) =>
 <>
-{console.log(props.places)}
   <div data-standalone-searchbox="">
     <StandaloneSearchBox
       ref={props.onSearchBoxMounted}
@@ -79,6 +84,7 @@ const PlacesWithStandaloneSearchBox = compose(
           fontSize: `14px`,
           outline: `none`,
           textOverflow: `ellipses`,
+          position: 'absolute',
         }}
         
       />
@@ -108,13 +114,21 @@ const PlacesWithStandaloneSearchBox = compose(
                   clickableIcons: true,
                   zoom: 15}}
     >
-        {props.places.map((index: any) =>
-      <Marker
-        position={{ lat: index.geometry.location.lat, lng: index.geometry.location.lng }}
-        onClick={props.onToggleOpen}
+        {props.places.map((currElement: any, index: any) =>
+        <>
+      <Marker key = {index}
+        position={{ lat: currElement.geometry.location.lat, lng: currElement.geometry.location.lng }}
+        onClick={() => {props.onToggleOpen(index)}}
       >
-
+        {props.openInfoWindowMarkerId === index ?
+        <InfoWindow key = {index} onCloseClick={()=>props.onToggleOpen(index)}>
+          <p><img key = {index} src = {currElement.icon}/><strong>{currElement.name}</strong><br/>{currElement.formatted_address}
+          <br/><button onClick = {(e)=>{e.preventDefault(); console.log(currElement.formatted_address);
+            props.updateCallback(currElement.formatted_address)}}>
+              Choose this location</button></p>
+        </InfoWindow> : null}
       </Marker>
+      </>
         )}
     </GoogleMap>
     : null }
@@ -127,27 +141,35 @@ export interface IAuthProps {
     //Action creators from the dispatcher
 }
 export interface IComponentProps {
+    closeCallback: Function;
+
 }
 interface IState {
     isFetching : boolean;
+    address: string;
 }
 type IProps = IComponentProps & IAuthProps;
-class MapPicker extends Component <IAuthProps,IState>{
+class MapPicker extends Component <IProps,IState>{
 
     constructor(props: any) {
         super(props);
         this.state = {
             isFetching: false,
+            address: '',
         };
+    }
+    updateCallback = (address : string) =>{
+      this.setState({...this.state, address});
+      this.props.closeCallback(address);
     }
 
     render() {
         return (
-            <Modal show animation>
+            <Modal size="lg" show animation 
+            onHide = {() => this.props.closeCallback(this.state.address)}>
                 <Modal.Header><h2>Map Picker</h2></Modal.Header>
                 <Modal.Body>
-<p>Map Picker in Progress</p> 
-<PlacesWithStandaloneSearchBox/>
+<PlacesWithStandaloneSearchBox updateCallback = {this.updateCallback}/>
                 </Modal.Body> 
             </Modal>     )
     }

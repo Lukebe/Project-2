@@ -35,7 +35,7 @@ import com.revature.services.JobService;
 
 @RestController
 @RequestMapping("jobs")
-@CrossOrigin(allowedHeaders = "*", methods = {RequestMethod.POST,RequestMethod.GET,RequestMethod.PATCH,RequestMethod.DELETE})
+@CrossOrigin
 public class JobController {
 	JobService jobService;
 	@Autowired
