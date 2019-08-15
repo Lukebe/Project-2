@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Nav, Button, Tab, Row, Col, ListGroup } from 'react-bootstrap';
+import { ListGroup } from 'react-bootstrap';
 
 export default class MyJobs extends Component <any, any>{
 
