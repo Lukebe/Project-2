@@ -1,13 +1,6 @@
 
 import axios from 'axios';
 import config from '../config.json';
-let requestConfig : any = {
-    headers: {
-      common: {
-        Authorization: "Bearer " + (window.localStorage.getItem('token') || window.sessionStorage.getItem('token')),
-        }
-      }
-    }
 export enum RequestState {
         FETCHING,
         SUCCESSFUL,
@@ -19,7 +12,14 @@ export enum RequestState {
  * @param route URI to be called after location specified in config. Example (http://localhost:3000/route).
  * @returns Axios response data. Either returned as Error class or javascript Object.
  */
-const GET = async (route: string = '/') => {
+const GET = async (route: string = '/', token : string) => {
+    let requestConfig : any = {
+        headers: {
+          common: {
+            Authorization: "Bearer " + (token),
+            }
+          }
+        }
     const responseData = await axios.get(config.backend.serverURL + route,requestConfig)
         .then((response :any) => { return response} )
         .catch((error) => { return error.response });
@@ -31,7 +31,14 @@ const GET = async (route: string = '/') => {
  * @param data Javascript object that is send in request.body. Ex: {username: 'user', password: 'pass'}
  * @returns Axios response data. Either returned as Error class or javascript Object.
  */
-const POST = async (route: string = '/', data : any = {}) => {
+const POST = async (route: string = '/', data : any = {}, token : string = '') => {
+    let requestConfig : any = {
+        headers: {
+          common: {
+            Authorization: "Bearer " + (token),
+            }
+          }
+        }
     if(route === '/users/login' || route === '/users') { requestConfig = {}}
     const responseData =  await axios.post(config.backend.serverURL + route, data, requestConfig)
         .then((response :any) => { return response} )
@@ -44,7 +51,14 @@ const POST = async (route: string = '/', data : any = {}) => {
  * @param data Javascript object that is send in request.body. Ex: {name: 'me', email: 'example'}
  * @returns Axios response data. Either returned as Error class or javascript Object.
  */
-const PATCH = async (route: string = '/', data : any = {}) => {
+const PATCH = async (route: string = '/', data : any = {}, token : string) => {
+    let requestConfig : any = {
+        headers: {
+          common: {
+            Authorization: "Bearer " + (token),
+            }
+          }
+        }
     const responseData =  await axios.patch(config.backend.serverURL + route, data, requestConfig)
         .then((response :any) => { return response})
         .catch((error) => { return error.response });

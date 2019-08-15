@@ -7,3 +7,41 @@
     color: white;
     cursor: pointer;
 }
+.pac-container {
+    z-index: 1050 !important;
+}
+.pac-item {
+    line-height: 50px !important;
+    cursor: pointer;
+    height: 100%;
+    width: 100% !important;
+}
+.pac-item :hover {
+    color: #999 !important;
+}
+.map-picker-input {
+    width: 80%;
+    margin-top: 10px;
+}
+.map-picker-info-window-icon {
+    width: 2.7em;
+    height:2.2em;
+    padding-right: 5px;
+    float:left;
+    position:absolute;
+}
+.map-picker-info-window-name{
+    padding-bottom: 2px;
+    text-align:center;
+}
+.map-picker-info-window-address{
+    padding-top: 0px;
+    text-align:center;
+}
+.map-picker-info-window-button{
+    display:block;
+    margin: auto;
+    background-color: indigo;
+}
+.gm-style-iw {
+}

@@ -17,20 +17,20 @@ class Job {
     private product : Product;
     private status : Status;
 
-    constructor(data : any[]) {
-        this.jobId = data[0];
-        this.userCreated = data[1];
-        this.address = data[2];
+    constructor(data : any) {
+        this.jobId = data.jobId;
+        this.userCreated = new User(data.userCreated);
+        this.address = data.address;
         this.description = data[3];
-        this.dateCreated = new Date(data[4]);
-        this.dateAccepted = new Date(data[5]);
-        this.jobDateTime = new Date(data[6]);
-        this.userAccepted = new User(data[7]);
-        this.jobPrice = data[8];
-        this.category = data[9];
-        this.timeEstimate = new Date(data[10]);
-        this.product = new Product(data[11]);
-        this.status = new Status(data[12]);
+        this.dateCreated = new Date(data.dateCreated);
+        this.dateAccepted = new Date(data.dateAccepted);
+        this.jobDateTime = new Date(data.jobDateTime);
+        this.userAccepted = new User(data.userAccepted);
+        this.jobPrice = data.jobPrice;
+        this.category = new Category(data.category);
+        this.timeEstimate = new Date(data.timeEstimate);
+        this.product = new Product(data.product);
+        this.status = new Status(data.status);
     }
 
     getJobId() : number {

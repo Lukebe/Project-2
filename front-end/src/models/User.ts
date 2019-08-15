@@ -6,15 +6,17 @@ class User {
     private email : string;
     private phone : string;
     private rating : number;
+    private token : string;
 
     constructor(data : any) {
-        this.userId = data.userid;
+        this.userId = data.userId | data.userid;
         this.userName = data.username;
         this.firstName = data.firstname;
         this.lastName = data.lastname;
         this.email = data.email;
         this.phone = data.phone;
         this.rating = data.rating;
+        this.token = data.token;
     }
 
     getUserId() : number {
@@ -40,6 +42,9 @@ class User {
     }
     getRating() : number {
         return this.rating;
+    }
+    getToken() : string {
+        return this.token;
     }
 }
 export {User}

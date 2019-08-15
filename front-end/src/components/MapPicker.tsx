@@ -3,8 +3,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { IAuthState, IAppState } from '../reducers';
 import '../pages/makerportal/Maker.css';
+import Axios from 'axios';
 import { loginSuccessful } from '../actions/Authentication.action';
-import { Modal } from "react-bootstrap";
+import { Modal, Form, Spinner, Button } from "react-bootstrap";
 import { withState, withHandlers, withStateHandlers } from "recompose";
 //GEOCODE METHOD: https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&address=hello
 const googleMapURL : string = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&libraries=geometry,drawing,places';
@@ -13,12 +14,13 @@ const { StandaloneSearchBox } = require("react-google-maps/lib/components/places
 const PlacesWithStandaloneSearchBox = compose(
   withProps({
     googleMapURL,
-    loadingElement: <div style={{ height: `100%` }} />,
+    loadingElement: <Spinner animation = "border" variant = "dark"/>,
     containerElement: <div style={{ height: `400px` }} />,
-    mapElement: <div style={{ height: `100%` }} />,
+    mapElement: <div style={{ height: `80%` }} />,
     places : [],
+    zoom: 3,
+    centerPlace : {geometry: {location: {lat: 37.0902, lng: -97.922211}}},
   }),
-  withState('zoom', 'onZoomChange', 8),
   withStateHandlers(() => ({
     openInfoWindowMarkerId: '',
   }), {
@@ -44,7 +46,9 @@ const PlacesWithStandaloneSearchBox = compose(
         onSearchBoxMounted: (ref:any) => {
           refs.searchBox = ref;
         },
-        
+        onClick: async (e:any) => {
+         console.log(e);
+        },
         onPlacesChanged: () => {
           let places = refs.searchBox.getPlaces();
            places.forEach((element : any, index: number) => {
@@ -54,8 +58,11 @@ const PlacesWithStandaloneSearchBox = compose(
               }
           });
           this.setState({
-            places,
+            places, zoom: 15
           });
+          if(places[0]) {
+          this.setState({centerPlace: places[0]})
+          }
         },
       })
     },
@@ -64,30 +71,14 @@ const PlacesWithStandaloneSearchBox = compose(
   withGoogleMap
 )((props : any) =>
 <>
-  <div data-standalone-searchbox="">
     <StandaloneSearchBox
       ref={props.onSearchBoxMounted}
       bounds={props.bounds}
       onPlacesChanged={props.onPlacesChanged}
     >
-      <input
-        type="text"
-        placeholder="Search for a location"
-        style={{
-          boxSizing: `border-box`,
-          border: `1px solid transparent`,
-          width: `240px`,
-          height: `32px`,
-          padding: `0 12px`,
-          borderRadius: `3px`,
-          boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-          fontSize: `14px`,
-          outline: `none`,
-          textOverflow: `ellipses`,
-          position: 'absolute',
-        }}
-        
-      />
+             <Form.Control className = "map-picker-input" required size="lg" type="text" 
+                          placeholder = "Search for a location" name="dropofflocation"/>
+
     </StandaloneSearchBox>
     <ol>
         {console.log(props.places)}
@@ -101,37 +92,42 @@ const PlacesWithStandaloneSearchBox = compose(
       //) 
     }
     </ol>
-    </div>
     {console.log(props.places)}
-       { (props.places[0]) ? 
+    <div className = "map-picker-map">
     <GoogleMap
-      center={{ lat: props.places[0]['geometry']['location']['lat'], lng: props.places[0]['geometry']['location']['lng'] }}
+      center={{lat: props.centerPlace['geometry']['location']['lat'], lng: props.centerPlace['geometry']['location']['lng']}}
       zoom={props.zoom}
       ref={props.onMapMounted}
-      streetView = {false}
+      onClick = {props.onClick}
       options = {{backgroundColor: 'black',
                   streetViewControl: false,
                   clickableIcons: true,
-                  zoom: 15}}
+                  }}
     >
-        {props.places.map((currElement: any, index: any) =>
+             { (props.places[0])?
+
+      props.places.map((currElement: any, index: any) => 
         <>
       <Marker key = {index}
         position={{ lat: currElement.geometry.location.lat, lng: currElement.geometry.location.lng }}
         onClick={() => {props.onToggleOpen(index)}}
       >
         {props.openInfoWindowMarkerId === index ?
-        <InfoWindow key = {index} onCloseClick={()=>props.onToggleOpen(index)}>
-          <p><img key = {index} src = {currElement.icon}/><strong>{currElement.name}</strong><br/>{currElement.formatted_address}
-          <br/><button onClick = {(e)=>{e.preventDefault(); console.log(currElement.formatted_address);
+        <InfoWindow key = {index} onCloseClick={()=>props.onToggleOpen(index)}><>
+          <img className = "map-picker-info-window-icon" key = {index} src = {currElement.icon}/>
+          <p className = "map-picker-info-window-name"><strong>{currElement.name}</strong>
+          </p><p className = "map-picker-info-window-address">{currElement.formatted_address}
+          </p><Button className = "map-picker-info-window-button"
+          onClick = {(e : any)=>{e.preventDefault(); console.log(currElement.formatted_address);
             props.updateCallback(currElement.formatted_address)}}>
-              Choose this location</button></p>
+              Choose this location</Button></>
         </InfoWindow> : null}
       </Marker>
       </>
-        )}
+      )
+      : null }
     </GoogleMap>
-    : null }
+    </div>
     </>
 );
 export interface IAuthProps {
