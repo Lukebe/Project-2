@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, unstable_Profiler } from 'react';
 //Import interfaces from reducers
 import { IAppState, IAuthState } from '../reducers';
 //Import action creators you want to reference
@@ -8,8 +8,10 @@ import {
 } from '../actions/Authentication.action';
 //Import connect function from redux, this connects global store to component.
 import { connect } from 'react-redux';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Card } from 'react-bootstrap';
 import './userAccount.css';
+import Profile from '../resources/images/profile.jpg';
+import { ListGroup } from 'react-bootstrap';
 //'./components/userAccount';
 
 
@@ -26,59 +28,44 @@ export interface IAuthProps {
 
 }
 export class UserAccount extends Component<IAuthProps, IState> {
-    state: IState = {
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            userName: "tampastudent",
+            password: "revature",
+            phone: "813-555-1212",
+            firstName: "Katie",
+            lastName: "Class",
+            rating: .80
+
+
+
+        }
     }
+
     render() {
         return (
-            <>
-                {//Returns email from auth.userProfile in redux state
-                }
-                <p>{this.props.auth.userProfile.getEmail}</p>
-                <div className="userAccountDiv">
-                    <h1 className="useraccountHeading">User Account Information</h1>
-                    <Form className="userAccountForm">
-                        <Form.Group controlId="formBasicEmail">
-                            <Form.Label>Email</Form.Label>
-                            <Form.Label>{this.props.auth.userProfile.getEmail}</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" />
-                            <Form.Text className="text-muted">
-                            </Form.Text>
-                        </Form.Group>
 
-                        <Form.Group controlId="formBasicPassword">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" />
-                        </Form.Group>
+            <div className="userAccountContainer">
+                <h1 className="useraccountHeading">User Account Information</h1>
+                <div className="userAccountContainerCard">
+                    <Card style={{ width: '18rem' }}>
+                        <Card.Img variant="top" src={Profile} />
+                        <Card.Body>
+                            <Card.Title>"Hello First Name"</Card.Title>
+                            <ListGroup variant="flush">
+                                <ListGroup.Item>First Last Name</ListGroup.Item>
 
-
-                        <Form.Group controlId="formFirstName">
-                            <Form.Label>First Name</Form.Label>
-                            <Form.Control type="firstName" placeholder="First Name" />
-                        </Form.Group>
-
-
-                        <Form.Group controlId="formLastName">
-                            <Form.Label>Last Name</Form.Label>
-                            <Form.Control type="password" placeholder="Last Name" />
-                        </Form.Group>
-
-
-                        <Form.Group controlId="formPhone">
-                            <Form.Label>Phone</Form.Label>
-                            <Form.Control type="phone" placeholder="Phone Number" />
-                        </Form.Group>
-
-
-
-
-                        <Button variant="primary" type="submit">
-                            Submit
-  </Button>
-                    </Form>
+                                <ListGroup.Item>Phone Number</ListGroup.Item>
+                                <ListGroup.Item>Email</ListGroup.Item>
+                                <ListGroup.Item>Rating</ListGroup.Item>
+                            </ListGroup>
+                            <Button variant="primary">Go somewhere</Button>
+                        </Card.Body>
+                    </Card>
                 </div>
+            </div>
 
-
-            </>
         );
     }
 }
