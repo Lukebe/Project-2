@@ -16,11 +16,9 @@ export default class PostJob extends Component<any, any>{
 
     render() {
         return (
-            <div><form>
+            <div className = "flex-container"><form>
 
-            <label>
-                     <input type="text"  value="address" />
-                </label>
+            <h1>Post a Job</h1>
 
                 <label>
                     Address:  <input type="text" name="address" value="address" />
@@ -75,9 +73,10 @@ export default class PostJob extends Component<any, any>{
                     Status:
         <input type="text" name="status" value="New" />
                 </label>
-
+                <div className="postJobButton">
                 <input type="button" value="Submit" />
                 <input type="button" value="Cancel" />
+                </div>
             </form></div>
             
         );

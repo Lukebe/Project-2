@@ -1,3 +1,9 @@
+.postJobButton{
+  text-align: center;
+  margin: auto;
+}
+
+
 label{
   background: rgb(23,123,123);
  text-align: right;
@@ -6,6 +12,11 @@ label{
   float: left;
 
  
+}
+
+h1{
+text-align: center;
+
 }
 
 .flex-container {
