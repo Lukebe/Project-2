@@ -1,6 +1,7 @@
 package com.revature.models;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -12,7 +13,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
+import org.hibernate.validator.constraints.time.DurationMax;
+import org.hibernate.validator.constraints.time.DurationMin;
 import org.springframework.beans.factory.annotation.Autowired;
 @Entity
 @Table(name="jobs")
@@ -22,130 +28,63 @@ public class Job {
 	private int jobId;
 	@ManyToOne
 	@JoinColumn(name = "user_created_id")
+	@NotNull
 	private Users userCreated;
+	@Length(min = 5, max = 150)
+	@NotNull
 	private String address;
+	@Length(max = 500)
+	@NotNull
 	private String description;
+	@NotNull
 	private Date dateCreated;
 	private Date dateAccepted;
+	@NotNull
 	private Date jobDateTime;
 	@ManyToOne
 	@JoinColumn(name = "user_accepted_id")
     private Users userAccepted;
+	@NotNull
+	@Range(min = 1, max = 100000)
 	private BigDecimal jobEarnings;
 	@OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category")
+	@NotNull
 	private Category category;
-	private Date timeEstimate;
+	@DurationMin(minutes = 10)
+	@DurationMax(days = 7)	
+	@NotNull
+	private Duration timeEstimate;
 	@OneToOne()
     @JoinColumn(name = "product")
+	@NotNull
 	private Product product;
 	@OneToOne()
     @JoinColumn(name = "status")
+	@NotNull
 	private Status status;
-	public int getJobId() {
-		return jobId;
-	}
+
 	
-	public void setJobId(int jobId) {
+	public Job(int jobId, @NotNull Users userCreated, @Length(min = 5, max = 100) String address,
+			@Length(min = 5, max = 500) String description, @NotNull Date dateCreated, Date dateAccepted,
+			@NotNull Date jobDateTime, Users userAccepted, @Range(min = 1, max = 100000) BigDecimal jobEarnings,
+			@NotNull Category category, @DurationMin(minutes = 10) @DurationMax(days = 7) Duration timeEstimate,
+			@NotNull Product product, @NotNull Status status) {
+		super();
 		this.jobId = jobId;
-	}
-
-	public Users getUserCreated() {
-		return userCreated;
-	}
-
-	public void setUserCreated(Users userCreated) {
 		this.userCreated = userCreated;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
 		this.address = address;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-
-	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
-	}
-
-	public Date getDateAccepted() {
-		return dateAccepted;
-	}
-
-	public void setDateAccepted(Date dateAccepted) {
 		this.dateAccepted = dateAccepted;
-	}
-
-	public Date getJobDateTime() {
-		return jobDateTime;
-	}
-
-	public void setJobDateTime(Date jobDateTime) {
 		this.jobDateTime = jobDateTime;
-	}
-
-	public Users getUserAccepted() {
-		return userAccepted;
-	}
-
-	public void setUserAccepted(Users userAccepted) {
 		this.userAccepted = userAccepted;
-	}
-
-	public BigDecimal getJobEarnings() {
-		return jobEarnings;
-	}
-
-	public void setJobEarnings(BigDecimal jobEarnings) {
 		this.jobEarnings = jobEarnings;
-	}
-
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
 		this.category = category;
-	}
-
-	public Date getTimeEstimate() {
-		return timeEstimate;
-	}
-
-	public void setTimeEstimate(Date timeEstimate) {
 		this.timeEstimate = timeEstimate;
-	}
-
-	public Product getProduct() {
-		return product;
-	}
-
-	public void setProduct(Product product) {
 		this.product = product;
-	}
-
-	public Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
 		this.status = status;
 	}
-
 
 
 	@Override
@@ -155,6 +94,7 @@ public class Job {
 				+ jobDateTime + ", userAccepted=" + userAccepted + ", jobEarnings=" + jobEarnings + ", category="
 				+ category + ", timeEstimate=" + timeEstimate + ", product=" + product + ", status=" + status + "]";
 	}
+
 
 	@Override
 	public int hashCode() {
@@ -175,6 +115,7 @@ public class Job {
 		result = prime * result + ((userCreated == null) ? 0 : userCreated.hashCode());
 		return result;
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -250,24 +191,136 @@ public class Job {
 		return true;
 	}
 
-	public Job(int jobId, Users userCreated, String address, String description, Date dateCreated, Date dateAccepted,
-			Date jobDateTime, Users userAccepted, BigDecimal jobEarnings, Category category, Date timeEstimate,
-			Product product, Status status) {
-		super();
+
+	public int getJobId() {
+		return jobId;
+	}
+
+
+	public void setJobId(int jobId) {
 		this.jobId = jobId;
+	}
+
+
+	public Users getUserCreated() {
+		return userCreated;
+	}
+
+
+	public void setUserCreated(Users userCreated) {
 		this.userCreated = userCreated;
+	}
+
+
+	public String getAddress() {
+		return address;
+	}
+
+
+	public void setAddress(String address) {
 		this.address = address;
+	}
+
+
+	public String getDescription() {
+		return description;
+	}
+
+
+	public void setDescription(String description) {
 		this.description = description;
+	}
+
+
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+
+
+	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
+	}
+
+
+	public Date getDateAccepted() {
+		return dateAccepted;
+	}
+
+
+	public void setDateAccepted(Date dateAccepted) {
 		this.dateAccepted = dateAccepted;
+	}
+
+
+	public Date getJobDateTime() {
+		return jobDateTime;
+	}
+
+
+	public void setJobDateTime(Date jobDateTime) {
 		this.jobDateTime = jobDateTime;
+	}
+
+
+	public Users getUserAccepted() {
+		return userAccepted;
+	}
+
+
+	public void setUserAccepted(Users userAccepted) {
 		this.userAccepted = userAccepted;
+	}
+
+
+	public BigDecimal getJobEarnings() {
+		return jobEarnings;
+	}
+
+
+	public void setJobEarnings(BigDecimal jobEarnings) {
 		this.jobEarnings = jobEarnings;
+	}
+
+
+	public Category getCategory() {
+		return category;
+	}
+
+
+	public void setCategory(Category category) {
 		this.category = category;
+	}
+
+
+	public Duration getTimeEstimate() {
+		return timeEstimate;
+	}
+
+
+	public void setTimeEstimate(Duration timeEstimate) {
 		this.timeEstimate = timeEstimate;
+	}
+
+
+	public Product getProduct() {
+		return product;
+	}
+
+
+	public void setProduct(Product product) {
 		this.product = product;
+	}
+
+
+	public Status getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(Status status) {
 		this.status = status;
 	}
+
 
 	@Autowired
 	public Job() {

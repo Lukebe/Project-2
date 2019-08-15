@@ -32,9 +32,9 @@ const GET = async (route: string = '/') => {
  * @returns Axios response data. Either returned as Error class or javascript Object.
  */
 const POST = async (route: string = '/', data : any = {}) => {
-    const configAndBody = {...requestConfig, body: data};
+    const configAndBody = {...requestConfig, data};
     console.log(configAndBody);
-    const responseData =  await axios.post(config.backend.serverURL + route, configAndBody)
+    const responseData =  await axios.post(config.backend.serverURL + route, data, requestConfig)
         .then((response :any) => { return response} )
         .catch((error) => { return error.response });
     return throwErrorOrReturn(await responseData);
@@ -46,8 +46,8 @@ const POST = async (route: string = '/', data : any = {}) => {
  * @returns Axios response data. Either returned as Error class or javascript Object.
  */
 const PATCH = async (route: string = '/', data : any = {}) => {
-    const configAndBody = {...requestConfig, body: data}
-    const responseData =  await axios.patch(config.backend.serverURL + route, configAndBody)
+    const configAndBody = {...requestConfig, data}
+    const responseData =  await axios.patch(config.backend.serverURL + route, data, requestConfig)
         .then((response :any) => { return response} )
         .catch((error) => { return error.response });
     return throwErrorOrReturn(await responseData);

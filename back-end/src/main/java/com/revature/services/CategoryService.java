@@ -4,11 +4,15 @@ package com.revature.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.revature.models.Category;
+import com.revature.models.Job;
 @Service
 public class CategoryService {
 	CategoryRepository categoryRepository;
@@ -25,15 +29,15 @@ public class CategoryService {
 		System.out.println("CATEGORY CREATED WITH CID: " + category.getCategoryId());
 		return categoryRepository.save(category);
 	}
-	public List<Category> listAll() {
+	public Page<Category> listAll(Pageable pageable) {
 		System.out.println("ALL CATEGORIES SELECTED");
-		return categoryRepository.findAll();
+		return categoryRepository.findAll(pageable);
 	}
 	public Category getById(int id) {
 		System.out.println("CATEGORY SELECTED WITH CID: " + id);
 		return categoryRepository.findById(id)
 				.orElseThrow(() -> 
-					new HttpClientErrorException(HttpStatus.NOT_FOUND));
+				new HttpClientErrorException(HttpStatus.NOT_FOUND));
 	}
 	public String deleteCategory(int id) {
 		System.out.println("CATEGORY DELETED WITH CID: " + id);
@@ -43,5 +47,8 @@ public class CategoryService {
 		} else {
 			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
 		}
+	}
+	public Page<Category> performSearch(Specification<Category> spec, Pageable pageable) {
+		return categoryRepository.findAll(spec, pageable);
 	}
 }

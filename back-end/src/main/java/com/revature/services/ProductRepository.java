@@ -8,12 +8,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import com.revature.models.Job;
-import com.revature.models.Users;
+import com.revature.models.Product;
 
 @Repository
-public interface UsersRepository extends JpaRepository<Users, Integer>, JpaSpecificationExecutor<Users>{
-	public Page<Users> findAll(Pageable pageable);
-	public Page<Users> findAll (Specification<Users> specification, Pageable pageable);
+public interface ProductRepository extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product>{
+	public Page<Product> findAll(Pageable pageable);
+	public Page<Product> findAll (Specification<Product> specification, Pageable pageable);
 
 }
-
