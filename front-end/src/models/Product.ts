@@ -1,27 +1,32 @@
 import {Category} from './Category';
 class Product {
-    private itemId : number;
+    private productId : number;
     private description : string;
     private itemName : string;
     private category : Category;
+    private imageUrl : string;
     private price : number;
 
-    constructor(data : any[]) {
-        this.itemId = data[0];
-        this.description = data[1];
-        this.itemName = data[2];
-        this.category = data[3];
-        this.price = data[4];
+    constructor(data : any) {
+        this.productId = data.productId;
+        this.description = data.description;
+        this.itemName = data.itemName;
+        this.imageUrl = data.imageUrl;
+        this.category = new Category(data.category);
+        this.price = data.price;
     }
 
-    getItemId() : number {
-        return this.itemId;
+    getProductId() : number {
+        return this.productId;
     }
     getDescription() : string {
         return this.description;
     }
     getItemName() : string {
         return this.itemName;
+    }
+    getImageUrl() : string {
+        return this.imageUrl;
     }
     getCategory() : Category {
         return this.category;
