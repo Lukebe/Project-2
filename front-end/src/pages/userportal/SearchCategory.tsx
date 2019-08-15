@@ -1,37 +1,60 @@
 import React, { Component } from 'react';
 import { Form, ListGroup, Card, Button } from 'react-bootstrap';
+import * as APICall from '../../utils/APICall';
+import {RequestState} from '../../utils/APICall';
+import Axios from 'axios';
 
-export default class Search extends Component <any, any>{
+export default class SearchCategory extends Component <any, any>{
     constructor(props: any) {
         super(props);
 
         this.state = { 
-            data: [
-               {id:"1", product:"Playstation", Date:"1/1/2019", Time:"2:23PM", Location:"123 W. Avenue, Tampa, FL 33612", Category:"Gaming", ProductPrice:"$400", Earnings:"$100", Description:"New Playstation release only available at best buy", Pay: "200.00"},
-               {id:"2", product:"product2", Date:"1/2/2019", Time:"3:23PM", Location:"122 W. Avenue, Tampa, FL 60606", Category:"Gaming", Earnings:"$9.99", Description:"Description here", Pay: "300.00"},
-               {id:"3", product:"product3", Date:"1/3/2019", Time:"4:23PM", Location:"124 W. Avenue, Tampa, FL 60606", Category:"Shoes", Earnings:"$9.99", Description:"Description here", Pay: "400.00"},
-               {id:"4", product:"product4", Date:"1/4/2019", Time:"5:23PM", Location:"125 W. Avenue, Tampa, FL 60606", Category:"Event", Earnings:"$9.99", Description:"Description here", Pay: "500.00"}
-            ]
+            data: []
         } 
+        this.handleRequest = this.handleRequest.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
+    }
+
+
+    componentDidMount(){
+        this.handleRequest();
+    }
+
+
+    async handleRequest() {
+        const url =`http://localhost:3333/jobs/category/2`;
+        try{
+            let response = await Axios.get(url) 
+            let res = response.data.content;
+            this.setState({
+                data: res
+            })
+            console.log(this.state.data);
+        } catch (e){
+            console.log(e);
+        }
     }
 
     render() {
+
         const list = this.state.data.map((item:any, i:any) => {
             return <ListGroup.Item className="list" key={i}>
                 <Card className="card" key={i}>
-                <Card.Header>Earn: ${item.Pay}</Card.Header>
+                <Card.Header>Earn: ${item.jobEarnings}</Card.Header>
                     <Card.Body> 
-                        <Card.Title>{item.product}</Card.Title>
+                        <Card.Title>{item.product.itemName}</Card.Title>
                         <Card.Text>
-                        {item.Description}
+                            {item.description}
                         </Card.Text> 
                         <Button variant="primary">View</Button>
                     </Card.Body>
-                    <Card.Footer className="text-muted">2 days ago</Card.Footer>
+                    <Card.Footer className="text-muted">{item.jobDateTime}</Card.Footer>
             </Card>
             </ListGroup.Item>
             
         })
+
+
         return(
             <React.Fragment>
                 <h2>Search</h2>
