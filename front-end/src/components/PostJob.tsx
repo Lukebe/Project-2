@@ -36,6 +36,11 @@ export default class PostJob extends Component<any, any>{
                 </label>
 
                 <label>
+                    Time Due:
+        <input type="text" name="timeDue" value="time" />
+                </label>
+
+                <label>
 
                     Job Price:
         <input type="number" name="jobPrice" value="Earnings" />
@@ -46,10 +51,6 @@ export default class PostJob extends Component<any, any>{
         <input type="number" name="product" value="What are they buying" />
                 </label>
 
-                <label>
-                    Product:
-        <input type="text" name="productPrice" value="itemPrice" />
-                </label>
 
                 <label>
 
