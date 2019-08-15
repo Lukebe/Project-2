@@ -105,7 +105,6 @@ const PlacesWithStandaloneSearchBox = compose(
       center={{ lat: props.places[0]['geometry']['location']['lat'], lng: props.places[0]['geometry']['location']['lng'] }}
       zoom={props.zoom}
       ref={props.onMapMounted}
-      streetView = {false}
       options = {{backgroundColor: 'black',
                   clickableIcons: true,
                   zoom: 15}}
