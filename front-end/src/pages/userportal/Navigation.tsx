@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { Link, Route } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 import { UserAccount } from '../../components/userAccount';
@@ -22,7 +22,7 @@ export default class LeftUserPortal extends Component<any, any>{
                             <NavDropdown.Item as={Link} to="/">other</NavDropdown.Item>  
                         </NavDropdown>
                     </Nav>  
-                </Navbar>
+                </Navbar> 
             </React.Fragment>
         );
     }
