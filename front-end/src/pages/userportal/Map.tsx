@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import React, { Component } from "react";
 import { withState, withHandlers } from "recompose";
 import { Marker, InfoWindow, GoogleMap, withGoogleMap } from "react-google-maps";
-import testData from './MapTestData';
+import testData from '../makerportal/MapTestData';
 //GEOCODE METHOD: https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&address=hello
 const googleMapURL : string = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&libraries=geometry,drawing,places';
 const { compose, withProps, lifecycle } = require("recompose");

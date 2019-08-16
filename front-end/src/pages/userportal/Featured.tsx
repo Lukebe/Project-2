@@ -19,7 +19,7 @@ export default class Featured extends Component <any, any>{
 
     render() {
         const caro = this.state.data.map((item:any, i:any) =>{
-            return <Carousel.Item>
+            return <Carousel.Item key={i}>
                         <img
                         className="d-block w-100"
                         src={ item.img }
