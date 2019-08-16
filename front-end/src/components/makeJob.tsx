@@ -30,7 +30,8 @@ const jobComponent: React.FC = () => {
             <div>Description:</div>
             <input type="text" id="resolver" />
             <div>Status:</div>
-            <input type="text" id="status" />                                        <div>
+            <input type="text" id="status" />
+            <div>
                 <div>Type:</div>
                 <input type="text" id="type" />
 

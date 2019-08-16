@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import { Card, ListGroup, Button } from 'react-bootstrap';
-import Axios from 'axios'; 
+import * as APICall from '../../utils/APICall';
+import { IAppState, IAuthState } from '../../reducers';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-export default class MyJobs extends Component <any, any>{
+export interface IAuthProps {
+    user: IAuthState;
+}
+
+export class MyJobs extends Component <IAuthProps, any>{
     constructor(props: any) {
         super(props);
 
@@ -19,17 +26,19 @@ export default class MyJobs extends Component <any, any>{
 
 
     async handleRequest() {
-        const url =`http://localhost:3333/jobs/useraccepted/2`;
-        try{
-            let response = await Axios.get(url) 
-            let res = response.data.content;
+        const userid = this.props.user.userProfile.getUserId();
+        const response = await APICall.GET('/jobs/useraccepted/2'
+        ,this.props.user.userProfile.getToken());
+
+        if(await response instanceof Error){
+        } else { 
+            let res = response.content;
             this.setState({
                 data: res
             })
             console.log(this.state.data);
-        } catch (e){
-            console.log(e);
         }
+        console.log(await response);
     }
 
     render() {
@@ -40,7 +49,7 @@ export default class MyJobs extends Component <any, any>{
                     <Card.Body >
                         <div className="cardContainer">
                         <Card.Text className="userCardText">{item.description}<br></br>{item.address}<br></br>{item.jobDateTime}</Card.Text>
-                        <Card.Link className="userCardLink" href="#"><br></br>Card Link</Card.Link>
+                        <Card.Link className="userCardLink" as={Link} to="/userportal/jobview"><br></br>Card Link</Card.Link>
                         </div>
                     </Card.Body>
                 </Card> 
@@ -61,3 +70,9 @@ export default class MyJobs extends Component <any, any>{
         );
     }
 }
+
+const mapStateToProps = (state:IAppState) => ({
+    user: state.auth
+});
+ 
+export default connect(mapStateToProps)(MyJobs);

@@ -1,38 +1,58 @@
 import React, { Component } from 'react';
 import { Form, ListGroup, Card, Button } from 'react-bootstrap';
+import { IAppState, IAuthState } from '../../reducers';
+import { connect } from 'react-redux';
 import * as APICall from '../../utils/APICall';
-import {RequestState} from '../../utils/APICall';
-import Axios from 'axios';
 
-export default class SearchCategory extends Component <any, any>{
+
+export interface IAuthProps {
+    user: IAuthState;
+}
+
+export class SearchCategory extends Component <IAuthProps, any>{
     constructor(props: any) {
         super(props);
 
         this.state = { 
-            data: []
+            data: [],
+            input: ""
         } 
         this.handleRequest = this.handleRequest.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
-
 
     componentDidMount(){
-        this.handleRequest();
+        this.handleRequest(1);
+    }
+
+ 
+    handleChange(event:any){
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        this.setState({
+            [name]: value
+        });
+        console.log(this.state.input);
+        this.handleRequest(value);
     }
 
 
-    async handleRequest() {
-        const url =`http://localhost:3333/jobs/category/2`;
-        try{
-            let response = await Axios.get(url) 
-            let res = response.data.content;
+    async handleRequest(num: any) {
+        console.log(this.state.input + "hello")
+        const response = await APICall.GET('/jobs/category/' + num
+        ,this.props.user.userProfile.getToken());
+
+        if(await response instanceof Error){
+        } else { 
+            let res = response.content;
             this.setState({
                 data: res
             })
             console.log(this.state.data);
-        } catch (e){
-            console.log(e);
         }
+        console.log(await response);
     }
 
     render() {
@@ -54,17 +74,16 @@ export default class SearchCategory extends Component <any, any>{
             
         })
 
-
         return(
             <React.Fragment>
-                <h2>Search</h2>
+                <h2>user {this.props.user.userProfile.getUsername()} </h2>
                 <Form>
                 <Form.Group controlId="exampleForm.ControlSelect1">
-                    <Form.Label>Search By:</Form.Label>
-                    <Form.Control as="select">
-                    <option>Date Posted</option>
-                    <option>Category</option>
-                    <option>Earnings</option>
+                    <Form.Label>Category:</Form.Label>
+                    <Form.Control as="select" onChange={this.handleChange} name="input">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
                     </Form.Control>
                 </Form.Group>
                 </Form>
@@ -73,3 +92,9 @@ export default class SearchCategory extends Component <any, any>{
         );
     }
 }
+
+const mapStateToProps = (state:IAppState) => ({
+    user: state.auth
+});
+
+export default connect(mapStateToProps)(SearchCategory);
