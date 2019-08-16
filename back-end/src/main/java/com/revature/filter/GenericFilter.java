@@ -42,7 +42,7 @@ public class GenericFilter<T> implements Specification<T> {
 			case "!":
 				System.out.println("not equal");
 				if (root.get(criteria.getKey()).getJavaType() == String.class) {
-	                return builder.notLike(
+					return builder.notLike(
 	                  root.<String>get(criteria.getKey()), "%" + criteria.getValue() + "%");
 	            } else {
 	                return builder.notEqual(root.get(criteria.getKey()), criteria.getValue());
