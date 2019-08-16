@@ -67,8 +67,13 @@
 
 }
 .btn-my-events-data-card{
-    background-color:rgb(156, 140, 45);
+    background-color:gold;
     border: 0;
+}
+.btn-my-events-data-card{
+    background-color:rgb(194, 172, 47);
+    border: 0;
+    box-shadow: 2px 2px 0px 0px #eee;
 }
 .my-events-container {
     padding-bottom: 50px;
@@ -80,10 +85,10 @@
     justify-content: center;
 }
 .my-events-container > .pagination-left > a, .my-events-container, .pagination-right > a {
-    color: gold;
+    color: white;
 }
 .my-events-container > .pagination-left > a:hover, .my-events-container, .pagination-right > a:hover {
-    color: rgb(192, 147, 0);
+    color: whitesmoke;
 }
 .my-events-container > .pagination-left {
     margin:auto;

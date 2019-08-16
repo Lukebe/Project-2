@@ -1,8 +1,6 @@
 package com.revature.services;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.revature.models.Job;
-import com.revature.models.Product;
+import com.revature.models.ProductAddressCountWrapper;
 import com.revature.models.ProductCountWrapper;
 import com.revature.models.Status;
 import com.revature.models.Users;
@@ -76,11 +74,14 @@ public class JobService {
 	public List<ProductCountWrapper> getPopularJobs(int amount, int daysAgo) {
 		System.out.println("FEATURED JOBS BEFORE: " + daysAgo);
 	    List<ProductCountWrapper> products = jobRepository.selectRecentJobProductCount(daysAgo);
-	    products.forEach(item->{
-	    	
-	    });
 	    products.removeIf((ProductCountWrapper n) -> (n.getCount() < amount));
 	    return products;
+	}
+	public List<ProductAddressCountWrapper> getPopularLocations(int amount, int daysAgo) {
+		System.out.println("FEATURED LOCATIONS BEFORE: " + daysAgo);
+	    List<ProductAddressCountWrapper> locations = jobRepository.selectPopularEvents(daysAgo);
+	    locations.removeIf((ProductAddressCountWrapper n) -> (n.getCount() < amount));
+	    return locations;
 	}
 	public Job updateJob(Job job, double rating ) {
 		System.out.println("JOB UPDATED WITH PARAMS: " + job.toString());

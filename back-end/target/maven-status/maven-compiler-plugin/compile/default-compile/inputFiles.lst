@@ -1,4 +1,6 @@
 C:\Users\kylej\Documents\Training\Project-2\back-end\src\main\java\com\revature\controllers\ProductController.java
+C:\Users\kylej\Documents\Training\Project-2\back-end\src\main\java\com\revature\models\JobRatingWrapper.java
+C:\Users\kylej\Documents\Training\Project-2\back-end\src\main\java\com\revature\models\ProductCountWrapper.java
 C:\Users\kylej\Documents\Training\Project-2\back-end\src\main\java\com\revature\models\Product.java
 C:\Users\kylej\Documents\Training\Project-2\back-end\src\main\java\com\revature\services\UsersRepository.java
 C:\Users\kylej\Documents\Training\Project-2\back-end\src\main\java\com\revature\services\UsersService.java
@@ -14,6 +16,7 @@ C:\Users\kylej\Documents\Training\Project-2\back-end\src\main\java\com\revature\
 C:\Users\kylej\Documents\Training\Project-2\back-end\src\main\java\com\revature\services\ProductRepository.java
 C:\Users\kylej\Documents\Training\Project-2\back-end\src\main\java\com\revature\controllers\CategoryController.java
 C:\Users\kylej\Documents\Training\Project-2\back-end\src\main\java\com\revature\controllers\JobController.java
+C:\Users\kylej\Documents\Training\Project-2\back-end\src\main\java\com\revature\models\ProductAddressCountWrapper.java
 C:\Users\kylej\Documents\Training\Project-2\back-end\src\main\java\com\revature\controllers\UsersController.java
 C:\Users\kylej\Documents\Training\Project-2\back-end\src\main\java\com\revature\utils\PasswordEncrypt.java
 C:\Users\kylej\Documents\Training\Project-2\back-end\src\main\java\com\revature\security\SecurityConfig.java

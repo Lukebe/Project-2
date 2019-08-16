@@ -33,6 +33,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import com.revature.filter.GenericFilterBuilder;
 import com.revature.models.Job;
 import com.revature.models.JobRatingWrapper;
+import com.revature.models.ProductAddressCountWrapper;
 import com.revature.models.ProductCountWrapper;
 import com.revature.services.JobService;
 
@@ -105,6 +106,11 @@ public class JobController {
 	@GetMapping("/popular/{amount}")
 	public List<ProductCountWrapper> getPopularJobs(@PathVariable int amount, @RequestParam int days) {
 		List<ProductCountWrapper> jobsList = jobService.getPopularJobs(amount,days);
+		return jobsList;
+	}
+	@GetMapping("/popularlocations/{amount}")
+	public List<ProductAddressCountWrapper> getPopularLocations(@PathVariable int amount, @RequestParam int days) {
+		List<ProductAddressCountWrapper> jobsList = jobService.getPopularLocations(amount,days);
 		return jobsList;
 	}
     @GetMapping("/search")

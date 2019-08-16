@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.revature.models.Job;
+import com.revature.models.ProductAddressCountWrapper;
 import com.revature.models.ProductCountWrapper;
 @Repository
 public interface JobRepository extends JpaRepository<Job, Integer>, JpaSpecificationExecutor<Job>{
@@ -30,4 +31,9 @@ public interface JobRepository extends JpaRepository<Job, Integer>, JpaSpecifica
 			"group by products.productId"
 			, nativeQuery = false)
 	public List<ProductCountWrapper> selectRecentJobProductCount(int daysAgo);
+	@Query(value = "SELECT new com.revature.models.ProductAddressCountWrapper(products,count(jobs.address), jobs.address) FROM Job jobs INNER JOIN Product products ON jobs.product=products.productId WHERE jobs.jobDateTime >" + 
+			"(current_date - ?1)" + 
+			"group by jobs.address,products.productId"
+			, nativeQuery = false)
+	public List<ProductAddressCountWrapper> selectPopularEvents(int daysAgo);
 }
