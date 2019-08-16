@@ -1,10 +1,10 @@
 .makerportal-container{
     border: 1px solid #eee ;
-    background-color: white;
+    background-color: whitesmoke;
 }
 .accordion >.card .card-header {
     background-color: rgb(67, 12, 170);
-    color: black;
+    color: white;
     cursor: pointer;
 }
 .pac-container {
@@ -43,100 +43,14 @@
     margin: auto;
     background-color: indigo;
 }
-.my-events-data {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+.gm-style-iw {
 }
-.my-events-title, .my-events-container {
-    background-color: #183442;
+.formRow p {
+    font-size: 1.5em;
 }
-.my-events-title {
-    padding-bottom: 10px;
-    padding-top: 10px;
-    margin-bottom: 0;
-    font-family: Fjalla One;
-    line-height: 120%;
-    color: white;
-    font-size: 45px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-weight: bold;
-    text-align: center;
-    border-radius:10px 10px 0px 0px;
-
+.formRow a>.material-icons {
+    font-size: 2.5em;
 }
-.btn-my-events-data-card{
-    background-color:rgb(156, 140, 45);
-    border: 0;
-}
-.my-events-container {
-    padding-bottom: 50px;
-    display: flex;
-    flex-direction: row;
-    border-radius:0px 0px 10px 10px;
-}
-.my-events-container > .pagination-left, .my-events-container > .pagination-right {
-    justify-content: center;
-}
-.my-events-container > .pagination-left > a, .my-events-container, .pagination-right > a {
-    color: gold;
-}
-.my-events-container > .pagination-left > a:hover, .my-events-container, .pagination-right > a:hover {
-    color: rgb(192, 147, 0);
-}
-.my-events-container > .pagination-left {
-    margin:auto;
-    padding-right: 10px;
-}
-.pagination-left > .pagination-disabled, 
-.pagination-right > .pagination-disabled {
-    color: gray !important;
-    cursor: default;
-}
-.my-events-container > .pagination-left > .pagination-disabled:hover,
-.my-events-container, .pagination-right > .pagination-disabled:hover {
-    color: gray !important;
-}
-.my-events-container > .pagination-right {
-    margin:auto;
-    padding-left: 10px;
-}
-.my-events-data-card{
-    flex-grow:1;
-    max-width: 20%;
-    color: black;
-    background-color: white;
-}
-.my-events-pagination-bottom {
-    margin: auto;
-    text-align:center;
-}
-@media only screen and (max-width: 500px) {
-    .my-events-data {
-        flex-direction: column;
-        width: 100%;
-    }
-    .my-events-data-card {
-        max-width:100%;
-    }
-    .my-events-pagination {
-        display: flex;
-        flex-direction: row;
-    }
-    .my-events-container {
-        background-color: black;
-    }
-    .my-events-container > .pagination-left {
-        padding-right: 0;
-    }
-    .my-events-container > .pagination-right {
-        padding-left: 0;
-    }
-    .my-events-container > .my-events-data {
-    }
-    .my-events-pagination-bottom {
-        display: none;
-    }
-
+.mb-3 p {
+    font-size: 2em;
 }
