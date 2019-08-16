@@ -1,0 +1,35 @@
+.postJobButton{
+  text-align: center;
+  margin: auto;
+}
+
+
+label{
+  background: rgb(23,123,123);
+ text-align: right;
+ width:100%;
+
+  float: left;
+
+ 
+}
+
+h1{
+text-align: center;
+
+}
+
+.flex-container {
+  background: rgb(23,123,123);
+ text-align: right;
+
+ height: 100%;
+ display: flex;
+margin: 0 auto;
+
+}
+ input {
+   margin-left: 10%;
+   float: right;
+  
+ }

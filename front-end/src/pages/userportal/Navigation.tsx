@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Navbar, Nav } from 'react-bootstrap';
+import { Link, Route } from 'react-router-dom';
+import { Dropdown } from 'react-bootstrap';
+import { UserAccount } from '../../components/userAccount';
 
-export default class Navigation extends Component <any, any>{
- 
+
+export default class LeftUserPortal extends Component<any, any>{
+
     render() {
-        return(  
+        return (
             <React.Fragment>
                 <Navbar bg="light">
                     <Nav className="mr-auto">
@@ -22,5 +25,5 @@ export default class Navigation extends Component <any, any>{
                 </Navbar>
             </React.Fragment>
         );
-    } 
+    }
 }
