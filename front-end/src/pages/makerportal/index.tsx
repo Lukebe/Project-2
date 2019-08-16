@@ -11,16 +11,16 @@ import CreateNewJob from './CreateNewJob';
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
-    loginSuccessful : () => void;
+    loginSuccessful: () => void;
     //Action creators from the dispatcher
 }
 export interface IComponentProps {
 }
 interface IState {
-    isFetching : boolean;
+    isFetching: boolean;
 }
 type IProps = IComponentProps & IAuthProps;
-class MakerPortal extends Component <IAuthProps,IState>{
+class MakerPortal extends Component<IAuthProps, IState>{
 
     constructor(props: any) {
         super(props);
@@ -32,32 +32,32 @@ class MakerPortal extends Component <IAuthProps,IState>{
     render() {
         return (
             <>
-            <Container className = "makerportal-container">
-                <Row>
-                    <Col sm={12} lg = {12} >
-                        Hello {this.props.auth.userProfile.getFullName()}
-                        <MyEvents/>
-                    </Col>
-                    <Col sm = {12} lg = {6}>
-                    <PopularEvents/>
-                    </Col>
-                    <Col sm = {12} lg = {6}>
-                        <CreateNewJob/>
-                    </Col>
-                </Row>
-            </Container>
-            <Footer/>
+                <Container className="makerportal-container">
+                    <Row>
+                        <Col sm={12} lg={12} >
+                            Hello {this.props.auth.userProfile.getFullName()}
+                            <MyEvents />
+                        </Col>
+                        <Col sm={12} lg={6}>
+                            <PopularEvents />
+                        </Col>
+                        <Col sm={12} lg={6}>
+                            <CreateNewJob />
+                        </Col>
+                    </Row>
+                </Container>
+                <Footer />
             </>
         )
     }
 }
-const mapStateToProps = (state : IAppState) => {
+const mapStateToProps = (state: IAppState) => {
     return {
         auth: state.auth
     }
 }
 //This object definition will be used to map action creators to properties
 const mapDispatchToProps = {
-    loginSuccessful : loginSuccessful,
+    loginSuccessful: loginSuccessful,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MakerPortal);

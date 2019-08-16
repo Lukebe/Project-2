@@ -17,7 +17,7 @@ const PlacesWithStandaloneSearchBox = compose(
     googleMapURL,
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `400px` }} />,
-    mapElement: <div style={{ height: `100%` }} />,
+    mapElement: <div style={{ height: `100%` }} />, 
     places : testData,
   }),
   withState('zoom', 'onZoomChange', 8),
@@ -55,7 +55,7 @@ const PlacesWithStandaloneSearchBox = compose(
         },
       })
     },
-  }),
+  }), 
   withScriptjs,
   withGoogleMap
 )((props : any) =>
