@@ -6,6 +6,9 @@ import './Maker.css';
 import { loginSuccessful } from '../../actions/Authentication.action';
 import * as APICall from '../../utils/APICall';
 import { Job } from "../../models/Job";
+import Pagination from '../../models/Pagination';
+import { Alert, Card, Button, FormLabel, Form } from "react-bootstrap";
+import isMobile from "../../utils/IsMobile";
 const RequestState = APICall.RequestState;
 export interface IAuthProps {
     //data from state store
@@ -18,6 +21,12 @@ export interface IComponentProps {
 interface IState {
     isFetching : boolean;
     data : Job[];
+    dataPagination: Pagination;
+    RequestStatus: {
+        status: APICall.RequestState,
+        errorMsg: string,
+
+    }
 }
 type IProps = IComponentProps & IAuthProps;
 class PopularEvents extends Component <IAuthProps,IState>{
@@ -27,25 +36,49 @@ class PopularEvents extends Component <IAuthProps,IState>{
         this.state = {
             isFetching: false,
             data: [],
+            dataPagination: new Pagination({empty:true}),
+            RequestStatus: {
+                status: RequestState.NOT_ACTIVE,
+                errorMsg: '',
+            }
         };
     }
     componentDidMount() {
-        this.handleRequest();
+        this.getMyJobs(0);
     }
-    async handleRequest() {
-        const response = await APICall.GET('/jobs/usercreated/' + this.props.auth.userProfile.getUserId()
+    goBackClick = (e : any) => {
+        e.preventDefault();
+        if(!this.state.dataPagination.isFirstPage()){
+            this.getMyJobs(this.state.dataPagination.getPageNumber() - 1)
+        }
+    }
+    goForwardClick = (e : any) => {
+        e.preventDefault();
+        if(!this.state.dataPagination.isLastPage()){
+            this.getMyJobs(this.state.dataPagination.getPageNumber() + 1)
+        }
+    }
+    async getMyJobs(page : number) {
+        this.setState({...this.state, RequestStatus: 
+            {...this.state.RequestStatus, status: RequestState.FETCHING}});
+        const numOfElements = (isMobile() === true) ? 1 : 5;
+        const response = await APICall.GET('/jobs/usercreated/' + this.props.auth.userProfile.getUserId() + 
+        '?page=' + page + '&size=' + numOfElements + '&sort=dateCreated,asc'
         ,this.props.auth.userProfile.getToken());
         //If there is an error, APICall methods will return an Error class instance.
         //This checks if there is an error and alerts message if there is.
         if(await response instanceof Error){
-
+            this.setState({...this.state, RequestStatus: 
+                {...this.state.RequestStatus, status: RequestState.ERROR, errorMsg: response.message}});
         } else {
             let responseArray = response.content;
             console.log(response.content);
             let jobsArray : Job[] = responseArray.map((element:any, index: number)=>{
                 return new Job(element);
             })
-            this.setState({data: jobsArray})
+            this.setState({...this.state, RequestStatus: 
+                {...this.state.RequestStatus, status: RequestState.SUCCESSFUL}});
+            this.setState({data: jobsArray, dataPagination: new Pagination(await response)})
         }
         console.log(await response);
     }
@@ -53,17 +86,46 @@ class PopularEvents extends Component <IAuthProps,IState>{
     render() {
         return (
             <>
-            <h2>My Events</h2><>
+            <h2 className = "my-events-title">My Events</h2>
+            {this.state.RequestStatus.status === RequestState.ERROR ?
+                    <Alert key="request-error" variant="danger">
+                    {this.state.RequestStatus.errorMsg}
+                    </Alert> : null}
+                    
+            <div className = "my-events-container">
+
+            <div className = "pagination-left">
+            <a href = '#' className = {(this.state.dataPagination.isFirstPage()) ? "pagination-disabled" : ""}
+            onClick={this.goBackClick}><i className = "material-icons large" style = {{fontSize: '50px'}}>arrow_back</i></a>
+            </div>      
+              <div className = "my-events-data">
             {(this.state.data[0]) ? this.state.data.map((element: Job) => {
 
                 return (
                 <>
-                <p>JobId: {element.getJobId()}</p>
-                <p>User Created: {element.getUserCreated().getFullName()}</p>
-                <p>Description: {element.getDescription()}</p>
+                <Card className = "my-events-data-card">
+                    <Card.Img variant="top" src="https://images-eu.ssl-images-amazon.com/images/I/41tFHNWXlPL._SY300_QL70_.jpg" />
+                    <Card.Body>
+                        <Card.Title>{element.getProduct().getItemName()}</Card.Title>
+                        <Card.Text>
+                        <Form.Label>Expected Delivery: </Form.Label> {element.getJobDateTime().getDate() + element.getTimeEstimate().getDate()}
+                        <Form.Label>Status: </Form.Label> {element.getStatus().getStatus()}
+                    </Card.Text>
+                    <Button className = "btn-my-events-data-card" >View Details</Button>
+                    </Card.Body>
+                </Card>
                 </> )
-            }) : <p>No Results</p>}</>
-            </>
+            }) : <p>No Results</p>}</div>
+    
+            <div className = "pagination-right">
+                <a href = '#' className = {(this.state.dataPagination.isLastPage()) ? "pagination-disabled" : ""}
+                onClick={this.goForwardClick}><i className = "large material-icons" style = {{fontSize: '50px'}}>arrow_forward</i></a>
+            </div>
+            </div><div className = "my-events-pagination-bottom">   
+            Page {this.state.dataPagination.getHumanFriendlyPageNumber()} of {this.state.dataPagination.getTotalPages()}
+            </div>
+             </>
+
         )
         
     }
