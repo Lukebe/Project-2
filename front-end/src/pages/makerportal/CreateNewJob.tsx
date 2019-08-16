@@ -67,6 +67,12 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                 },
                 category: {
                     value: 'Choose a category...'
+                },
+                timeEstimateHour: {
+                    value: ''
+                },
+                timeEstimateMinute: {
+                    value: ''
                 }
             },
             Error: {isError: false, message: ''},
@@ -75,7 +81,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
             creationData: [],
             categoriesArray: [],
             isAuthorized: false,
-            openedLocation: '',
+            openedLocation: ''
 
         };
     }
@@ -93,16 +99,19 @@ class CreateNewJob extends Component <IAuthProps,IState>{
             const returnData = await APICall.POST('/jobs', 
                 {
                     userCreated: this.props.auth.userProfile.getUserId,
-                    address: this.state.formFields.productlocation,
+                    address: formData.productlocation,
                     description: this.state.formFields.description,
-                    dateCreated: "",
+                    dateCreated: null,
                     dateAccepted: null,
-                    jobDateTime: this.state.formFields.jobdate + this.state.formFields.jobhour + this.state.formFields.jobhour,
+                    jobDateTime: formData.jobdate + formData.jobhour + formData.jobhour,
                     userAccpeted: null,
-                    category: this.state.formFields.category,
-                    type: formData.type.value,
-                    amount: formData.amount.value
+                    category: formData.category,
+                    jobEarnings: formData.jobpay.value,
+                    timeEstimate: formData.timeEstimateHour+formData.timeEstimateMinute,
+                    product:formData.product.value,
+                    status:"1"
                 });
+            console.log(formData.timeEstimateHour+formData.timeEstimateMinute);
             if(returnData instanceof Error) {
                 this.setState({...this.state, isLoading:false});
             } else {
@@ -139,7 +148,6 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                 }
             }
         });
-        console.log(value);
     }
     async getCategories() {
         console.log("This is before")
@@ -169,7 +177,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
             <>
             {this.state.isMapModalOpen ?
             <MapPicker closeCallback = {this.closeMap}/> : null}
-            <h2>New Job Listing</h2>
+            <h2>Create New Job</h2>
             <Form noValidate className="formCreateNewJob" validated={this.state.validated} onSubmit={this.handleSubmit}>
                 <Form.Group controlId="formCategory">
                     <Form.Label>Category</Form.Label>
@@ -276,6 +284,29 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                         <Col><p>24-hour time</p></Col>
                     </Form.Row>
                 </Form.Group>
+                    <Form.Group controlId="formJobDate">
+                        <Form.Label>Job Time Estimate</Form.Label>
+                        
+                        <Form.Row className="formRow">
+                            <Col>
+                                <Form.Control required onChange={this.changeHandler} size="lg" type="number"
+                                    step="1" min="1" max="23" value={this.state.formFields.timeEstimateHour.value}
+                                    id="new-job-jobhour" placeholder="12" name="timeEstimateHour" />
+                            </Col>
+                            <p>:</p>
+                            <Col>
+                                <Form.Control required onChange={this.changeHandler} size="lg" type="number"
+                                    step="1" min="0" max="59" value={this.state.formFields.timeEstimateMinute.value}
+                                    id="new-job-jobminute" placeholder="00" name="timeEstimateMinute" />
+                                <Form.Control.Feedback type="invalid">
+                                    Please enter some comments about your reimbursement request.
+                        </Form.Control.Feedback>
+                            </Col>
+                            <Col><p>24-hour time</p></Col>
+                        </Form.Row>
+                    </Form.Group>
+
+
                 <Form.Group controlId="formGroupDescription">
                     <Form.Label>Comments</Form.Label>
                     <Form.Control optional onChange={this.changeHandler} as="textarea" rows="4" 
