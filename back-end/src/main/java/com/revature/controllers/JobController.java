@@ -1,6 +1,8 @@
 package com.revature.controllers;
 
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
@@ -31,6 +32,8 @@ import org.springframework.web.client.HttpServerErrorException;
 
 import com.revature.filter.GenericFilterBuilder;
 import com.revature.models.Job;
+import com.revature.models.JobRatingWrapper;
+import com.revature.models.ProductCountWrapper;
 import com.revature.services.JobService;
 
 @RestController
@@ -50,13 +53,19 @@ public class JobController {
 	}
 	@PostMapping("")
 	public  Job createJob(@RequestBody Job job) {
+		job.setDateCreated(new Date());
 		Job newJob = jobService.createJob(job);
 		return newJob;
 	}
 	@PatchMapping("")
-	public  Job updateJob(@RequestBody Job job) {
-		Job updatedJob = jobService.updateJob(job.getJobId(), job);
-		return updatedJob;
+	public  Job updateJobWithRating(@RequestBody JobRatingWrapper data) {
+		if(Double.isNaN(data.getRating())){
+			Job updatedJob = jobService.updateJob(data.getJob());
+			return updatedJob;
+		} else {
+			Job updatedJob = jobService.updateJob(data.getJob(), data.getRating());
+			return updatedJob;
+		}
 	}
 	@DeleteMapping("/{id}")
 	public String deleteJobById(@PathVariable int id) {
@@ -91,6 +100,11 @@ public class JobController {
 	@GetMapping("/status/{id}")
 	public Page<Job> getJobsByStatusId(@PathVariable int id, Pageable pageable) {
 		Page<Job> jobsList = jobService.selectJobsByStatusId(id, pageable);
+		return jobsList;
+	}
+	@GetMapping("/popular/{amount}")
+	public List<ProductCountWrapper> getPopularJobs(@PathVariable int amount, @RequestParam int days) {
+		List<ProductCountWrapper> jobsList = jobService.getPopularJobs(amount,days);
 		return jobsList;
 	}
     @GetMapping("/search")

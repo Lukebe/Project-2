@@ -1,5 +1,9 @@
 package com.revature.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,15 +13,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.revature.models.Job;
+import com.revature.models.Product;
+import com.revature.models.ProductCountWrapper;
+import com.revature.models.Status;
+import com.revature.models.Users;
 import com.revature.utils.Utils;
 @Service
 public class JobService {
 	JobRepository jobRepository;
+	UsersRepository usersRepository;
+	ProductRepository productRepository;
 	@Autowired
-	public JobService(JobRepository jobRepository) {
+	public JobService(JobRepository jobRepository, UsersRepository usersRepository, ProductRepository productRepository) {
 		super();
 		this.jobRepository = jobRepository;
-		
+		this.usersRepository = usersRepository;
+		this.productRepository = productRepository;
 	}
 	
 	public Job createJob(Job job) {
@@ -61,9 +72,47 @@ public class JobService {
 		System.out.println("JOBS SELECTED WITH STATUS ID: " + statusId);
 		return jobRepository.findAllByCategoryCategoryId(statusId, pageable);
 	}
-	public Job updateJob(int id, Job job) {
+	
+	public List<ProductCountWrapper> getPopularJobs(int amount, int daysAgo) {
+		System.out.println("FEATURED JOBS BEFORE: " + daysAgo);
+	    List<ProductCountWrapper> products = jobRepository.selectRecentJobProductCount(daysAgo);
+	    products.forEach(item->{
+	    	
+	    });
+	    products.removeIf((ProductCountWrapper n) -> (n.getCount() < amount));
+	    return products;
+	}
+	public Job updateJob(Job job, double rating ) {
 		System.out.println("JOB UPDATED WITH PARAMS: " + job.toString());
-		Job oldJob = jobRepository.findById(id).orElseThrow(() ->
+		Job oldJob = jobRepository.findById(job.getJobId()).orElseThrow(() ->
+		new HttpClientErrorException(HttpStatus.NOT_FOUND));
+		Job newJob = (Job) Utils.merge(oldJob, job);
+		int jobStatusBeforeUpdate = newJob.getStatus().getStatusId();
+		newJob.setStatus(new Status(6, "Rating Completed"));
+		Job savedJob = jobRepository.save(newJob);
+		Users userToUpdateRating = usersRepository.findById(savedJob.getUserAccepted().getUserId())
+				.orElseThrow(() -> new HttpClientErrorException(HttpStatus.BAD_REQUEST));
+		List<Job> userJobList = jobRepository.findAllByUserAcceptedUserId(userToUpdateRating.getUserId());
+		double newRating = userToUpdateRating.getRating() * userJobList.size();
+		newRating += rating;
+		newRating = newRating / (userJobList.size() + 1);
+		if(userJobList.size() == 0) {
+			newRating = rating; 
+		}
+		if(jobStatusBeforeUpdate == 6) {
+			newRating = userToUpdateRating.getRating();
+		}
+		userToUpdateRating.setRating(newRating);
+		usersRepository.save(userToUpdateRating);
+		//Save the product
+		return savedJob;
+		//Retrieve it again to show joined values correctly
+		//return productRepository.findById(id).orElseThrow(() ->
+		//new HttpClientErrorException(HttpStatus.NOT_FOUND));
+	}
+	public Job updateJob(Job job ) {
+		System.out.println("JOB UPDATED WITH PARAMS: " + job.toString());
+		Job oldJob = jobRepository.findById(job.getJobId()).orElseThrow(() ->
 		new HttpClientErrorException(HttpStatus.NOT_FOUND));
 		Job newJob = (Job) Utils.merge(oldJob, job);
 		//Save the product
