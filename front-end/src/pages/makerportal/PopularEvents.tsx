@@ -5,6 +5,9 @@ import React, { Component } from "react";
 import { withState, withHandlers } from "recompose";
 import { Marker, InfoWindow, GoogleMap, withGoogleMap } from "react-google-maps";
 import testData from './MapTestData';
+import * as APICall from '../../utils/APICall';
+const RequestState = APICall.RequestState;
+
 //GEOCODE METHOD: https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&address=hello
 const googleMapURL : string = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&libraries=geometry,drawing,places';
 const { compose, withProps, lifecycle } = require("recompose");
@@ -133,6 +136,10 @@ export interface IComponentProps {
 interface IState {
     isFetching : boolean;
     currentPlaces: any;
+    RequestStatus: {
+      status: APICall.RequestState,
+      errorMsg: string,
+  }
 }
 type IProps = IComponentProps & IAuthProps;
 class PopularEvents extends Component <IAuthProps,IState>{
@@ -142,16 +149,41 @@ class PopularEvents extends Component <IAuthProps,IState>{
         this.state = {
             isFetching: false,
             currentPlaces: {},
+            RequestStatus: {
+              status: RequestState.NOT_ACTIVE,
+              errorMsg: '',
+          }
         };
+        
     }
      retrieveInformationFromMap = (obj : any) => {
       this.setState({...this.state, currentPlaces: obj});
       alert(obj);
     }
-
+    async getPopularLocations(page : number) {
+      this.setState({...this.state, RequestStatus: 
+          {...this.state.RequestStatus, status: RequestState.FETCHING}});
+      const response = await APICall.GET('/jobs/popularlocations/5?days=10000' ,this.props.auth.userProfile.getToken());
+      //If there is an error, APICall methods will return an Error class instance.
+      //This checks if there is an error and alerts message if there is.
+      if(await response instanceof Error){
+          this.setState({...this.state, RequestStatus: 
+              {...this.state.RequestStatus, status: RequestState.ERROR, errorMsg: response.message}});
+      } else {
+          let responseArray = response.content;
+          console.log(response.content);
+          let jobsArray : Job[] = responseArray.map((element:any, index: number)=>{
+              return new Job(element);
+          })
+          this.setState({...this.state, RequestStatus: 
+              {...this.state.RequestStatus, status: RequestState.SUCCESSFUL}});
+          this.setState({data: jobsArray, dataPagination: new Pagination(await response)})
+      }
+      console.log(await response);
+  } 
     render() {
         return (<>
-        <h2>Popular Events</h2>
+        <h2 className = " makerportal-title">Popular Events</h2>
 <PlacesWithStandaloneSearchBox updateCallback = {this.retrieveInformationFromMap} places = {testData}/>
 </>
         )

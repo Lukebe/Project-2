@@ -126,7 +126,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
             <>
             {this.state.isMapModalOpen ?
             <MapPicker closeCallback = {this.closeMap}/> : null}
-            <h2>New Job Listing</h2>
+            <h2 className = "makerportal-title">New Job Listing</h2>
             <Form noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
                     <Form.Group controlId="formProductLocation">
                         <Form.Label>Product Location</Form.Label>

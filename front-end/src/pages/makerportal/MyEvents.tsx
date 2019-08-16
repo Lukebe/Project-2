@@ -7,7 +7,7 @@ import { loginSuccessful } from '../../actions/Authentication.action';
 import * as APICall from '../../utils/APICall';
 import { Job } from "../../models/Job";
 import Pagination from '../../models/Pagination';
-import { Alert, Card, Button, FormLabel, Form } from "react-bootstrap";
+import { Alert, Card, Button, FormLabel, Form, Spinner } from "react-bootstrap";
 import isMobile from "../../utils/IsMobile";
 const RequestState = APICall.RequestState;
 export interface IAuthProps {
@@ -58,6 +58,18 @@ class PopularEvents extends Component <IAuthProps,IState>{
             this.getMyJobs(this.state.dataPagination.getPageNumber() + 1)
         }
     }
+    createPagination = () => {
+        if(this.state.dataPagination.getPageNumber() === undefined){
+            return;
+        }
+        let elements = [];
+            for (let i = 0; i < this.state.dataPagination.getTotalPages(); i++) {
+          elements.push(<li className=
+            {i === this.state.dataPagination.getPageNumber() ? "active" : ""}>
+                <a href="#" onClick = {(e:any) => {e.preventDefault(); this.getMyJobs(i)}}>Click</a></li>);
+        }
+        return elements;
+      }
     async getMyJobs(page : number) {
         this.setState({...this.state, RequestStatus: 
             {...this.state.RequestStatus, status: RequestState.FETCHING}});
@@ -75,6 +87,7 @@ class PopularEvents extends Component <IAuthProps,IState>{
             console.log(response.content);
             let jobsArray : Job[] = responseArray.map((element:any, index: number)=>{
                 return new Job(element);
+
             })
             this.setState({...this.state, RequestStatus: 
                 {...this.state.RequestStatus, status: RequestState.SUCCESSFUL}});
@@ -86,7 +99,7 @@ class PopularEvents extends Component <IAuthProps,IState>{
     render() {
         return (
             <>
-            <h2 className = "my-events-title">My Events</h2>
+            <h2 className = "my-events-title makerportal-title">My Events</h2>
             {this.state.RequestStatus.status === RequestState.ERROR ?
                     <Alert key="request-error" variant="danger">
                     {this.state.RequestStatus.errorMsg}
@@ -99,6 +112,7 @@ class PopularEvents extends Component <IAuthProps,IState>{
             onClick={this.goBackClick}><i className = "material-icons large" style = {{fontSize: '50px'}}>arrow_back</i></a>
             </div>      
               <div className = "my-events-data">
+
             {(this.state.data[0]) ? this.state.data.map((element: Job) => {
 
                 return (
@@ -113,17 +127,22 @@ class PopularEvents extends Component <IAuthProps,IState>{
                     </Card.Text>
                     <Button className = "btn-my-events-data-card" >View Details</Button>
                     </Card.Body>
-                </Card>
-                </> )
-            }) : <p>No Results</p>}</div>
-    
+                </Card> 
+            </> )
+    }) : <p className = "loadingNoResults">No Results</p> }
+                </div>
             <div className = "pagination-right">
                 <a href = '#' className = {(this.state.dataPagination.isLastPage()) ? "pagination-disabled" : ""}
                 onClick={this.goForwardClick}><i className = "large material-icons" style = {{fontSize: '50px'}}>arrow_forward</i></a>
             </div>
             </div><div className = "my-events-pagination-bottom">   
-            Page {this.state.dataPagination.getHumanFriendlyPageNumber()} of {this.state.dataPagination.getTotalPages()}
-            </div>
+            <>
+            <ul>
+                {this.createPagination()}
+			</ul>
+            </>
+            {this.state.RequestStatus.status === RequestState.FETCHING ? <Spinner className = "my-events-loading-spinner"
+            animation = "border" variant = "light"/> : null}</div>
              </>
 
         )

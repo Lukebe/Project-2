@@ -79,23 +79,23 @@ public class JobController {
 		return job;
 	}
 	@GetMapping("/useraccepted/{id}")
-	public Page<Job> getJobsByUserAcceptedId(@PathVariable int id,Pageable pageable) {
-		Page<Job> jobsList = jobService.selectJobsByUserAcceptedId(id,pageable);
+	public Page<Job> getJobsByUserAcceptedId(@PathVariable int id,@RequestParam int status, Pageable pageable) {
+		Page<Job> jobsList = jobService.selectJobsByUserAcceptedId(id,status, pageable);
 		return jobsList;
 	}
 	@GetMapping("/usercreated/{id}")
-	public Page<Job> getJobsByUserCreatedId(@PathVariable int id, Pageable pageable) {
-		Page<Job> jobsList = jobService.selectJobsByUserCreatedId(id,pageable);
+	public Page<Job> getJobsByUserCreatedId(@PathVariable int id,@RequestParam int status, Pageable pageable) {
+		Page<Job> jobsList = jobService.selectJobsByUserCreatedId(id,status,pageable);
 		return jobsList;
 	}
 	@GetMapping("/category/{id}")
-	public Page<Job> getJobsByCategoryId(@PathVariable int id, Pageable pageable) {
-		Page<Job> jobsList = jobService.selectJobsByCategoryId(id,pageable);
+	public Page<Job> getJobsByCategoryId(@PathVariable int id, @RequestParam int status, Pageable pageable) {
+		Page<Job> jobsList = jobService.selectJobsByCategoryId(id,status,pageable);
 		return jobsList;
 	}
 	@GetMapping("/product/{id}")
-	public Page<Job> getJobsByProductId(@PathVariable int id, Pageable pageable) {
-		Page<Job> jobsList = jobService.selectJobsByProductId(id, pageable);
+	public Page<Job> getJobsByProductId(@PathVariable int id, @RequestParam int status, Pageable pageable) {
+		Page<Job> jobsList = jobService.selectJobsByProductId(id, status, pageable);
 		return jobsList;
 	}
 	@GetMapping("/status/{id}")

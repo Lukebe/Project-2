@@ -17,11 +17,11 @@ import com.revature.models.ProductAddressCountWrapper;
 import com.revature.models.ProductCountWrapper;
 @Repository
 public interface JobRepository extends JpaRepository<Job, Integer>, JpaSpecificationExecutor<Job>{
-	public Page<Job> findAllByUserAcceptedUserId(int useraccepted, Pageable pageable);
+	public Page<Job> findAllByUserAcceptedUserIdAndStatusStatusId(int useraccepted, int status, Pageable pageable);
 	public List<Job> findAllByUserAcceptedUserId(int useraccepted);
-	public Page<Job> findAllByUserCreatedUserId(int usercreated, Pageable pageable);
-	public Page<Job> findAllByCategoryCategoryId(int category, Pageable pageable);
-	public Page<Job> findAllByProductProductId(int product, Pageable pageable);
+	public Page<Job> findAllByUserCreatedUserIdAndStatusStatusId(int usercreated, int status, Pageable pageable);
+	public Page<Job> findAllByCategoryCategoryIdAndStatusStatusId(int category, int status, Pageable pageable);
+	public Page<Job> findAllByProductProductIdAndStatusStatusId(int product, int status, Pageable pageable);
 	public Page<Job> findAllByStatusStatusId(int status, Pageable pageable);
 	public Page<Job> findAll(Pageable pageable);
 	public Page<Job> findAll (Specification<Job> specification, Pageable pageable);
