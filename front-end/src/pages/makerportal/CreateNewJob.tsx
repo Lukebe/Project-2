@@ -27,6 +27,7 @@ interface IState {
     isLoading: boolean;
     isCreated: boolean;
     creationData: any;
+    categoryList: any;
     categoriesArray: any;
     isAuthorized:boolean;
     isMapModalOpen: boolean;
@@ -79,6 +80,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
             isLoading: false,
             isCreated: false,
             creationData: [],
+            categoryList: [],
             categoriesArray: [],
             isAuthorized: false,
             openedLocation: ''
@@ -92,26 +94,29 @@ class CreateNewJob extends Component <IAuthProps,IState>{
         const form = event.currentTarget;
         event.preventDefault();
         if (form.checkValidity() === false) {
-          event.stopPropagation();
+            event.stopPropagation();
         } else {
             this.setState({...this.state, isLoading: true});
             const formData = this.state.formFields;
-            const returnData = await APICall.POST('/jobs', 
+            const estimateTimeInHours: number = this.state.formFields.timeEstimateHour.value/1;
+            const estimateTimeInMinutes: number = this.state.formFields.timeEstimateMinute.value / 60;
+            const data =
                 {
-                    userCreated: this.props.auth.userProfile.getUserId,
-                    address: formData.productlocation,
-                    description: this.state.formFields.description,
+                    userCreated: this.props.auth.userProfile.getUserId(), // sends user id of the user logged in
+                    address: formData.productlocation, // sends an address as a string
+                    description: this.state.formFields.description, // sends a description as a string
                     dateCreated: null,
                     dateAccepted: null,
-                    jobDateTime: formData.jobdate + formData.jobhour + formData.jobhour,
+                jobDateTime: '2016-06-22 19:10:25-07',//formData.jobdate + formData.jobhour + formData.jobhour,
                     userAccpeted: null,
-                    category: formData.category,
-                    jobEarnings: formData.jobpay.value,
-                    timeEstimate: formData.timeEstimateHour+formData.timeEstimateMinute,
-                    product:formData.product.value,
-                    status:"1"
-                });
-            console.log(formData.timeEstimateHour+formData.timeEstimateMinute);
+                    category: formData.category.value, // sends the category id
+                    jobEarnings: formData.jobpay.value, // sends amount the worker is payed for the job
+                    timeEstimate: ((estimateTimeInHours + estimateTimeInMinutes) * 60 * 1000), // sends an integer of time in milliseconds
+                    product: formData.product.value, // sends product id
+                    status: 1
+                }
+            const returnData = await APICall.POST('/jobs', data, this.props.auth.userProfile.getToken());
+            console.log(data)
             if(returnData instanceof Error) {
                 this.setState({...this.state, isLoading:false});
             } else {
@@ -133,8 +138,8 @@ class CreateNewJob extends Component <IAuthProps,IState>{
         } else {
             this.setState({...this.state, isMapModalOpen: false,
                 formFields: {...this.state.formFields,dropofflocation: {value: address}}})
+            }
         }
-    }
     changeHandler = (event: any) => {    
         const name = event.target.name;
         const value = event.target.value;
@@ -148,9 +153,10 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                 }
             }
         });
+        console.log(name);
+        console.log(value);
     }
     async getCategories() {
-        console.log("This is before")
         const response = await APICall.GET('/categories'
             , this.props.auth.userProfile.getToken());
         //If there is an error, APICall methods will return an Error class instance.
@@ -158,18 +164,19 @@ class CreateNewJob extends Component <IAuthProps,IState>{
         if (await response instanceof Error) {
             console.log(response.message);
         } else {
-            let responseArray = response.content;
-            console.log("This is it")
-            console.log(response.content);
-            let categoriesArray: Category[] = responseArray.map((category: any) => {
-                return (<option>category</option>);
+            let categoriesArray = response.content.map((element: any) => {
+                return new Category(element);
+            });
+            let categoryList : Category[] = categoriesArray.map((category: Category) => {
+                return (<option value={category.getCategoryId()}>{category.getName()}</option>);
             });
             this.setState({
                 ...this.state,
-                categoriesArray: categoriesArray
+                categoriesArray: categoriesArray,
+                categoryList: categoryList
             })
         }
-        //console.log(await response);
+        console.log(await response);
     }
 
     render() {
@@ -205,9 +212,9 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                     </Form.Group> 
                 <Form.Group controlId="formCategory">
                     <Form.Label>Category</Form.Label>
-                    <Form.Control as="select">
-                        <option hidden>Choose a category...</option>
-                        {this.state.categoriesArray}
+                        <Form.Control as="select" onChange={this.changeHandler} name="category" size="lg">
+                            <option hidden>Choose a category...</option>
+                            {this.state.categoryList}
 
                     </Form.Control>
                 </Form.Group>
@@ -312,21 +319,25 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                         <Form.Label>Job Time Estimate</Form.Label>
                         
                         <Form.Row className="formRow">
-                            <Col>
+                            <Col lg="2">
+                            <p>Hours</p>
+                            </Col>
+                            <Col lg="2">
                                 <Form.Control required onChange={this.changeHandler} size="lg" type="number"
                                     step="1" min="1" max="23" value={this.state.formFields.timeEstimateHour.value}
-                                    id="new-job-jobhour" placeholder="12" name="timeEstimateHour" />
+                                    id="new-job-jobhour" placeholder="1" name="timeEstimateHour" />
                             </Col>
-                            <p>:</p>
-                            <Col>
+                            <Col lg="2">
+                                <p>Minutes</p>
+                            </Col>
+                            <Col lg="2">
                                 <Form.Control required onChange={this.changeHandler} size="lg" type="number"
                                     step="1" min="0" max="59" value={this.state.formFields.timeEstimateMinute.value}
                                     id="new-job-jobminute" placeholder="00" name="timeEstimateMinute" />
                                 <Form.Control.Feedback type="invalid">
-                                    Please enter some comments about your reimbursement request.
-                        </Form.Control.Feedback>
+                                    Please enter an estimated time for your job.
+                                </Form.Control.Feedback>
                             </Col>
-                            <Col><p>24-hour time</p></Col>
                         </Form.Row>
                     </Form.Group>
 

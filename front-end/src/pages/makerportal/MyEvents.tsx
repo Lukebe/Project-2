@@ -88,6 +88,8 @@ class PopularEvents extends Component <IAuthProps,IState>{
                 return new Job(element);
 
             })
+            console.log("Jobs");
+            console.log(jobsArray);
             this.setState({...this.state, RequestStatus: 
                 {...this.state.RequestStatus, status: RequestState.SUCCESSFUL}});
             this.setState({data: jobsArray, dataPagination: new Pagination(await response)})
