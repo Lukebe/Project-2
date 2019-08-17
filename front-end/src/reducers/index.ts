@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import { authReducer } from "./Authentication.reducer";
 import { accountModalReducer, AccountModalType } from "./AccountModal.reducer";
 import { User } from "../models/User";
+import { makerPortalReducer } from "./MakerPortal.reducer";
 
 //This is the IAuthState interface defined in the Authentication reducer. This defines the structure
 //of the gloabl authentication state. The initial state in Authentication reducer follows the exact
@@ -15,6 +16,10 @@ export interface IAuthState {
         route: string,
     }
 };
+export interface IMakerPortalState {
+    needsRefresh: boolean,
+    formFields: any;
+};
 export interface IAccountState {
     selectedModal : AccountModalType
 };
@@ -27,11 +32,13 @@ export interface IAccountState {
 //use this.state.auth. Other properties can be added in here and be accessed in components like: this.props.propertyName
 export interface IAppState {
     auth: IAuthState,
-    accountModal : IAccountState
+    accountModal : IAccountState,
+    makerPortal: IMakerPortalState,
 }
 //This combines all the different reducers into a global state variable. This variable is then passed to the store (in Store.ts)
 //and becomes the global state.
 export const state = combineReducers<IAppState>({
     auth: authReducer,
     accountModal : accountModalReducer,
+    makerPortal: makerPortalReducer,
 })
