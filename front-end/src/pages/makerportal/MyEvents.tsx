@@ -84,7 +84,6 @@ class PopularEvents extends Component <IAuthProps,IState>{
                 {...this.state.RequestStatus, status: RequestState.ERROR, errorMsg: response.message}});
         } else {
             let responseArray = response.content;
-            console.log(response.content);
             let jobsArray : Job[] = responseArray.map((element:any, index: number)=>{
                 return new Job(element);
 
@@ -93,7 +92,6 @@ class PopularEvents extends Component <IAuthProps,IState>{
                 {...this.state.RequestStatus, status: RequestState.SUCCESSFUL}});
             this.setState({data: jobsArray, dataPagination: new Pagination(await response)})
         }
-        console.log(await response);
     }
 
     render() {

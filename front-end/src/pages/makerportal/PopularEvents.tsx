@@ -6,6 +6,8 @@ import { withState, withHandlers } from "recompose";
 import { Marker, InfoWindow, GoogleMap, withGoogleMap } from "react-google-maps";
 import testData from './MapTestData';
 import * as APICall from '../../utils/APICall';
+import Axios from "axios";
+import { Spinner } from "react-bootstrap";
 const RequestState = APICall.RequestState;
 
 //GEOCODE METHOD: https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&address=hello
@@ -20,8 +22,7 @@ const PlacesWithStandaloneSearchBox = compose(
     googleMapURL,
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `400px` }} />,
-    mapElement: <div style={{ height: `100%` }} />,
-    places : testData,
+    mapElement: <div style={{ height: `100%` }} />, 
   }),
   withState('zoom', 'onZoomChange', 8),
   withHandlers(() => {
@@ -30,6 +31,7 @@ const PlacesWithStandaloneSearchBox = compose(
     }
     return {
       onMapMounted: () => (ref: any) => {
+        console.log("map loaded!");
         refs.map = ref;
       }
     }
@@ -38,70 +40,31 @@ const PlacesWithStandaloneSearchBox = compose(
     componentWillMount() {
       const refs : any = {}
       this.setState({
-        places: testData,
+        places: this.props.places,
         onSearchBoxMounted: (ref:any) => {
           refs.searchBox = ref;
         },
-        onPlacesChanged: () => {
-          let places = refs.searchBox.getPlaces();
-           places.forEach((element : any, index: number) => {
-              if(isNaN(element.geometry.location.lat)){
-                  console.log(element.geometry.location.lat());
-                  places[index].geometry.location.lat = element.geometry.location.lat();
-                  places[index].geometry.location.lng = element.geometry.location.lng();
-              }
-          });
-          console.log(places);
-          this.setState({
-            places,
-          });
-        },
+        //onPlacesChanged: () => {
+          //let places = refs.searchBox.getPlaces();
+           //places.forEach((element : any, index: number) => {
+           //   if(isNaN(element.geometry.location.lat)){
+          //       console.log(element.geometry.location.lat());
+          //        places[index].geometry.location.lat = element.geometry.location.lat();
+          //        places[index].geometry.location.lng = element.geometry.location.lng();
+         //     }
+          //});
+          //console.log(places);
+          //this.setState({
+            //places,
+          //});
+        //},
       })
     },
-  }),
+  }), 
   withScriptjs,
   withGoogleMap
 )((props : any) =>
 <>
-{console.log(props.places)}
-  <div data-standalone-searchbox="">
-    <StandaloneSearchBox
-      ref={props.onSearchBoxMounted}
-      bounds={props.bounds}
-      onPlacesChanged={(e : any) => {     console.log(props.updateCallback);     
-        props.updateCallback(props.places);
-        props.onPlacesChanged(e);
-        }}>
-      <input
-        type="text"
-        placeholder="Search for a location"
-        style={{
-          boxSizing: `border-box`,
-          border: `1px solid transparent`,
-          width: `240px`,
-          height: `32px`,
-          padding: `0 12px`,
-          borderRadius: `3px`,
-          boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-          fontSize: `14px`,
-          outline: `none`,
-          textOverflow: `ellipses`,
-        }}
-        
-      />
-    </StandaloneSearchBox>
-    <ol>
-    {//props.places.map((arr : any) =>
-        //<li key={arr.place_id}>
-        //  {arr.formatted_address}
-        //  {" at "}
-        //  ({arr.geometry.location.lat}, {arr.geometry.location.lng})
-
-        //</li>
-      //) 
-    }
-    </ol>
-    </div>
     {console.log(props.places)}
        { (props.places[0]) ? 
     <GoogleMap
@@ -148,7 +111,7 @@ class PopularEvents extends Component <IAuthProps,IState>{
         super(props);
         this.state = {
             isFetching: false,
-            currentPlaces: {},
+            currentPlaces: null,
             RequestStatus: {
               status: RequestState.NOT_ACTIVE,
               errorMsg: '',
@@ -157,34 +120,46 @@ class PopularEvents extends Component <IAuthProps,IState>{
         
     }
      retrieveInformationFromMap = (obj : any) => {
-      this.setState({...this.state, currentPlaces: obj});
       alert(obj);
     }
-    async getPopularLocations(page : number) {
+    componentDidMount() {
+      this.getPopularLocations();
+    }
+    async getPopularLocations() {
       this.setState({...this.state, RequestStatus: 
           {...this.state.RequestStatus, status: RequestState.FETCHING}});
-      const response = await APICall.GET('/jobs/popularlocations/5?days=10000' ,this.props.auth.userProfile.getToken());
+      const response = await APICall.GET('/jobs/popularlocations/1?days=864000' ,this.props.auth.userProfile.getToken());
       //If there is an error, APICall methods will return an Error class instance.
       //This checks if there is an error and alerts message if there is.
       if(await response instanceof Error){
           this.setState({...this.state, RequestStatus: 
               {...this.state.RequestStatus, status: RequestState.ERROR, errorMsg: response.message}});
       } else {
-          let responseArray = response.content;
-          console.log(response.content);
-          let jobsArray : Job[] = responseArray.map((element:any, index: number)=>{
-              return new Job(element);
-          })
+        console.log(await response);
+        if(!response[0]){ return;}
+        let geocodeDataArray : any = await response.map(async(element : any) => {
+            let geocodeData = await Axios.get(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&address=${element.address}`)
+            if (geocodeData.status === 200) {
+              console.log(geocodeData.data.results[0]);
+            return geocodeData.data.results[0];
+            }
+          });
+          console.log(await geocodeDataArray);
           this.setState({...this.state, RequestStatus: 
-              {...this.state.RequestStatus, status: RequestState.SUCCESSFUL}});
-          this.setState({data: jobsArray, dataPagination: new Pagination(await response)})
+              {...this.state.RequestStatus, status: RequestState.SUCCESSFUL},currentPlaces: geocodeDataArray});
+          console.log(this.state);
       }
-      console.log(await response);
   } 
     render() {
-        return (<>
+        return (<> 
         <h2 className = " makerportal-title">Popular Events</h2>
-<PlacesWithStandaloneSearchBox updateCallback = {this.retrieveInformationFromMap} places = {testData}/>
+        {this.state.currentPlaces !== null ? 
+<PlacesWithStandaloneSearchBox updateCallback = {this.retrieveInformationFromMap} places = {this.state.currentPlaces}/>
+   :
+<Spinner animation = "border" variant = "dark"/>}
+{console.log(this.state.currentPlaces)}
+
+
 </>
         )
     }
