@@ -60,7 +60,7 @@ public class JobController {
 	}
 	@PatchMapping("")
 	public  Job updateJobWithRating(@RequestBody JobRatingWrapper data) {
-		if(Double.isNaN(data.getRating())){
+		if(data.getRating() == 0.0){
 			Job updatedJob = jobService.updateJob(data.getJob());
 			return updatedJob;
 		} else {

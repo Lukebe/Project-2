@@ -1,4 +1,4 @@
-import { IAuthState, IAppState } from "../../reducers";
+import { IAuthState, IAppState, IMakerPortalState } from "../../reducers";
 import { loginSuccessful } from "../../actions/Authentication.action";
 import { connect } from "react-redux";
 import React, { Component } from "react";
@@ -11,6 +11,8 @@ import { Spinner, Button, Accordion, Card } from "react-bootstrap";
 import { Job } from "../../models/Job";
 import { Product } from "../../models/Product";
 import { Category } from "../../models/Category";
+import { myJobsRefresh, newJobsPopulate, newJobsReset } from "../../actions/MakerPortal.action";
+import { makerPortalReducer } from "../../reducers/MakerPortal.reducer";
 const RequestState = APICall.RequestState;
 
 //GEOCODE METHOD: https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&address=hello
@@ -78,7 +80,7 @@ const PlacesWithStandaloneSearchBox = compose(
           {currElement.formatted_address}
           </p><Button className = "map-picker-info-window-button"
           onClick = {(e : any)=>{e.preventDefault(); console.log(props.jobDetails[index]);
-            props.updateCallback(props.jobDetails[index]); props.onToggleOpen(100000000)}}>
+            props.updateCallback(index); props.onToggleOpen(100000000)}}>
               Skip the Line for {props.jobDetails[index].product.itemName}</Button></>
         </InfoWindow> : null}
 
@@ -92,7 +94,10 @@ const PlacesWithStandaloneSearchBox = compose(
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
-    loginSuccessful : () => void;
+    makerPortal: IMakerPortalState,
+    myJobsRefresh: () => void,
+    newJobsPopulate: (name: string, value : any) => void,
+    newJobsReset: () => void,
     //Action creators from the dispatcher
 }
 export interface IComponentProps {
@@ -123,8 +128,15 @@ class PopularEvents extends Component <IAuthProps,IState>{
         };
         
     }
-     retrieveInformationFromMap = (obj : any) => {
-      alert(obj);
+     retrieveInformationFromMap = (index : number) => {
+       console.log(this.state.popularJobDetails[index]);
+       this.props.newJobsReset();
+       this.props.newJobsPopulate("productlocation", this.state.popularJobDetails[index].address);
+       this.props.newJobsPopulate("category",  this.state.popularJobDetails[index].product.category.categoryId);
+       this.props.newJobsPopulate("product",  this.state.popularJobDetails[index].product.productId)
+      this.props.myJobsRefresh();
+
+
     }
     async componentDidMount() {
       let popularLocations = await this.getPopularLocations();
@@ -144,7 +156,7 @@ class PopularEvents extends Component <IAuthProps,IState>{
     async getPopularLocations()  {
       this.setState({...this.state, RequestStatus: 
           {...this.state.RequestStatus, status: RequestState.FETCHING}});
-      const response = await APICall.GET('/jobs/popularlocations/1?days=864000' ,this.props.auth.userProfile.getToken());
+      const response = await APICall.GET('/jobs/popularlocations/5?days=864000' ,this.props.auth.userProfile.getToken());
       //If there is an error, APICall methods will return an Error class instance.
       //This checks if there is an error and alerts message if there is.
       if(response instanceof Error){
@@ -154,7 +166,6 @@ class PopularEvents extends Component <IAuthProps,IState>{
         this.setState({popularJobDetails: response});
         console.log(response);
         let addressArray : any[] = response.map((element : any) => {
-          console.log(element.address);
           return element.address;
         });   
         console.log(addressArray);
@@ -216,11 +227,14 @@ places = {this.state.currentPlaces} jobDetails = {this.state.popularJobDetails} 
 }
 const mapStateToProps = (state : IAppState) => {
     return {
-        auth: state.auth
+        auth: state.auth,
+        makerPortal: state.makerPortal,
     }
 }
 //This object definition will be used to map action creators to properties
 const mapDispatchToProps = {
-    loginSuccessful : loginSuccessful,
+  myJobsRefresh: myJobsRefresh,
+  newJobsPopulate: newJobsPopulate,
+  newJobsReset: newJobsReset,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(PopularEvents);

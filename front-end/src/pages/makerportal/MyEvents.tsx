@@ -1,7 +1,7 @@
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { IAuthState, IAppState } from '../../reducers';
+import { IAuthState, IAppState, IMakerPortalState } from '../../reducers';
 import './Maker.css';
 import { loginSuccessful } from '../../actions/Authentication.action';
 import * as APICall from '../../utils/APICall';
@@ -9,11 +9,14 @@ import { Job } from "../../models/Job";
 import Pagination from '../../models/Pagination';
 import { Alert, Card, Button, FormLabel, Form, Spinner } from "react-bootstrap";
 import isMobile from "../../utils/IsMobile";
+import { makerPortalReducer } from "../../reducers/MakerPortal.reducer";
+import { myJobsDoneRefresh } from "../../actions/MakerPortal.action";
 const RequestState = APICall.RequestState;
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
-    loginSuccessful : () => void;
+    makerPortal: IMakerPortalState,
+    myJobsDoneRefresh: () => void;
     //Action creators from the dispatcher
 }
 export interface IComponentProps {
@@ -25,7 +28,6 @@ interface IState {
     RequestStatus: {
         status: APICall.RequestState,
         errorMsg: string,
-
     }
 }
 type IProps = IComponentProps & IAuthProps;
@@ -45,6 +47,12 @@ class PopularEvents extends Component <IAuthProps,IState>{
     }
     componentDidMount() {
         this.getMyJobs(0);
+    }
+    componentWillReceiveProps(props:any){
+        if(props.makerPortal.needsRefresh !== this.props.makerPortal.needsRefresh){
+            console.log("yes");
+            if(this.props.makerPortal.needsRefresh){this.getMyJobs(0)}
+        }
     }
     goBackClick = (e : any) => {
         e.preventDefault();
@@ -75,7 +83,7 @@ class PopularEvents extends Component <IAuthProps,IState>{
             {...this.state.RequestStatus, status: RequestState.FETCHING}});
         const numOfElements = (isMobile() === true) ? 1 : 5;
         const response = await APICall.GET('/jobs/usercreated/' + this.props.auth.userProfile.getUserId() + 
-        '?page=' + page + '&size=' + numOfElements + '&sort=dateCreated,asc'
+        '?page=' + page + '&size=' + numOfElements + '&sort=dateCreated,desc'
         ,this.props.auth.userProfile.getToken());
         //If there is an error, APICall methods will return an Error class instance.
         //This checks if there is an error and alerts message if there is.
@@ -152,11 +160,12 @@ class PopularEvents extends Component <IAuthProps,IState>{
 }
 const mapStateToProps = (state : IAppState) => {
     return {
-        auth: state.auth
+        auth: state.auth,
+        makerPortal: state.makerPortal,
     }
 }
 //This object definition will be used to map action creators to properties
 const mapDispatchToProps = {
-    loginSuccessful : loginSuccessful,
+    myJobsDoneRefresh: myJobsDoneRefresh,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(PopularEvents);
