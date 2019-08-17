@@ -2,12 +2,15 @@ import { IAuthState, IAppState } from "../../reducers";
 import { loginSuccessful } from "../../actions/Authentication.action";
 import { connect } from "react-redux";
 import React, { Component } from "react";
-import { withState, withHandlers } from "recompose";
+import { withState, withHandlers, withStateHandlers } from "recompose";
 import { Marker, InfoWindow, GoogleMap, withGoogleMap } from "react-google-maps";
 import testData from './MapTestData';
 import * as APICall from '../../utils/APICall';
 import Axios from "axios";
-import { Spinner } from "react-bootstrap";
+import { Spinner, Button, Accordion, Card } from "react-bootstrap";
+import { Job } from "../../models/Job";
+import { Product } from "../../models/Product";
+import { Category } from "../../models/Category";
 const RequestState = APICall.RequestState;
 
 //GEOCODE METHOD: https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&address=hello
@@ -25,13 +28,19 @@ const PlacesWithStandaloneSearchBox = compose(
     mapElement: <div style={{ height: `100%` }} />, 
   }),
   withState('zoom', 'onZoomChange', 8),
+  withStateHandlers(() => ({
+    openInfoWindowMarkerId: '',
+  }), {
+    onToggleOpen: ({ openInfoWindowMarkerId }) => (markerId) => ({
+      openInfoWindowMarkerId: markerId,
+    })
+  }),
   withHandlers(() => {
     const refs : any = {
       map: undefined,
     }
     return {
       onMapMounted: () => (ref: any) => {
-        console.log("map loaded!");
         refs.map = ref;
       }
     }
@@ -39,47 +48,39 @@ const PlacesWithStandaloneSearchBox = compose(
   lifecycle({
     componentWillMount() {
       const refs : any = {}
-      this.setState({
-        places: this.props.places,
-        onSearchBoxMounted: (ref:any) => {
-          refs.searchBox = ref;
-        },
-        //onPlacesChanged: () => {
-          //let places = refs.searchBox.getPlaces();
-           //places.forEach((element : any, index: number) => {
-           //   if(isNaN(element.geometry.location.lat)){
-          //       console.log(element.geometry.location.lat());
-          //        places[index].geometry.location.lat = element.geometry.location.lat();
-          //        places[index].geometry.location.lng = element.geometry.location.lng();
-         //     }
-          //});
-          //console.log(places);
-          //this.setState({
-            //places,
-          //});
-        //},
-      })
+
     },
   }), 
   withScriptjs,
   withGoogleMap
 )((props : any) =>
 <>
-    {console.log(props.places)}
        { (props.places[0]) ? 
     <GoogleMap
-      center={{ lat: props.places[0]['geometry']['location']['lat'], lng: props.places[0]['geometry']['location']['lng'] }}
+      center={props.center}
       zoom={props.zoom}
       ref={props.onMapMounted}
       options = {{backgroundColor: 'black',
                   clickableIcons: true,
                   zoom: 15}}
     >
-        {props.places.map((index: any) =>
+        {props.places.map((currElement : any, index: any) =>
       <Marker
-        position={{ lat: index.geometry.location.lat, lng: index.geometry.location.lng }}
-        onClick={props.onToggleOpen}
+        position={{ lat: currElement.geometry.location.lat, lng: currElement.geometry.location.lng }}
+        onClick={() => {console.log(props.jobDetails);props.onToggleOpen(index)}}
       >
+        {props.openInfoWindowMarkerId === index ?
+        <InfoWindow key = {index} onCloseClick={()=>props.onToggleOpen(index)}><>
+          <img className = "map-picker-info-window-icon" key = {index} src = {props.jobDetails[index].product.imageUrl}/>
+          <p className = "map-picker-info-window-name"><strong>{props.jobDetails[index].product.itemName}</strong></p>
+          <p className = "map-picker-info-window-description">{props.jobDetails[index].product.description}</p>
+          <p className = "map-picker-info-window-address"><i className = "material-icons">location_on</i>
+          {currElement.formatted_address}
+          </p><Button className = "map-picker-info-window-button"
+          onClick = {(e : any)=>{e.preventDefault(); console.log(props.jobDetails[index]);
+            props.updateCallback(props.jobDetails[index]); props.onToggleOpen(100000000)}}>
+              Skip the Line for {props.jobDetails[index].product.itemName}</Button></>
+        </InfoWindow> : null}
 
       </Marker>
         )}
@@ -97,8 +98,9 @@ export interface IAuthProps {
 export interface IComponentProps {
 }
 interface IState {
-    isFetching : boolean;
     currentPlaces: any;
+    popularJobDetails: any;
+    mapCenter: any;
     RequestStatus: {
       status: APICall.RequestState,
       errorMsg: string,
@@ -110,11 +112,13 @@ class PopularEvents extends Component <IAuthProps,IState>{
     constructor(props: any) {
         super(props);
         this.state = {
-            isFetching: false,
-            currentPlaces: null,
+            currentPlaces: testData,
+            mapCenter: { },
+            popularJobDetails: {},
             RequestStatus: {
               status: RequestState.NOT_ACTIVE,
               errorMsg: '',
+              
           }
         };
         
@@ -122,42 +126,88 @@ class PopularEvents extends Component <IAuthProps,IState>{
      retrieveInformationFromMap = (obj : any) => {
       alert(obj);
     }
-    componentDidMount() {
-      this.getPopularLocations();
+    async componentDidMount() {
+      let popularLocations = await this.getPopularLocations();
+      if(await popularLocations){
+     this.setState({currentPlaces: popularLocations, RequestStatus: 
+      {...this.state.RequestStatus, status: RequestState.SUCCESSFUL}}) ; 
+      this.changeMapCenter(0);
+    } else {
+      this.setState({RequestStatus: 
+        {...this.state.RequestStatus, status: RequestState.ERROR}}) ; 
+     }
     }
-    async getPopularLocations() {
+    changeMapCenter = (index:number) => {
+      this.setState({mapCenter: {lat: this.state.currentPlaces[index]['geometry']['location']['lat'],
+       lng: this.state.currentPlaces[index]['geometry']['location']['lng']} });
+    }
+    async getPopularLocations()  {
       this.setState({...this.state, RequestStatus: 
           {...this.state.RequestStatus, status: RequestState.FETCHING}});
       const response = await APICall.GET('/jobs/popularlocations/1?days=864000' ,this.props.auth.userProfile.getToken());
       //If there is an error, APICall methods will return an Error class instance.
       //This checks if there is an error and alerts message if there is.
-      if(await response instanceof Error){
+      if(response instanceof Error){
           this.setState({...this.state, RequestStatus: 
               {...this.state.RequestStatus, status: RequestState.ERROR, errorMsg: response.message}});
       } else {
-        console.log(await response);
-        if(!response[0]){ return;}
-        let geocodeDataArray : any = await response.map(async(element : any) => {
-            let geocodeData = await Axios.get(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&address=${element.address}`)
-            if (geocodeData.status === 200) {
-              console.log(geocodeData.data.results[0]);
-            return geocodeData.data.results[0];
-            }
-          });
-          console.log(await geocodeDataArray);
-          this.setState({...this.state, RequestStatus: 
-              {...this.state.RequestStatus, status: RequestState.SUCCESSFUL},currentPlaces: geocodeDataArray});
-          console.log(this.state);
+        this.setState({popularJobDetails: response});
+        console.log(response);
+        let addressArray : any[] = response.map((element : any) => {
+          console.log(element.address);
+          return element.address;
+        });   
+        console.log(addressArray);
+        let geocodeData = await Axios.all(addressArray.map((address:string) => 
+        Axios.get(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&address=${address}`)))
+          .then(Axios.spread(function (...res) {
+            console.log(res);
+            return res;
+            }));
+        let geocodeMap = geocodeData.map((element: any) => {
+          if(element.status === 200){
+            return element.data.results[0];
+          }
+        })
+        return await geocodeMap;
+         
+          
       }
   } 
     render() {
-        return (<> 
-        <h2 className = " makerportal-title">Popular Events</h2>
-        {this.state.currentPlaces !== null ? 
-<PlacesWithStandaloneSearchBox updateCallback = {this.retrieveInformationFromMap} places = {this.state.currentPlaces}/>
-   :
-<Spinner animation = "border" variant = "dark"/>}
-{console.log(this.state.currentPlaces)}
+        return (<>
+        {console.log(this.state)} 
+        <h2 className = "makerportal-title">Popular Orders</h2>
+        {(this.state.RequestStatus.status === RequestState.FETCHING) ? <Spinner animation = "border" variant = "dark"/> :
+<PlacesWithStandaloneSearchBox updateCallback = {this.retrieveInformationFromMap} 
+places = {this.state.currentPlaces} jobDetails = {this.state.popularJobDetails} center = {this.state.mapCenter}/>
+} 
+        {(this.state.popularJobDetails[0]) ?
+          <Accordion defaultActiveKey="0" className = "popular-events-list">
+        {this.state.popularJobDetails.map((element: any, index: number) => {
+          return (
+          <Card>
+            <Accordion.Toggle as={Card.Header} eventKey={""+index} onClick = {()=>this.changeMapCenter(index)}>
+              {element.product.itemName} @ {element.address}
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey={""+index}>
+              <Card.Body>
+              <img className = "popular-events-list-image" key = {index} src = {element.product.imageUrl}/>
+              <p className = "popular-events-list-description">{element.product.description}</p>
+              <p className = "popular-events-list-category">Category: {element.product.category.name}</p>
+              <p className = "popular-events-list-price">Price: {element.product.price}</p>
+              <p className = "popular-events-list-address"><i className = "material-icons">location_on</i>{element.address}
+              <p className = "popular-events-list-count"><strong>{element.count} Kutsies users are waiting for this product.
+              Get it before it's too late!</strong></p>
+              </p><Button className = "map-picker-info-window-button"
+          onClick = {(e : any)=>{e.preventDefault();}}>
+              Skip the Line for {element.product.itemName}</Button>
+              </Card.Body>
+            </Accordion.Collapse>
+          </Card> )
+        })}
+        </Accordion>
+        : null }
 
 
 </>

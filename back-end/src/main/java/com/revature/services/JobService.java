@@ -48,18 +48,30 @@ public class JobService {
 	}
 	public Page<Job> selectJobsByUserCreatedId(int userCreatedId, int status, Pageable pageable) {
 		System.out.println("JOBS SELECTED WITH USER CREATED ID: " + userCreatedId);
+		if(status == 0) {
+			return jobRepository.findAllByUserCreatedUserId(userCreatedId, pageable);
+		}
 		return jobRepository.findAllByUserCreatedUserIdAndStatusStatusId(userCreatedId, status, pageable);
 	}
 	public Page<Job> selectJobsByUserAcceptedId(int userAcceptedId, int status, Pageable pageable) {
 		System.out.println("JOBS SELECTED WITH USER ACCEPTED ID: " + userAcceptedId);
+		if(status == 0) {
+			return jobRepository.findAllByUserAcceptedUserId(userAcceptedId, pageable);
+		}
 		return jobRepository.findAllByUserAcceptedUserIdAndStatusStatusId(userAcceptedId, status, pageable);
 	}
 	public Page<Job> selectJobsByCategoryId(int category,int status, Pageable pageable) {
 		System.out.println("JOBS SELECTED WITH CATEGORY ID: " + category);
+		if(status == 0) {
+			return jobRepository.findAllByCategoryCategoryId(category, pageable);
+		}
 		return jobRepository.findAllByCategoryCategoryIdAndStatusStatusId(category, status, pageable);
 	}
 	public Page<Job> selectJobsByProductId(int product, int status, Pageable pageable) {
 		System.out.println("JOBS SELECTED WITH PRODUCT ID: " + product);
+		if(status == 0) {
+			return jobRepository.findAllByProductProductId(product, pageable);
+		}
 		return jobRepository.findAllByProductProductIdAndStatusStatusId(product, status, pageable);
 	}
 	public Page<Job> selectJobsByStatusId(int status, Pageable pageable) {

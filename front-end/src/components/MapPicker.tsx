@@ -163,8 +163,8 @@ class MapPicker extends Component <IProps,IState>{
         return (
             <Modal size="lg" show animation 
             onHide = {() => this.props.closeCallback(this.state.address)}>
-                <Modal.Header><h2>Map Picker</h2></Modal.Header>
-                <Modal.Body>
+          <Modal.Header closeButton><h2>Map Picker</h2></Modal.Header>
+         <Modal.Body>
 <PlacesWithStandaloneSearchBox updateCallback = {this.updateCallback}/>
                 </Modal.Body> 
             </Modal>     )

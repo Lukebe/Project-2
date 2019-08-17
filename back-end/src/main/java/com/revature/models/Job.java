@@ -2,6 +2,7 @@ package com.revature.models;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -20,6 +21,10 @@ import org.hibernate.validator.constraints.Range;
 import org.hibernate.validator.constraints.time.DurationMax;
 import org.hibernate.validator.constraints.time.DurationMin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 @Table(name="jobs")
 public class Job {
@@ -40,9 +45,12 @@ public class Job {
 	@NotNull
 	private String description;
 	@NotNull
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date dateCreated;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date dateAccepted;
 	@NotNull
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date jobDateTime;
 	@ManyToOne
 	@JoinColumn(name = "user_accepted_id")

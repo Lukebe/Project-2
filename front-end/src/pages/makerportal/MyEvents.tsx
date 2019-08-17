@@ -99,11 +99,12 @@ class PopularEvents extends Component <IAuthProps,IState>{
     render() {
         return (
             <>
-            <h2 className = "my-events-title makerportal-title">My Events</h2>
-            {this.state.RequestStatus.status === RequestState.ERROR ?
-                    <Alert key="request-error" variant="danger">
-                    {this.state.RequestStatus.errorMsg}
+                        {this.state.RequestStatus.status === RequestState.ERROR ?
+                    <Alert key="request-error" className = "my-events-error" variant="danger">
+                    Error retrieving data from server : {this.state.RequestStatus.errorMsg}
                     </Alert> : null}
+            <h2 className = "my-events-title makerportal-title">My Orders</h2>
+
                     
             <div className = "my-events-container">
 

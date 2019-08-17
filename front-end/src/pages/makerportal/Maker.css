@@ -32,6 +32,12 @@
 }
 .map-picker-info-window-name{
     padding-bottom: 2px;
+    margin-bottom:1.0em;
+    margin-top: 0.4em;
+    text-align:center;
+}
+.map-picker-info-window-description {
+    font-size: 1em;
     text-align:center;
 }
 .map-picker-info-window-address{
@@ -98,10 +104,14 @@
     bottom: -8px !important;
     left: -8px !important;
   }
+.my-events-error {
+    text-align: center;
+}
 .my-events-container {
     padding-bottom: 1em;
     display: flex;
     flex-direction: row;
+    text-align: center;
 }
 .my-events-container > .pagination-left, .my-events-container > .pagination-right {
     justify-content: center;
@@ -208,6 +218,9 @@
 .my-events-loading-spinner {
     margin-right: .5em;
     float:right;
+}
+.popular-events-list {
+    margin-top: 1em;
 }
 @media only screen and (max-width: 500px) {
     .my-events-data {
