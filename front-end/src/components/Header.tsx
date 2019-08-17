@@ -46,20 +46,22 @@ class Header extends Component<IAuthProps, IState>{
     render() {
         return (
             <>
-                <div className="headerLinks" >
-                    <Navbar bg="light" expand="lg">
-                        <Navbar.Brand href="#home">Kutsies</Navbar.Brand>
+                <div className="headerNavBar" >
+                    <Navbar bg="dark" expand="lg">
+
+                        <Navbar.Brand className="headerLogo" href="#/">Kutsies</Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                        <Navbar.Collapse id="basic-navbar-nav">
+                        <Navbar.Collapse className="headerHoldsLinks" id="basic-navbar-nav">
                             <img src={iconWhite} style={{ width: 100, marginTop: -7 }} />
                             <Nav className="mr-auto">
+                                <div className="headerLinks">
 
-                                <Nav.Link href="#home">Home</Nav.Link>
-                                <Nav.Link href="#userPortal">User Portal</Nav.Link>
+                                    <Nav.Link href="#/">Home</Nav.Link>
+                                    <Nav.Link href="#userPortal">User Portal</Nav.Link>
 
-                                <Nav.Link href="#makerportal">Maker Portal</Nav.Link>
-                                <Nav.Link href="#userAccount">My Account</Nav.Link>
-
+                                    <Nav.Link href="#makerportal">Maker Portal</Nav.Link>
+                                    <Nav.Link href="#userAccount">My Account</Nav.Link>
+                                </div>
                                 {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                                 <Nav.Link href="#userPortal">User Portal</Nav.Link>
 
