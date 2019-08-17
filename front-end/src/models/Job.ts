@@ -6,11 +6,12 @@ class Job {
     private jobId : number;
     private userCreated : User;
     private address : string;
+    private dropoffAddress : string;
     private description : string;
     private dateCreated : Date;
-    private dateAccepted : Date | undefined;
+    private dateAccepted : Date;
     private jobDateTime : Date;
-    private userAccepted : User | undefined;
+    private userAccepted : User;
     private jobPrice : number;
     private category : Category;
     private timeEstimate: Date;
@@ -19,28 +20,56 @@ class Job {
 
     constructor(data : any) {
         this.jobId = data.jobId;
-        this.userCreated = new User(data.userCreated);
+        if(data.userCreated) {
+            this.userCreated = new User(data.userCreated);
+        }else {
+            this.userCreated = new User({userId: 0, username: '', firstname: '',
+            lastname: '', email: '', phone : '', rating: 0});
+        }
         this.address = data.address;
-        this.description = data[3];
+        this.dropoffAddress = data.dropoffAddress;
+        this.description = data.description;
         this.dateCreated = new Date(data.dateCreated);
         this.dateAccepted = new Date(data.dateAccepted);
         this.jobDateTime = new Date(data.jobDateTime);
-        this.userAccepted = new User(data.userAccepted);
+        if(data.userAccepted) {
+            this.userAccepted = new User(data.userAccepted);
+        } else {
+            this.userAccepted = new User({userId: 0, username: '', firstname: '',
+            lastname: '', email: '', phone : '', rating: 0});
+        }
         this.jobPrice = data.jobPrice;
-        this.category = new Category(data.category);
+        if(data.category) {
+            this.category = new Category(data.category);
+        } else {
+            this.category = new Category({categoryId: 0, name: '', description: ''});
+        }
         this.timeEstimate = new Date(data.timeEstimate);
-        this.product = new Product(data.product);
-        this.status = new Status(data.status);
+        if(data.product) {
+            this.product = new Product(data.product);
+        } else {
+            this.product = new Product({productId: 0, description: '', itemName: '',
+        imageUrl: '', category: new Category({categoryId: 0, name: '', description: ''}),
+        price: 0});
+        }
+        if(data.status) {
+            this.status = new Status(data.status);
+        } else {
+            this.status = new Status({statusId: 0, status: ''});
+        }
     }
 
     getJobId() : number {
         return this.jobId;
     }
-    getUserCreated() : User {
+    getUserCreated() : User | undefined {
         return this.userCreated;
     }
     getAddress() : string {
         return this.address;
+    }
+    getDropoffAddress() : string {
+        return this.dropoffAddress;
     }
     getDescription() : string {
         return this.description;
@@ -48,13 +77,13 @@ class Job {
     getDateCreated() : Date {
         return this.dateCreated;
     }
-    getDateAccepted() : Date | undefined {
+    getDateAccepted() : Date {
         return this.dateAccepted;
     }
     getJobDateTime() : Date{
         return this.jobDateTime;
     }
-    getUserAccepted() : User | undefined {
+    getUserAccepted() : User {
         return this.userAccepted;
     }
     getJobPrice() : number {
@@ -69,7 +98,7 @@ class Job {
     getProduct() : Product {
         return this.product;
     }
-    getStatus() : Status {
+    getStatus() : Status{
         return this.status;
     }
 }

@@ -6,12 +6,13 @@ import './Maker.css';
 import { loginSuccessful } from '../../actions/Authentication.action';
 import Form from "react-bootstrap/Form";
 import * as APICall from '../../utils/APICall';
-import { Button, Spinner, Col } from "react-bootstrap";
+import { Button, Spinner, Col, Alert } from "react-bootstrap";
 import InputGroup from 'react-bootstrap/InputGroup';
 import StandaloneSearchBox from "react-google-maps/lib/components/places/StandaloneSearchBox";
 import MapPicker from '../../components/MapPicker';
 import { Category } from "../../models/Category";
-
+import ProductPicker from "../../components/ProductPicker";
+const RequestState = APICall.RequestState;
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
@@ -24,14 +25,17 @@ interface IState {
     validated : boolean;
     formFields: any;
     Error: any;
-    isLoading: boolean;
-    isCreated: boolean;
+    RequestStatus: {
+        status: APICall.RequestState,
+        errorMsg: string,
+    }
     creationData: any;
     categoryList: any;
     categoriesArray: any;
     isAuthorized:boolean;
     isMapModalOpen: boolean;
     openedLocation: string;
+    productPickerOpen: boolean;
 }
 type IProps = IComponentProps & IAuthProps;
 class CreateNewJob extends Component <IAuthProps,IState>{
@@ -41,6 +45,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
         this.state = {
             validated : false,
             isMapModalOpen: false,
+            productPickerOpen: false,
             formFields: {
                 productlocation: {
                   value: ''
@@ -77,8 +82,10 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                 }
             },
             Error: {isError: false, message: ''},
-            isLoading: false,
-            isCreated: false,
+            RequestStatus: {
+                status: RequestState.NOT_ACTIVE,
+                errorMsg: '',
+            },
             creationData: [],
             categoryList: [],
             categoriesArray: [],
@@ -96,31 +103,72 @@ class CreateNewJob extends Component <IAuthProps,IState>{
         if (form.checkValidity() === false) {
             event.stopPropagation();
         } else {
-            this.setState({...this.state, isLoading: true});
+            this.setState({...this.state, RequestStatus: 
+                {...this.state.RequestStatus, status: RequestState.FETCHING}});
             const formData = this.state.formFields;
             const estimateTimeInHours: number = this.state.formFields.timeEstimateHour.value/1;
             const estimateTimeInMinutes: number = this.state.formFields.timeEstimateMinute.value / 60;
+            const jobTimeAdd = new Date(formData.jobdate.value).getTime() + new Date(formData.jobhour.value).getTime()
+             + new Date(formData.jobminute.value).getTime();
             const data =
                 {
-                    userCreated: this.props.auth.userProfile.getUserId(), // sends user id of the user logged in
-                    address: formData.productlocation, // sends an address as a string
-                    description: this.state.formFields.description, // sends a description as a string
-                    dateCreated: null,
+                    userCreated: {userId: this.props.auth.userProfile.getUserId()}, // sends user id of the user logged in
+                    dropoffAddress: formData.dropofflocation.value, // sends an address as a string
+                    address: formData.productlocation.value, // sends an address as a string
+                    description: this.state.formFields.description.value, // sends a description as a string
                     dateAccepted: null,
-                jobDateTime: '2016-06-22 19:10:25-07',//formData.jobdate + formData.jobhour + formData.jobhour,
-                    userAccpeted: null,
-                    category: formData.category.value, // sends the category id
+                    jobDateTime: `${formData.jobdate.value} ${formData.jobhour.value}:${formData.jobminute.value}:00`, //formData.jobdate + formData.jobhour + formData.jobhour,
+                    userAccepted: null,
+                    category: {categoryId: formData.category.value}, // sends the category id
                     jobEarnings: formData.jobpay.value, // sends amount the worker is payed for the job
                     timeEstimate: ((estimateTimeInHours + estimateTimeInMinutes) * 60 * 1000), // sends an integer of time in milliseconds
-                    product: formData.product.value, // sends product id
-                    status: 1
+                    product: {productId: formData.product.value}, // sends product id
+                    status:  {statusId: 1}
                 }
+            
             const returnData = await APICall.POST('/jobs', data, this.props.auth.userProfile.getToken());
             console.log(data)
             if(returnData instanceof Error) {
-                this.setState({...this.state, isLoading:false});
+                this.setState({...this.state, RequestStatus: 
+                    {...this.state.RequestStatus, status: RequestState.ERROR, errorMsg: `Could not complete request. Try again.`}});
             } else {
-                this.setState({...this.state, isLoading:false, creationData: returnData, isCreated:true});
+                this.setState({...this.state, RequestStatus:{...this.state.RequestStatus, status: RequestState.SUCCESSFUL},
+                formFields: {
+                    productlocation: {
+                      value: ''
+                    },
+                    dropofflocation: {
+                        value: ''
+                    },
+                    product: {
+                      value: ''
+                    },
+                    jobdate : {
+                        value: ''
+                    },
+                    jobhour: {
+                        value: ''
+                    },
+                    jobminute: {
+                        value: ''
+                    },
+                    jobpay: {
+                      value: ''  
+                    },
+                    description : {
+                        value: ''
+                    },
+                    category: {
+                        value: 'Choose a category...'
+                    },
+                    timeEstimateHour: {
+                        value: ''
+                    },
+                    timeEstimateMinute: {
+                        value: ''
+                    }
+                }, validated: false});
+                
             }
         }
         this.setState({...this.state, validated: true});
@@ -140,6 +188,9 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                 formFields: {...this.state.formFields,dropofflocation: {value: address}}})
             }
         }
+    handleProductUpdate = (productId : number) => {
+        this.setState({...this.state, formFields : {...this.state.formFields, product: productId},productPickerOpen: false});
+    }
     changeHandler = (event: any) => {    
         const name = event.target.name;
         const value = event.target.value;
@@ -153,8 +204,6 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                 }
             }
         });
-        console.log(name);
-        console.log(value);
     }
     async getCategories() {
         const response = await APICall.GET('/categories'
@@ -184,8 +233,18 @@ class CreateNewJob extends Component <IAuthProps,IState>{
             <>
             {this.state.isMapModalOpen ?
             <MapPicker closeCallback = {this.closeMap}/> : null}
-            <h2>Create New Job</h2>
-            <Form noValidate className="formCreateNewJob" validated={this.state.validated} onSubmit={this.handleSubmit}>
+            <h2 className = "makerportal-title">New Job Listing</h2>
+            {(this.state.RequestStatus.status === RequestState.ERROR) ?
+                    <Alert key="request-type" className = "create-job-error" variant="danger">
+                    {this.state.RequestStatus.errorMsg}
+                    </Alert> : null}
+            {(this.state.RequestStatus.status === RequestState.SUCCESSFUL) ?
+                <Alert key="request-type" className = "create-job-success" variant="success">
+                New Job Created. You will be notified when we find somebody to fulfill your job request.
+                </Alert> : null}
+                {(this.state.productPickerOpen) ?
+                <ProductPicker callback = {this.handleProductUpdate}/> : null}
+            <Form noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
                 <Form.Group controlId="formCategory">
                     <Form.Label>Category</Form.Label>
                         <Form.Control as="select" onChange={this.changeHandler} name="category" size="lg">
@@ -235,6 +294,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                                 <Form.Control required onChange={this.changeHandler} size="lg" type="text" 
                                     value = {this.state.formFields.product.value}
                                     id = "new-job-product" placeholder = "" name="product"/>
+                                    <Button onClick = {() => {this.setState({productPickerOpen: true})}}>Open Product Picker</Button>
                                 <Form.Control.Feedback type="invalid">
                                     Please choose a product
                                 </Form.Control.Feedback>
@@ -331,7 +391,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                 Submit
                 </Button>
                 <span id = 'login-loading-container'>
-                {this.state.isLoading ?<Spinner variant = 'dark' animation='border'/> : null}
+                {this.state.RequestStatus.status === RequestState.FETCHING ?<Spinner variant = 'dark' animation='border'/> : null}
                 </span>
             </Form>
             </>

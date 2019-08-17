@@ -5,11 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ProductCountWrapper {
 	  private Product product;
 	  private long count;
-	public ProductCountWrapper(Product product, long count) {
-		super();
-		this.product = product;
-		this.count = count;
-	}
 	public Product getProduct() {
 		return product;
 	}
@@ -22,5 +17,18 @@ public class ProductCountWrapper {
 	public void setCount(long count) {
 		this.count = count;
 	}
+
+	public ProductCountWrapper(Product product, long count) {
+		super();
+		this.product = product;
+		this.count = count;
+	}
+	@Override
+	public String toString() {
+		return "ProductCountWrapper [product=" + product + ", count=" + count + "]";
+	}
+
+
+	
 	  
 }
