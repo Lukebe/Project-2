@@ -11,6 +11,7 @@ import MyEvents from './MyEvents';
 import CreateNewJob from './CreateNewJob';
 import { openNewJobs, closeNewJobs } from '../../actions/MakerPortal.action';
 import isMobileDevice from '../../utils/IsMobile';
+import { Redirect } from 'react-router';
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
@@ -46,10 +47,17 @@ class MakerPortal extends Component<IAuthProps, IState>{
     hideTitle = (e : any) => {
         this.setState({isNewJobTitle: false});
     }
+    checkLoggedIn = () => {
+        if(!this.props.auth.userProfile.getUserId())
+        {    
+            return <Redirect push to='/' />;
+        }
+    }
 
     render() {
         return (
             <>
+            { this.checkLoggedIn()}
                 <Header />
                 <Container className="makerportal-container">
 
