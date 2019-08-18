@@ -275,7 +275,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                             Please enter some comments about your reimbursement request.
                         </Form.Control.Feedback>   
                         </Col>
-                        <Col><p>24-hour time</p></Col>
+                            <Col><Form.Text className="text-muted">24-hour time</Form.Text></Col>
                     </Form.Row>
                 </Form.Group>
                     <Form.Group controlId="formJobDate">

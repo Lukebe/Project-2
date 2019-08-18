@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import Login from './account/Login';
 import IsMobile from '../utils/IsMobile';
 import { Footer } from '../components/Footer';
+import Header from '../components/Header';
 import { closeModal, openLogin, openIsLoggedIn } from '../actions/AccountModal.action';
 import { AccountModalType } from '../reducers/AccountModal.reducer';
 import Signup from './account/Signup';
@@ -76,6 +77,7 @@ export class Landing extends React.Component<IReduxProps, IState>{
             // Maker Portal, User Portal, My Account. Incorporate logo or plain "Kutsies" title (like in footer) on the left. My Account link should be on right. User portal and maker portal should be in the center.
 
             <div className='landing-background'>
+                <Header/>
                 {this.props.accountModal.selectedModal === AccountModalType.LOGIN ?
                     <Login updateCallback={this.handleModalClose} /> : null}
                 {this.props.accountModal.selectedModal === AccountModalType.SIGNUP ?
