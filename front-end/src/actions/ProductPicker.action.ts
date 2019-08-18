@@ -8,6 +8,6 @@ export const chooseProduct = (product: Product) => (dispatch: any) => {
         type: CHOOSE_PRODUCT,
     })
 }
-export function resetProduct() {
+export function resetProduct() { 
     return { type: RESET_PRODUCT }
 }

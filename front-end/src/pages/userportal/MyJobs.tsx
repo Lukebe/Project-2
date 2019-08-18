@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import { Card, ListGroup, Button } from 'react-bootstrap';
+import { Card, ListGroup, Button, Container, Row, Col } from 'react-bootstrap';
 import * as APICall from '../../utils/APICall';
-import { IAppState, IAuthState } from '../../reducers';
+import { IAppState, IAuthState, IJobViewState } from '../../reducers';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { Job } from '../../models/Job';
+import { updateJob } from '../../actions/JobView.action';
 
 export interface IAuthProps {
     user: IAuthState;
+
+    updateJob: (id: any) => void;
 }
 
 export class MyJobs extends Component <IAuthProps, any>{
@@ -14,10 +18,14 @@ export class MyJobs extends Component <IAuthProps, any>{
         super(props);
 
         this.state = { 
-            data: []
+            data: [],
+            jobClick: "",
+            job: []
         } 
         this.handleRequest = this.handleRequest.bind(this);
+        this.handleJobRequest = this.handleJobRequest.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
+        this.handleLink = this.handleLink.bind(this);
     }
 
     componentDidMount(){
@@ -41,16 +49,52 @@ export class MyJobs extends Component <IAuthProps, any>{
         console.log(await response);
     }
 
+
+    handleLink(event:any){
+        console.log("link clicked");
+        const target = event.target;
+        const value = target.value;
+        this.setState({
+            jobClick: value
+        })
+        console.log(this.state.jobClick);
+        this.props.updateJob(this.state.jobClick);
+        //this.handleJobRequest(value);
+    }
+
+    async handleJobRequest(num : any) {
+        const response = await APICall.GET('/jobs/' + num
+        ,this.props.user.userProfile.getToken());
+
+        if(await response instanceof Error){
+        } else { 
+            this.setState({
+                job: new Job(response)
+            })
+            console.log(this.state.job);
+
+        }
+        console.log(await response);
+    }
+
     render() {
 
         const list = this.state.data.map((item:any, i:any) => {
             return <ListGroup.Item className="list" key={i}>
                 <Card border="info" className="card" key={i}>
                     <Card.Body >
-                        <div className="cardContainer">
-                        <Card.Text className="userCardText">{item.description}<br></br>{item.address}<br></br>{item.jobDateTime}</Card.Text>
-                        <Card.Link className="userCardLink" as={Link} to="/userportal/jobview"><br></br>Card Link</Card.Link>
-                        </div>
+                        <Container>
+                        <Row>
+                            <Col  md="auto">
+                                <Card.Text className="userCardText">{item.jobId}</Card.Text>
+                            </Col> 
+                            <Col  md="auto">
+                                <Card.Text className="userCardText">{item.description}<br></br>{item.address}<br></br>{item.jobDateTime}</Card.Text>
+                            </Col>
+                            <Col  >Status<br></br></Col>
+                            <Col  md="auto"><Link to="/userportal/jobview" className="userCardLink"><Button onClick={this.handleLink}>View/Edit</Button></Link></Col>
+                        </Row> 
+                        </Container> 
                     </Card.Body>
                 </Card> 
             </ListGroup.Item>
@@ -74,5 +118,9 @@ export class MyJobs extends Component <IAuthProps, any>{
 const mapStateToProps = (state:IAppState) => ({
     user: state.auth
 });
+
+const mapDispatchToProps = {
+    updateJob: updateJob
+}
  
-export default connect(mapStateToProps)(MyJobs);
+export default connect(mapStateToProps,mapDispatchToProps)(MyJobs);

@@ -16,8 +16,8 @@ import { makerPortalReducer } from "../../reducers/MakerPortal.reducer";
 import ImageModal from "../../components/ImageModal";
 import { HashLink as Link } from 'react-router-hash-link';
 const RequestState = APICall.RequestState;
-
-
+ 
+ 
 //GEOCODE METHOD: https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&address=hello
 const googleMapURL : string = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&libraries=geometry,drawing,places';
 const { compose, withProps, lifecycle } = require("recompose");

@@ -5,7 +5,7 @@ import { User } from "../models/User";
 import { makerPortalReducer } from "./MakerPortal.reducer";
 import { productPickerReducer } from "./ProductPicker.reducer";
 import { Product } from "../models/Product";
-
+import { viewJobReducer } from "./ViewJob.reducer";
 //This is the IAuthState interface defined in the Authentication reducer. This defines the structure
 //of the gloabl authentication state. The initial state in Authentication reducer follows the exact
 //format below.
@@ -30,6 +30,10 @@ export interface IProductPickerState {
     product: Product;
 }
 
+export interface IJobViewState {
+    jobId: any
+}
+
 //Access to authorization information should be state.auth....
 //User data: state.auth.userData
 //This is the overall global state interface used by redux. It is comprised of properties that implement other
@@ -41,6 +45,7 @@ export interface IAppState {
     accountModal : IAccountState,
     makerPortal: IMakerPortalState,
     productPicker: IProductPickerState,
+    viewJob: IJobViewState
 }
 //This combines all the different reducers into a global state variable. This variable is then passed to the store (in Store.ts)
 //and becomes the global state.
@@ -49,4 +54,5 @@ export const state = combineReducers<IAppState>({
     accountModal : accountModalReducer,
     makerPortal: makerPortalReducer,
     productPicker: productPickerReducer,
+    viewJob: viewJobReducer
 })

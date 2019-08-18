@@ -3,6 +3,10 @@
     background-color: whitesmoke;
 }
 
+.searchCatLabel{
+    background-color: aliceblue;
+}
+
 .card{
     text-align: center;
     padding: -4px;
@@ -18,11 +22,20 @@
 }
 
 
-.userCardLink{
-    float: right;
+.myJobViewButtonGroup{
+    margin: 0 auto;
     
 }
 
+.searchCategoryForm{
+    width: 180px;
+    margin: 0 auto;
+}
+
 .userCardText{
-    float: left;
+    font-size: 12px;
+}
+
+.jobViewCard{
+    margin: 0 auto;
 }
