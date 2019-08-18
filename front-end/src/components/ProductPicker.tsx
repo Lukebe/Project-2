@@ -1,11 +1,11 @@
 import { IAuthState, IAppState } from "../reducers";
-import { Modal, Tabs, Tab } from "react-bootstrap";
+import { Modal, Tabs, Tab, Nav, Col } from "react-bootstrap";
 import React from 'react';
 import { loginSuccessful } from "../actions/Authentication.action";
 import { connect } from "react-redux";
 import ProductList from "./ProductList";
 import CreateProduct from "./CreateProduct";
-
+import './ProductPicker.css'
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
@@ -37,18 +37,34 @@ class ProductPicker extends React.Component <IProps,IState>{
 
     render() {
         return (
-            <Modal size="lg" show animation keyboard 
+            <Modal className = "product-picker-modal" size="lg" show animation keyboard 
             onHide = {() => this.props.callback(this.state.productId)}>
-          <Modal.Header closeButton><h2>Product Portal</h2></Modal.Header>
+          <Modal.Header><i className="large material-icons"></i>
+                <h2> Login </h2>  <i className="large material-icons" onClick = {(e : any) => this.updateCallback(this.state.productId)}>close</i>
+                </Modal.Header>
                 <Modal.Body>
-                <Tabs defaultActiveKey="profile" className = "product-picker-tabs" id = "product-picker-tabs">
-                    <Tab eventKey="list" title="Select a Product">
+                <Tab.Container defaultActiveKey="list" transition = {false} id="product-selection-tabs">
+                <Nav justify variant="pills">
+                    <Col sm = {12} lg = {6}>
+                        <Nav.Item className = 'product-selection-tab'>
+                            <Nav.Link as = "a" eventKey="list">Find Product</Nav.Link>
+                        </Nav.Item>
+                    </Col>
+                    <Col sm = {12} lg = {6}>
+                        <Nav.Item className = 'product-selection-tab'>
+                            <Nav.Link as = "a" eventKey="create">Create Product</Nav.Link>
+                        </Nav.Item>
+                    </Col>
+                </Nav>
+                <Tab.Content>
+                    <Tab.Pane eventKey="list">
                         <ProductList/>
-                    </Tab>
-                    <Tab eventKey="create" title="Create a Product">
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="create">
                         <CreateProduct/>
-                    </Tab>
-                </Tabs>
+                    </Tab.Pane>
+                </Tab.Content>
+                </Tab.Container>
                 </Modal.Body> 
             </Modal>     )
     }
