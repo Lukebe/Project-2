@@ -6,7 +6,7 @@ import { Route } from 'react-router';
 import Search from './Search';
 import MyJobs from './MyJobs';
 import SearchCategory from './SearchCategory';
-import JobView from './JobView';
+import MyJobView from './MyJobView';
 
 export default class RightUserPortal extends Component <any, any>{
 
@@ -19,7 +19,7 @@ export default class RightUserPortal extends Component <any, any>{
                         <Route exact path="/userportal/search" component={Search} />
                         <Route exact path="/userportal/search/category" component={SearchCategory} />
                         <Route exact path="/userportal/myjobs" component={MyJobs} /> 
-                        <Route exact path="/userportal/jobview" component={JobView} />
+                        <Route exact path="/userportal/jobview" component={MyJobView} />
                 </div>
             </BrowserRouter>      
         );

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, ListGroup, Button } from 'react-bootstrap';
+import { Card, ListGroup, Button, Container, Row, Col } from 'react-bootstrap';
 import * as APICall from '../../utils/APICall';
 import { IAppState, IAuthState } from '../../reducers';
 import { connect } from 'react-redux';
@@ -47,10 +47,15 @@ export class MyJobs extends Component <IAuthProps, any>{
             return <ListGroup.Item className="list" key={i}>
                 <Card border="info" className="card" key={i}>
                     <Card.Body >
-                        <div className="cardContainer">
-                        <Card.Text className="userCardText">{item.description}<br></br>{item.address}<br></br>{item.jobDateTime}</Card.Text>
-                        <Card.Link className="userCardLink" as={Link} to="/userportal/jobview"><br></br>Card Link</Card.Link>
-                        </div>
+                        <Container>
+                        <Row>
+                            <Col xs={6}>
+                                <Card.Text className="userCardText">{item.description}<br></br>{item.address}<br></br>{item.jobDateTime}</Card.Text>
+                            </Col>
+                            <Col>Status<br></br>status here</Col>
+                            <Col><Card.Link className="userCardLink" as={Link} to="/userportal/jobview"><br></br>View/Edit</Card.Link></Col>
+                        </Row>
+                        </Container>
                     </Card.Body>
                 </Card> 
             </ListGroup.Item>
