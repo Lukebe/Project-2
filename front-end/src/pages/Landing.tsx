@@ -70,6 +70,11 @@ export class Landing extends React.Component<IReduxProps, IState>{
             this.setState({ ...this.state, logoKShow: false });
         }
     }
+    isLoggedIn(){
+        if(this.props.auth.userProfile.getUserId()){
+            return <Header/>
+        }
+    }
     render() {
         return (
 
@@ -77,10 +82,7 @@ export class Landing extends React.Component<IReduxProps, IState>{
             // Maker Portal, User Portal, My Account. Incorporate logo or plain "Kutsies" title (like in footer) on the left. My Account link should be on right. User portal and maker portal should be in the center.
 
             <div className='landing-background'>
-                {
-                    this.props.auth.userProfile.getUserId() &&
-                    <Header/>
-                }
+                { this.isLoggedIn()}
                 {this.props.accountModal.selectedModal === AccountModalType.LOGIN ?
                     <Login updateCallback={this.handleModalClose} /> : null}
                 {this.props.accountModal.selectedModal === AccountModalType.SIGNUP ?
