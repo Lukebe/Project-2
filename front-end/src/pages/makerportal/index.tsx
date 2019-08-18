@@ -3,6 +3,7 @@ import { Button, Form, Spinner, Modal, Container, Col, Row, Badge } from "react-
 import { connect } from 'react-redux';
 import { IAuthState, IAppState, IMakerPortalState } from '../../reducers';
 import { Footer } from '../../components/Footer';
+import Header from '../../components/Header';
 import './Maker.css';
 import { loginSuccessful } from '../../actions/Authentication.action';
 import PopularEvents from './PopularEvents';
@@ -49,6 +50,7 @@ class MakerPortal extends Component<IAuthProps, IState>{
     render() {
         return (
             <>
+                <Header />
                 <Container className="makerportal-container">
 
                     <Row>

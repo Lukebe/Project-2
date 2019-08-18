@@ -1,100 +1,83 @@
-import React, { Component } from 'react';
-import '../App.css';
+import React, { Component, unstable_Profiler } from 'react';
+import { IAppState, IAuthState } from '../reducers';
+import {
+    loginSuccessful, toggleAuthStatus,
+    authTimerTick
+} from '../actions/Authentication.action';
+import { connect } from 'react-redux';
+import { Form, Button, Card, Col, Navbar, Nav, Dropdown, Row } from 'react-bootstrap';
+import './userAccount.css';
+import Profile from '../resources/images/profile.jpg';
+import { ListGroup } from 'react-bootstrap';
+import './Header.css';
 import iconWhite from '../resources/images/icon/icon-white-2.png';
-import { Row, Col, Nav, Navbar, FormControl, Button, NavDropdown, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import { loginSuccessful } from '../actions/Authentication.action';
-import { IAuthState, IAppState } from '../reducers';
-import { connect } from 'react-redux';
-import { render } from 'react-dom';
-import src from '*.png';
-
-
-
-
-type IProps = IComponentProps & IAuthProps;
-
+interface IState {
+}
 
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
-    loginSuccessful: () => void;
     //Action creators from the dispatcher
-}
-export interface IComponentProps {
-}
-interface IState {
 
 }
-
-//Header with class format for Nav bar
-class Header extends Component<IAuthProps, IState>{
+export class Header extends Component < IAuthProps, any >  {
     constructor(props: any) {
         super(props);
-        // this.myRef = React.createRef();
         this.state = {
-
-        };
+            userFullName: <Dropdown.Item>{this.props.auth.userProfile.getFullName()}</Dropdown.Item>,
+            rating: <Dropdown.Item>{this.props.auth.userProfile.getRating()}</Dropdown.Item>
+        }
     }
-
-
-    // Maker Portal, User Portal, My Account. Incorporate logo or plain "Kutsies" title (like in footer) on the left. 
-    //My Account link should be on right. User portal and maker portal should be in the center.
-
-
-    render() {
-        return (
-            <>
-                <div className="headerNavBar" >
-                    <Navbar bg="dark" expand="lg">
-
-                        <Navbar.Brand className="headerLogo" href="#/">Kutsies</Navbar.Brand>
-                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                        <Navbar.Collapse className="headerHoldsLinks" id="basic-navbar-nav">
-                            <img src={iconWhite} style={{ width: 100, marginTop: -7 }} />
-                            <Nav className="mr-auto">
-                                <div className="headerLinks">
-
-                                    <Nav.Link href="#/">Home</Nav.Link>
-                                    <Nav.Link href="#userPortal">User Portal</Nav.Link>
-
-                                    <Nav.Link href="#makerportal">Maker Portal</Nav.Link>
-                                    <Nav.Link href="#userAccount">My Account</Nav.Link>
-                                </div>
-                                {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                                <Nav.Link href="#userPortal">User Portal</Nav.Link>
-
-
-                                <NavDropdown.Item href="#action/3.1">Testing</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                            </NavDropdown> */}
-                            </Nav>
-                            {/* <Form inline>
-                            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                            <Button variant="outline-success">Search</Button>
-                        </Form> */}
-                        </Navbar.Collapse>
+    render () {
+        return(
+        <header className='main-footer'>
+            <Row className='footer-nav'>
+                <Col sm={12} md={12} lg={12} xl={3}>
+                    <Navbar.Brand className="Logo" href="#/">
+                        <img  className="sissorImage" src={iconWhite} />
+                    </Navbar.Brand>
+                </Col>
+                <Col sm={12} md={8} lg={7} xl={6}>
+                    <Navbar className='nav-black'>
+                        <Nav className="">
+                            <Link to="/">Home</Link>
+                            <Link to="/userportal">User Portal</Link>
+                            <Link to="/makerportal">Maker Portal</Link>
+                        </Nav>
                     </Navbar>
-                </div>
-            </>
-        )
+                </Col>
+                { this.props.auth.userProfile.getUserId() &&
+                    <Col sm={12} md={4} lg={5} xl={3}>
+                        <Dropdown>
+                            <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                Account
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                {this.state.userFullName}
+                                { this.props.auth.userProfile.getRating() == 0.0 &&
+                                    this.state.rating
+                                }
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </Col>
+                }
+            </Row>
+        </header>
+        );
     }
-
 }
-
-
 
 const mapStateToProps = (state: IAppState) => {
     return {
         auth: state.auth
     }
 }
-//This object definition will be used to map action creators to properties
 const mapDispatchToProps = {
     loginSuccessful: loginSuccessful,
+    toggleAuthStatus: toggleAuthStatus,
+    authTimerTick: authTimerTick,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
