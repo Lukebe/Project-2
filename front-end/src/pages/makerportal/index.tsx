@@ -85,11 +85,12 @@ class MakerPortal extends Component<IAuthProps, IState>{
                             <Badge variant="primary" className = {(this.props.makerPortal.newJobOpen ? "newjob_menu_open" : "")}>
                                 <i className = "material-icons menu_open" onClick = {()=>{this.toggleCreateJob()}}>menu</i>
                             </Badge>
-                            </div> : null }
+                            </div> : null } 
                         <Col sm={12}lg={6} 
                         className = {this.props.makerPortal.newJobOpen ? "createnewjob-container"  : "createnewjob-hidden"}
                         style = {this.props.makerPortal.newJobOpen ? {transform:"none"} : {}}>
-                            <CreateNewJob />
+                            
+                                <CreateNewJob />
                         </Col>
                     </Row>
                 </Container>

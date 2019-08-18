@@ -1,7 +1,7 @@
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { IAuthState, IAppState, IMakerPortalState } from '../../reducers';
+import { IAuthState, IAppState, IMakerPortalState, IProductPickerState } from '../../reducers';
 import './Maker.css';
 import { loginSuccessful } from '../../actions/Authentication.action';
 import * as APICall from '../../utils/APICall';

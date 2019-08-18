@@ -52,6 +52,7 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    width: 80%;
 }
 .makerportal-container {
     height: auto;
@@ -104,7 +105,9 @@
     font-size: 5em;
     cursor: pointer;
 }
-
+.create-job-success, .create-job-error {
+    margin-bottom:0;
+}
 .createjob-form{
     background-color:  #ddd
     ;
@@ -135,22 +138,19 @@
     background-color: #183442;
     color: white;
 }
-.btn-my-events-data-card{
-    background-color:gold;
-    border: 0;
-}
 .btn-my-events-data-card {
     vertical-align: middle;
     -webkit-transform: perspective(1px) translateZ(0) !important;
     transform: perspective(1px) translateZ(0) !important;
     box-shadow: 0 0 1px rgba(0, 0, 0, 0) !important;
     position: relative !important;
-    background-color:rgb(209, 178, 3) !important;
+    background-color:#FF4136 !important;
+    border: 0;
   }
   .btn-my-events-data-card:before {
     content: '';
     position: absolute !important;
-    border: 4px solid rgb(209, 178, 3) !important;
+    border: 4px solid rgb(255, 107, 99) !important;
     top: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
@@ -255,9 +255,6 @@
     text-indent: -999em;
     cursor: pointer;
     position: absolute;
-}
-
-.gm-style-iw {
 }
 .formRow p {
     font-size: 1.5em;

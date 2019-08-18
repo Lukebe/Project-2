@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Switch, Route, HashRouter } from 'react-router-dom';
+import { Switch, Route, HashRouter, BrowserRouter } from 'react-router-dom';
 import Landing from './pages/Landing';
 import PostJob from './components/PostJob';
 import UserAccount from './components/userAccount';
@@ -14,7 +14,7 @@ import Header from './components/Header';
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <HashRouter>
+      <BrowserRouter>
         <Switch>
           {
             /* Insert routes here using <Route exact path = "" component = {}> 
@@ -29,7 +29,7 @@ const App: React.FC = () => {
           <Route exact path="/userAccount" component={UserAccount} />
           <Route exact path="/makerportal" component={MakerPortal} />
         </Switch>
-      </HashRouter>
+      </BrowserRouter>
     </Provider>
   );
 }

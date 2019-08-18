@@ -3,6 +3,8 @@ import { authReducer } from "./Authentication.reducer";
 import { accountModalReducer, AccountModalType } from "./AccountModal.reducer";
 import { User } from "../models/User";
 import { makerPortalReducer } from "./MakerPortal.reducer";
+import { productPickerReducer } from "./ProductPicker.reducer";
+import { Product } from "../models/Product";
 
 //This is the IAuthState interface defined in the Authentication reducer. This defines the structure
 //of the gloabl authentication state. The initial state in Authentication reducer follows the exact
@@ -24,6 +26,9 @@ export interface IMakerPortalState {
 export interface IAccountState {
     selectedModal : AccountModalType
 };
+export interface IProductPickerState {
+    product: Product;
+}
 
 //Access to authorization information should be state.auth....
 //User data: state.auth.userData
@@ -35,6 +40,7 @@ export interface IAppState {
     auth: IAuthState,
     accountModal : IAccountState,
     makerPortal: IMakerPortalState,
+    productPicker: IProductPickerState,
 }
 //This combines all the different reducers into a global state variable. This variable is then passed to the store (in Store.ts)
 //and becomes the global state.
@@ -42,4 +48,5 @@ export const state = combineReducers<IAppState>({
     auth: authReducer,
     accountModal : accountModalReducer,
     makerPortal: makerPortalReducer,
+    productPicker: productPickerReducer,
 })
