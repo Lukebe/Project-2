@@ -14,7 +14,9 @@ import { Category } from "../../models/Category";
 import { myJobsRefresh, newJobsPopulate, newJobsReset, openNewJobs, closeNewJobs } from "../../actions/MakerPortal.action";
 import { makerPortalReducer } from "../../reducers/MakerPortal.reducer";
 import ImageModal from "../../components/ImageModal";
+import { HashLink as Link } from 'react-router-hash-link';
 const RequestState = APICall.RequestState;
+
 
 //GEOCODE METHOD: https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&address=hello
 const googleMapURL : string = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&libraries=geometry,drawing,places';
@@ -241,9 +243,9 @@ zoom = {15}/>
                 <p className = "popular-events-list-address"><i className = "material-icons">location_on</i>{element.address}</p>
               </div>
               <p className = "popular-events-list-count">{element.count} other Kutsies users are waiting for this product.</p>
-              <Button className = "popular-events-pick-button"
+              <Link smooth to = "#createnewjob"><Button className = "popular-events-pick-button"
           onClick = {(e : any)=>{e.preventDefault(); this.retrieveInformationFromMap(index,false)}}>
-              Skip the Line for {element.product.itemName}</Button>
+              Skip the Line for {element.product.itemName}</Button></Link>
               </Card.Body>
             </Accordion.Collapse>
           </Card> )
