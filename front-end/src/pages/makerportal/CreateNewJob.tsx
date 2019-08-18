@@ -65,7 +65,6 @@ class CreateNewJob extends Component <IAuthProps,IState>{
             isAuthorized: false,
             openedLocation: '',
             productId: 0,
-
         };
     }
     componentDidMount() {
@@ -248,12 +247,12 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                     <Form.Label>Job Pay</Form.Label>
                     <InputGroup className="mb-3">
                         <Form.Row className="formRow">
-                            <Col lg="1">
+                            <Col sm="1" lg="1">
                                 <InputGroup.Prepend>
                                     <p>$</p>
                                 </InputGroup.Prepend>
                             </Col>
-                            <Col lg="9">
+                            <Col sm="6" lg="9">
                                 <Form.Control required onChange={this.changeHandler} size="lg" type="number" 
                                     step="0.01" min="0" max = "10000" value = {this.props.makerPortal.formFields.jobpay.value}
                                     id = "new-job-jobpay" placeholder = "0.00" name="jobpay"/>
@@ -298,18 +297,18 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                         <Form.Label>Job Time Estimate</Form.Label>
                         
                         <Form.Row className="formRow">
-                            <Col lg="2">
+                            <Col sm="2" lg="2">
                             <p>Hours</p>
                             </Col>
-                            <Col lg="2">
+                            <Col sm="2" lg="2">
                                 <Form.Control required onChange={this.changeHandler} size="lg" type="number"
                                     step="1" min="1" max="23" value={this.props.makerPortal.formFields.timeEstimateHour.value}
                                     id="new-job-jobhour" placeholder="1" name="timeEstimateHour" />
                             </Col>
-                            <Col lg="2">
+                            <Col sm="2" lg="2">
                                 <p>Minutes</p>
                             </Col>
-                            <Col lg="2">
+                            <Col sm="2" lg="2">
                                 <Form.Control required onChange={this.changeHandler} size="lg" type="number"
                                     step="1" min="0" max="59" value={this.props.makerPortal.formFields.timeEstimateMinute.value}
                                     id="new-job-jobminute" placeholder="00" name="timeEstimateMinute" />

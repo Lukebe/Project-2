@@ -1,0 +1,17 @@
+.darkBackground {
+    background-color: #333 !important;
+    
+}
+.lightGrayBackground{
+    background-color: #aaa !important;
+}
+.darkColor{
+    color: #333 !important;
+}
+.lightColor{
+    color: #aaa !important;
+}
+.buttonColor{
+    color: #FF4136 !important;
+    background-color: #FF4136 !important;
+}
