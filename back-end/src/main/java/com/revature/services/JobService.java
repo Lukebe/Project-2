@@ -1,5 +1,7 @@
 package com.revature.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,15 +11,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.revature.models.Job;
+import com.revature.models.ProductAddressCountWrapper;
+import com.revature.models.ProductCountWrapper;
+import com.revature.models.Status;
+import com.revature.models.Users;
 import com.revature.utils.Utils;
 @Service
 public class JobService {
 	JobRepository jobRepository;
+	UsersRepository usersRepository;
+	ProductRepository productRepository;
 	@Autowired
-	public JobService(JobRepository jobRepository) {
+	public JobService(JobRepository jobRepository, UsersRepository usersRepository, ProductRepository productRepository) {
 		super();
 		this.jobRepository = jobRepository;
-		
+		this.usersRepository = usersRepository;
+		this.productRepository = productRepository;
 	}
 	
 	public Job createJob(Job job) {
@@ -37,33 +46,82 @@ public class JobService {
 		return jobRepository.findById(id).orElseThrow(() -> 
 		new HttpClientErrorException(HttpStatus.NOT_FOUND));
 	}
-	public Page<Job> selectJobsByUserCreatedId(int userCreatedId, Pageable pageable) {
+	public Page<Job> selectJobsByUserCreatedId(int userCreatedId, int status, Pageable pageable) {
 		System.out.println("JOBS SELECTED WITH USER CREATED ID: " + userCreatedId);
-		return jobRepository.findAllByUserCreatedUserId(userCreatedId, pageable);
+		if(status == 0) {
+			return jobRepository.findAllByUserCreatedUserId(userCreatedId, pageable);
+		}
+		return jobRepository.findAllByUserCreatedUserIdAndStatusStatusId(userCreatedId, status, pageable);
 	}
-	public Page<Job> selectJobsByUserAcceptedId(int userAcceptedId, Pageable pageable) {
+	public Page<Job> selectJobsByUserAcceptedId(int userAcceptedId, int status, Pageable pageable) {
 		System.out.println("JOBS SELECTED WITH USER ACCEPTED ID: " + userAcceptedId);
-		return jobRepository.findAllByUserAcceptedUserId(userAcceptedId, pageable);
+		if(status == 0) {
+			return jobRepository.findAllByUserAcceptedUserId(userAcceptedId, pageable);
+		}
+		return jobRepository.findAllByUserAcceptedUserIdAndStatusStatusId(userAcceptedId, status, pageable);
 	}
-	public Page<Job> selectJob(int userAcceptedId, Pageable pageable) {
-		System.out.println("JOBS SELECTED WITH USER ACCEPTED ID: " + userAcceptedId);
-		return jobRepository.findAllByUserAcceptedUserId(userAcceptedId, pageable);
+	public Page<Job> selectJobsByCategoryId(int category,int status, Pageable pageable) {
+		System.out.println("JOBS SELECTED WITH CATEGORY ID: " + category);
+		if(status == 0) {
+			return jobRepository.findAllByCategoryCategoryId(category, pageable);
+		}
+		return jobRepository.findAllByCategoryCategoryIdAndStatusStatusId(category, status, pageable);
 	}
-	public Page<Job> selectJobsByCategoryId(int categoryId, Pageable pageable) {
-		System.out.println("JOBS SELECTED WITH CATEGORY ID: " + categoryId);
-		return jobRepository.findAllByCategoryCategoryId(categoryId, pageable);
+	public Page<Job> selectJobsByProductId(int product, int status, Pageable pageable) {
+		System.out.println("JOBS SELECTED WITH PRODUCT ID: " + product);
+		if(status == 0) {
+			return jobRepository.findAllByProductProductId(product, pageable);
+		}
+		return jobRepository.findAllByProductProductIdAndStatusStatusId(product, status, pageable);
 	}
-	public Page<Job> selectJobsByProductId(int productId, Pageable pageable) {
-		System.out.println("JOBS SELECTED WITH PRODUCT ID: " + productId);
-		return jobRepository.findAllByCategoryCategoryId(productId, pageable);
+	public Page<Job> selectJobsByStatusId(int status, Pageable pageable) {
+		System.out.println("JOBS SELECTED WITH STATUS ID: " + status);
+		return jobRepository.findAllByStatusStatusId(status, pageable);
 	}
-	public Page<Job> selectJobsByStatusId(int statusId, Pageable pageable) {
-		System.out.println("JOBS SELECTED WITH STATUS ID: " + statusId);
-		return jobRepository.findAllByCategoryCategoryId(statusId, pageable);
+	
+	public List<ProductCountWrapper> getPopularJobs(int amount, int daysAgo) {
+		System.out.println("FEATURED JOBS BEFORE: " + daysAgo);
+	    List<ProductCountWrapper> products = jobRepository.selectRecentJobProductCount(daysAgo);
+	    products.removeIf((ProductCountWrapper n) -> (n.getCount() < amount));
+	    return products;
 	}
-	public Job updateJob(int id, Job job) {
+	public List<ProductAddressCountWrapper> getPopularLocations(int amount, int daysAgo) {
+		System.out.println("FEATURED LOCATIONS BEFORE: " + daysAgo);
+	    List<ProductAddressCountWrapper> locations = jobRepository.selectPopularEvents(daysAgo);
+	    locations.removeIf((ProductAddressCountWrapper n) -> (n.getCount() < amount));
+	    return locations;
+	}
+	public Job updateJob(Job job, double rating ) {
 		System.out.println("JOB UPDATED WITH PARAMS: " + job.toString());
-		Job oldJob = jobRepository.findById(id).orElseThrow(() ->
+		Job oldJob = jobRepository.findById(job.getJobId()).orElseThrow(() ->
+		new HttpClientErrorException(HttpStatus.NOT_FOUND));
+		Job newJob = (Job) Utils.merge(oldJob, job);
+		int jobStatusBeforeUpdate = newJob.getStatus().getStatusId();
+		newJob.setStatus(new Status(6, "Rating Completed"));
+		Job savedJob = jobRepository.save(newJob);
+		Users userToUpdateRating = usersRepository.findById(savedJob.getUserAccepted().getUserId())
+				.orElseThrow(() -> new HttpClientErrorException(HttpStatus.BAD_REQUEST));
+		List<Job> userJobList = jobRepository.findAllByUserAcceptedUserId(userToUpdateRating.getUserId());
+		double newRating = userToUpdateRating.getRating() * userJobList.size();
+		newRating += rating;
+		newRating = newRating / (userJobList.size() + 1);
+		if(userJobList.size() == 0) {
+			newRating = rating; 
+		}
+		if(jobStatusBeforeUpdate == 6) {
+			newRating = userToUpdateRating.getRating();
+		}
+		userToUpdateRating.setRating(newRating);
+		usersRepository.save(userToUpdateRating);
+		//Save the product
+		return savedJob;
+		//Retrieve it again to show joined values correctly
+		//return productRepository.findById(id).orElseThrow(() ->
+		//new HttpClientErrorException(HttpStatus.NOT_FOUND));
+	}
+	public Job updateJob(Job job ) {
+		System.out.println("JOB UPDATED WITH PARAMS: " + job.toString());
+		Job oldJob = jobRepository.findById(job.getJobId()).orElseThrow(() ->
 		new HttpClientErrorException(HttpStatus.NOT_FOUND));
 		Job newJob = (Job) Utils.merge(oldJob, job);
 		//Save the product

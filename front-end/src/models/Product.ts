@@ -12,7 +12,11 @@ class Product {
         this.description = data.description;
         this.itemName = data.itemName;
         this.imageUrl = data.imageUrl;
-        this.category = new Category(data.category);
+        if(data.category){
+            this.category = new Category(data.category);
+        } else {
+            this.category = new Category({categoryId: 0, name: '', description: ''});
+        }
         this.price = data.price;
     }
 

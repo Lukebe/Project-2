@@ -20,22 +20,7 @@ export class SearchCategory extends Component <IAuthProps, any>{
             input: "",
             showModal: false,
             jobVal:"",
-            job: [],
-            jobId: 0,
-            userCreated: 0,
-            address: "",
-            dropoffAddress: "",
-            description: "",
-            dateCreated: "",
-            dateAccepted: "", 
-            jobDateTime: "", 
-            userAccepted: "", 
-            jobEarnings: "",
-            category: "",
-            timeEstimate: "", 
-            product: "", 
-            status: ""
- 
+            job: []
         } 
         this.handleRequest = this.handleRequest.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
@@ -74,8 +59,6 @@ export class SearchCategory extends Component <IAuthProps, any>{
         console.log(await response); 
     }
 
-
-
     async handleAccept() {
         console.log(this.state.jobId);
         const response = await APICall.PATCH('/jobs/'
@@ -96,12 +79,12 @@ export class SearchCategory extends Component <IAuthProps, any>{
     handleClick(event:any){
         const target = event.target;
         const value = target.value;
+        this.handleRequestJob(value);
         this.setState({
             showModal: true,
             jobVal: value
         })
         console.log(this.state.jobVal);
-        this.handleRequestJob(value);
     }
 
     async handleRequestJob(num: any) {
@@ -112,19 +95,7 @@ export class SearchCategory extends Component <IAuthProps, any>{
         } else { 
             
             this.setState({ 
-                jobId: response.jobId,
-                address: response.address,
-                dropoffAddress: response.dropoffAddress,
-                description: response.description,
-                dateCreated: response.dateCreated,
-                dateAccepted: response.dateAccepted,
-                jobDateTime: response.jobDateTime, 
-                userAccepted: response.userAccepted, 
-                jobEarnings: response.jobEarnings,
-                category: response.category,
-                timeEstimate: response.timeEstimate, 
-                product: response.product, 
-                status: response.status
+                job: new Job(response)
             })
         }
         console.log(await response);
@@ -155,20 +126,7 @@ export class SearchCategory extends Component <IAuthProps, any>{
                             onHide={() => this.setState({ showModal: false })}
                             onaccept={this.handleAccept}
                             user={this.props.user}
-                            jobid={this.state.jobId}  
-                            usercreated={this.state.userCreated} 
-                            address={this.state.address} 
-                            dropoffaddress={this.state.dropoffAddress} 
-                            description={this.state.description} 
-                            datecreated={this.state.dateCreated} 
-                            dateaccepted={this.state.dateAccepted}
-                            jobdatetime={this.state.jobDateTime} 
-                            useraccepted={this.state.userAccepted} 
-                            jobearnings={this.state.jobEarnings} 
-                            category={this.state.category} 
-                            timeestimate={this.state.timeEstimate}  
-                            product={this.state.product} 
-                            status={this.state.status} 
+                            job={this.state.job}
                         /> 
                     </Card.Body>
                     <Card.Footer className="text-muted">{item.jobDateTime}</Card.Footer>

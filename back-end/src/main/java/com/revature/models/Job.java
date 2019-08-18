@@ -2,6 +2,7 @@ package com.revature.models;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -20,6 +21,10 @@ import org.hibernate.validator.constraints.Range;
 import org.hibernate.validator.constraints.time.DurationMax;
 import org.hibernate.validator.constraints.time.DurationMin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 @Table(name="jobs")
 public class Job {
@@ -33,13 +38,19 @@ public class Job {
 	@Length(min = 5, max = 150)
 	@NotNull
 	private String address;
+	@Length(min = 5, max = 150)
+	@NotNull
+	private String dropoffAddress;
 	@Length(max = 500)
 	@NotNull
 	private String description;
 	@NotNull
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date dateCreated;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date dateAccepted;
 	@NotNull
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date jobDateTime;
 	@ManyToOne
 	@JoinColumn(name = "user_accepted_id")
@@ -65,15 +76,17 @@ public class Job {
 	private Status status;
 
 	
-	public Job(int jobId, @NotNull Users userCreated, @Length(min = 5, max = 100) String address,
-			@Length(min = 5, max = 500) String description, @NotNull Date dateCreated, Date dateAccepted,
-			@NotNull Date jobDateTime, Users userAccepted, @Range(min = 1, max = 100000) BigDecimal jobEarnings,
-			@NotNull Category category, @DurationMin(minutes = 10) @DurationMax(days = 7) Duration timeEstimate,
-			@NotNull Product product, @NotNull Status status) {
+	public Job(int jobId, @NotNull Users userCreated, @Length(min = 5, max = 150) @NotNull String address,
+			@Length(min = 5, max = 150) @NotNull String dropoffAddress, @Length(max = 500) @NotNull String description,
+			@NotNull Date dateCreated, Date dateAccepted, @NotNull Date jobDateTime, Users userAccepted,
+			@NotNull @Range(min = 1, max = 100000) BigDecimal jobEarnings, @NotNull Category category,
+			@DurationMin(minutes = 10) @DurationMax(days = 7) @NotNull Duration timeEstimate, @NotNull Product product,
+			@NotNull Status status) {
 		super();
 		this.jobId = jobId;
 		this.userCreated = userCreated;
 		this.address = address;
+		this.dropoffAddress = dropoffAddress;
 		this.description = description;
 		this.dateCreated = dateCreated;
 		this.dateAccepted = dateAccepted;
@@ -89,10 +102,11 @@ public class Job {
 
 	@Override
 	public String toString() {
-		return "Job [jobId=" + jobId + ", userCreated=" + userCreated + ", address=" + address + ", description="
-				+ description + ", dateCreated=" + dateCreated + ", dateAccepted=" + dateAccepted + ", jobDateTime="
-				+ jobDateTime + ", userAccepted=" + userAccepted + ", jobEarnings=" + jobEarnings + ", category="
-				+ category + ", timeEstimate=" + timeEstimate + ", product=" + product + ", status=" + status + "]";
+		return "Job [jobId=" + jobId + ", userCreated=" + userCreated + ", address=" + address + ", dropoffAddress="
+				+ dropoffAddress + ", description=" + description + ", dateCreated=" + dateCreated + ", dateAccepted="
+				+ dateAccepted + ", jobDateTime=" + jobDateTime + ", userAccepted=" + userAccepted + ", jobEarnings="
+				+ jobEarnings + ", category=" + category + ", timeEstimate=" + timeEstimate + ", product=" + product
+				+ ", status=" + status + "]";
 	}
 
 
@@ -105,6 +119,7 @@ public class Job {
 		result = prime * result + ((dateAccepted == null) ? 0 : dateAccepted.hashCode());
 		result = prime * result + ((dateCreated == null) ? 0 : dateCreated.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((dropoffAddress == null) ? 0 : dropoffAddress.hashCode());
 		result = prime * result + ((jobDateTime == null) ? 0 : jobDateTime.hashCode());
 		result = prime * result + ((jobEarnings == null) ? 0 : jobEarnings.hashCode());
 		result = prime * result + jobId;
@@ -150,6 +165,11 @@ public class Job {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
+			return false;
+		if (dropoffAddress == null) {
+			if (other.dropoffAddress != null)
+				return false;
+		} else if (!dropoffAddress.equals(other.dropoffAddress))
 			return false;
 		if (jobDateTime == null) {
 			if (other.jobDateTime != null)
@@ -219,6 +239,16 @@ public class Job {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+
+	public String getDropoffAddress() {
+		return dropoffAddress;
+	}
+
+
+	public void setDropoffAddress(String dropoffAddress) {
+		this.dropoffAddress = dropoffAddress;
 	}
 
 

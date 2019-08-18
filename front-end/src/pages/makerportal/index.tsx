@@ -1,23 +1,29 @@
 import React, { Component } from 'react';
-import { Button, Form, Spinner, Modal, Container, Col, Row } from "react-bootstrap";
+import { Button, Form, Spinner, Modal, Container, Col, Row, Badge } from "react-bootstrap";
 import { connect } from 'react-redux';
-import { IAuthState, IAppState } from '../../reducers';
+import { IAuthState, IAppState, IMakerPortalState } from '../../reducers';
 import { Footer } from '../../components/Footer';
+import Header from '../../components/Header';
 import './Maker.css';
 import { loginSuccessful } from '../../actions/Authentication.action';
 import PopularEvents from './PopularEvents';
 import MyEvents from './MyEvents';
 import CreateNewJob from './CreateNewJob';
+import { openNewJobs, closeNewJobs } from '../../actions/MakerPortal.action';
+import isMobileDevice from '../../utils/IsMobile';
+import { Redirect } from 'react-router';
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
-    loginSuccessful: () => void;
+    makerPortal: IMakerPortalState,
+    openNewJobs: () => void;
+    closeNewJobs: () => void;
     //Action creators from the dispatcher
 }
 export interface IComponentProps {
 }
 interface IState {
-    isFetching: boolean;
+    isNewJobTitle: boolean;
 }
 type IProps = IComponentProps & IAuthProps;
 class MakerPortal extends Component<IAuthProps, IState>{
@@ -25,24 +31,66 @@ class MakerPortal extends Component<IAuthProps, IState>{
     constructor(props: any) {
         super(props);
         this.state = {
-            isFetching: false,
+            isNewJobTitle: false,
         };
+    }
+    toggleCreateJob = () => {
+        if(this.props.makerPortal.newJobOpen){
+            this.props.closeNewJobs();
+        } else {
+            this.props.openNewJobs();
+        }
+    }
+    showTitle = (e: any) => {
+        this.setState({isNewJobTitle: true});
+    }
+    hideTitle = (e : any) => {
+        this.setState({isNewJobTitle: false});
+    }
+    checkLoggedIn = () => {
+        if(!this.props.auth.userProfile.getUserId())
+        {    
+            return <Redirect push to='/' />;
+        }
     }
 
     render() {
         return (
             <>
+            { this.checkLoggedIn()}
+                <Header />
                 <Container className="makerportal-container">
+
                     <Row>
                         <Col sm={12} lg={12} >
-                            Hello {this.props.auth.userProfile.getFullName()}
                             <MyEvents />
                         </Col>
-                        <Col sm={12} lg={6}>
+                        {(!isMobileDevice()) ? 
+                            <Col lg = {12} className = "makerportal-collapse-container" style = {this.props.makerPortal.newJobOpen ? {} : 
+                            {backgroundColor: "whitesmoke", boxShadow: "none", border: 0}}>
+                            <Badge variant="primary" className = {(this.props.makerPortal.newJobOpen ? "newjob_menu_open" : "")}>
+                                <i className = "material-icons menu_open" onMouseEnter = {this.showTitle}
+                                onMouseLeave = {this.hideTitle}
+                                onClick = {()=>{this.toggleCreateJob()}}>menu</i>
+                            </Badge>
+                            </Col> : null }
+
+                        <Col sm={12} lg={this.props.makerPortal.newJobOpen ? 6 : 12}>
                             <PopularEvents />
                         </Col>
-                        <Col sm={12} lg={6}>
-                            <CreateNewJob />
+                        {(isMobileDevice()) ? 
+                            <div className = "makerportal-collapse-container">
+                               
+                                <h3 className = "mobile-newjob-title">Create New Job</h3>
+                            <Badge variant="primary" className = {(this.props.makerPortal.newJobOpen ? "newjob_menu_open" : "")}>
+                                <i className = "material-icons menu_open" onClick = {()=>{this.toggleCreateJob()}}>menu</i>
+                            </Badge>
+                            </div> : null } 
+                        <Col sm={12}lg={6} id = "createnewjob" 
+                        className = {this.props.makerPortal.newJobOpen ? "createnewjob-container"  : "createnewjob-hidden"}
+                        style = {this.props.makerPortal.newJobOpen ? {transform:"none"} : {}}>
+                            
+                                <CreateNewJob />
                         </Col>
                     </Row>
                 </Container>
@@ -53,11 +101,13 @@ class MakerPortal extends Component<IAuthProps, IState>{
 }
 const mapStateToProps = (state: IAppState) => {
     return {
-        auth: state.auth
+        auth: state.auth,
+        makerPortal: state.makerPortal,
     }
 }
 //This object definition will be used to map action creators to properties
 const mapDispatchToProps = {
-    loginSuccessful: loginSuccessful,
+    openNewJobs: openNewJobs,
+    closeNewJobs: closeNewJobs,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MakerPortal);

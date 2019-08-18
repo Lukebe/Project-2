@@ -9,6 +9,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class Users {
 	private String phone;
 	@Range(min = 0, max = 5)
 	@NotNull
+	@Column(precision = 5, scale = 4)
 	private double rating;
 	public int getUserId() {
 		return userId;

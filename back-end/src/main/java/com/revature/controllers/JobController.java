@@ -1,6 +1,8 @@
 package com.revature.controllers;
 
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
@@ -31,6 +32,9 @@ import org.springframework.web.client.HttpServerErrorException;
 
 import com.revature.filter.GenericFilterBuilder;
 import com.revature.models.Job;
+import com.revature.models.JobRatingWrapper;
+import com.revature.models.ProductAddressCountWrapper;
+import com.revature.models.ProductCountWrapper;
 import com.revature.services.JobService;
 
 @RestController
@@ -50,13 +54,19 @@ public class JobController {
 	}
 	@PostMapping("")
 	public  Job createJob(@RequestBody Job job) {
+		job.setDateCreated(new Date());
 		Job newJob = jobService.createJob(job);
 		return newJob;
 	}
 	@PatchMapping("")
-	public  Job updateJob(@RequestBody Job job) {
-		Job updatedJob = jobService.updateJob(job.getJobId(), job);
-		return updatedJob;
+	public  Job updateJobWithRating(@RequestBody JobRatingWrapper data) {
+		if(data.getRating() == 0.0){
+			Job updatedJob = jobService.updateJob(data.getJob());
+			return updatedJob;
+		} else {
+			Job updatedJob = jobService.updateJob(data.getJob(), data.getRating());
+			return updatedJob;
+		}
 	}
 	@DeleteMapping("/{id}")
 	public String deleteJobById(@PathVariable int id) {
@@ -69,28 +79,38 @@ public class JobController {
 		return job;
 	}
 	@GetMapping("/useraccepted/{id}")
-	public Page<Job> getJobsByUserAcceptedId(@PathVariable int id,Pageable pageable) {
-		Page<Job> jobsList = jobService.selectJobsByUserAcceptedId(id,pageable);
+	public Page<Job> getJobsByUserAcceptedId(@PathVariable int id,@RequestParam(name="status", defaultValue = "0") int status, Pageable pageable) {
+		Page<Job> jobsList = jobService.selectJobsByUserAcceptedId(id,status, pageable);
 		return jobsList;
 	}
 	@GetMapping("/usercreated/{id}")
-	public Page<Job> getJobsByUserCreatedId(@PathVariable int id, Pageable pageable) {
-		Page<Job> jobsList = jobService.selectJobsByUserCreatedId(id,pageable);
+	public Page<Job> getJobsByUserCreatedId(@PathVariable int id,@RequestParam(name="status", defaultValue = "0") int status, Pageable pageable) {
+		Page<Job> jobsList = jobService.selectJobsByUserCreatedId(id, status, pageable);
 		return jobsList;
 	}
 	@GetMapping("/category/{id}")
-	public Page<Job> getJobsByCategoryId(@PathVariable int id, Pageable pageable) {
-		Page<Job> jobsList = jobService.selectJobsByCategoryId(id,pageable);
+	public Page<Job> getJobsByCategoryId(@PathVariable int id, @RequestParam(name="status", defaultValue = "0") int status, Pageable pageable) {
+		Page<Job> jobsList = jobService.selectJobsByCategoryId(id,status,pageable);
 		return jobsList;
 	}
 	@GetMapping("/product/{id}")
-	public Page<Job> getJobsByProductId(@PathVariable int id, Pageable pageable) {
-		Page<Job> jobsList = jobService.selectJobsByProductId(id, pageable);
+	public Page<Job> getJobsByProductId(@PathVariable int id, @RequestParam(name="status", defaultValue = "0") int status, Pageable pageable) {
+		Page<Job> jobsList = jobService.selectJobsByProductId(id, status, pageable);
 		return jobsList;
 	}
 	@GetMapping("/status/{id}")
 	public Page<Job> getJobsByStatusId(@PathVariable int id, Pageable pageable) {
 		Page<Job> jobsList = jobService.selectJobsByStatusId(id, pageable);
+		return jobsList;
+	}
+	@GetMapping("/popular/{amount}")
+	public List<ProductCountWrapper> getPopularJobs(@PathVariable int amount, @RequestParam int days) {
+		List<ProductCountWrapper> jobsList = jobService.getPopularJobs(amount,days);
+		return jobsList;
+	}
+	@GetMapping("/popularlocations/{amount}")
+	public List<ProductAddressCountWrapper> getPopularLocations(@PathVariable int amount, @RequestParam int days) {
+		List<ProductAddressCountWrapper> jobsList = jobService.getPopularLocations(amount,days);
 		return jobsList;
 	}
     @GetMapping("/search")

@@ -5,20 +5,13 @@
     margin: 0 auto;
     padding: 10%;
     background:rgb(23,123,123);
- 
     text-align: center;
-  
-    
 }
 
 .userAccountCard{
     margin: 0 auto;
     text-align: center;
-  
-
 }
 .userAccountHeading{
-clear: right;
-
-
+    clear: right;
 }
