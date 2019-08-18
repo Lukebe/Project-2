@@ -50,7 +50,7 @@ export class Header extends Component < IAuthProps, any >  {
                 </Col>
                     <Col sm={12} md={4} lg={5} xl={3}>
                         <Dropdown>
-                            <Dropdown.Toggle variant="success" id="dropdown-basic">
+                            <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic">
                                 Account
                             </Dropdown.Toggle>
 
