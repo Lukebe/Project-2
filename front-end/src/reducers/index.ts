@@ -19,6 +19,7 @@ export interface IAuthState {
 export interface IMakerPortalState {
     needsRefresh: boolean,
     formFields: any;
+    newJobOpen : boolean;
 };
 export interface IAccountState {
     selectedModal : AccountModalType

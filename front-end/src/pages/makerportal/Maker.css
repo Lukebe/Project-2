@@ -1,9 +1,8 @@
 .makerportal-container{
-    border: 1px solid #eee ;
     background-color: whitesmoke;
 }
-.accordion >.card .card-header {
-    background-color: rgb(67, 12, 170);
+.popular-events-list > .card .card-header {
+    background-color: #FF4136    ;
     color: white;
     cursor: pointer;
 }
@@ -54,6 +53,69 @@
     flex-direction: row;
     justify-content: center;
 }
+.makerportal-container {
+    height: auto;
+    min-height: 100% !important;
+}
+.createnewjob-container {
+    background-color:#183442;
+    border-radius: 0px 0px 0 15px;
+    box-shadow: 10px inset #888888aa;
+    border-left: 2px solid #88888855;
+    -webkit-font-smoothing: antialiased;
+    transform: translate(0, -200%);
+    transition: transform 1.0s cubic-bezier(0.77,0.2,0.05,1.0);
+}
+.createnewjob-hidden {
+    margin-left: 50%;
+    display:none;
+    background-color:#183442;
+    border-radius: 0px 0px 0 15px;
+    box-shadow: 10px inset #888888aa;
+    border-left: 2px solid #88888855;
+    -webkit-font-smoothing: antialiased;
+    transform: translate(0, -200%) !important;
+}
+.makerportal-collapse-container{
+    float:right;
+    width: 50% !important;
+    padding-right: 1em;
+    margin-top:0.5em;
+    border-radius: 15px 15px 0px 0px;
+    background-color: #183442;
+    box-shadow: 0px 3px 0px 0px #888888aa;
+}
+.makerportal-collapse-container > .badge-primary {
+    background-color:transparent;
+    color: black; 
+    padding: 0; 
+    float:right;
+}
+
+.makerportal-collapse-container > .newjob_menu_open {
+    color: whitesmoke;
+}
+
+.makerportal-collapse-container > .badge-primary :hover {
+    transition: color 0.25s ease-in;
+    color: #aaa;    
+}
+.makerportal-collapse-container > .badge-primary > .material-icons {
+    font-size: 5em;
+    cursor: pointer;
+}
+
+.createjob-form{
+    background-color:  #ddd
+    ;
+    opacity:0.97;
+    padding: 1em;
+    margin-bottom: 1em;
+}
+.createnewjob-container > .makerportal-title {
+    background-color: #ddd    ;
+    color: black;
+}
 .makerportal-title {
     padding-bottom: 10px;
     padding-top: 10px;
@@ -69,7 +131,7 @@
     border-radius:10px 10px 0px 0px;
 
 }
-.my-events-title, .my-events-container {
+.my-events-title, .my-events-container, .my-events-title-container {
     background-color: #183442;
     color: white;
 }
@@ -216,12 +278,109 @@
     box-shadow: inset 0 0 0 8px white;
 }
 .my-events-loading-spinner {
-    margin-right: .5em;
-    float:right;
+    position: absolute;
+    right: 2em;
+    top: 1em;
+    width: 2.5rem;
+    height: 2.5rem;
 }
 .popular-events-list {
     margin-top: 1em;
+    margin-bottom: 1em;
 }
+.popular-events-list-image {
+    width: 12em;
+    height:12em;
+    float:left;
+}
+.popular-events-list-category > .material-icons,
+ .popular-events-list-price > .material-icons,
+ .popular-events-list-address > .material-icons {
+    font-size: 1.6em;
+    float:left;
+    margin-left: 1.0em;  
+    margin-right: 1.3em; 
+}
+.popular-events-list-category,
+ .popular-events-list-price,
+ .popular-events-list-address {
+     text-align:left;
+}
+.popular-events-product-container{
+    display: flex;
+    flex-direction: column;
+}
+.popular-events-image-container{
+    float:left;
+    width:12em;
+}
+.popular-events-image-container > .expand-image-button{
+    width:12em;
+    height: 2em;
+    margin-top:0.2em;
+    background-color: #666;
+    font-size: 1em;
+    padding-top:0;
+    outline: 0;
+    border:0;
+}
+.popular-events-image-container > .expand-image-button:hover{
+    background-color:#111;
+    transition: background-color 0.5s ease-in;
+}
+.popular-events-image-container > .expand-image-button:active, 
+.popular-events-image-container > .expand-image-button:focus
+{
+    border:0 !important;
+    outline:0 !important;
+    box-shadow: none !important;
+}
+
+.popular-events-list > .card > .card-header > .material-icons {
+    font-size: 2em;
+    float:right;
+}
+.popular-events-pick-button {
+    background-color: #001f3f    ;
+    width: 80%;
+    height: 4em;
+}
+.popular-events-pick-button:hover{
+    background-color: #004183 !important;
+    transition: background-color 0.5s;
+}
+.popular-events-list-description{
+    font-style:italic;
+    padding-bottom: 1em;
+    margin-left:1em;
+    padding-right:.5em;
+    box-sizing:content-box;
+    border-bottom: 1px double #aaa;
+}
+.popular-events-list-address {
+    margin-bottom: 2em;
+}
+.popular-events-list-count {
+    font-weight: 400;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    border-radius: 10px;
+    
+}
+.popular-events-warning {
+    display:flex;
+    justify-content: center;
+}
+.popular-events-warning > .material-icons {
+    justify-content: center;
+    margin: auto;
+    font-size: 2em;
+}
+.popular-events-warning > p {
+    margin-bottom:0;
+    text-align:left;
+    margin-left:1em;
+}
+
 @media only screen and (max-width: 500px) {
     .my-events-data {
         flex-direction: column;
@@ -239,5 +398,58 @@
     }
     .my-events-container > .pagination-right {
         padding-left: 0;
+    }
+    .my-events-loading-spinner {
+        right: 1.5em;
+        width: 2.0em;
+        height: 2.0em;
+    }
+    .popular-events-list-description {
+        margin-top:0.5em;
+    }
+    .popular-events-list-image {
+        width: 100%;
+        height:100%;
+        float:none;
+    }
+    .popular-events-list-category > .material-icons,
+ .popular-events-list-price > .material-icons,
+ .popular-events-list-address > .material-icons {
+    margin-left: 0.7em;  
+    margin-right: 1.3em; 
+    
+}
+    .makerportal-collapse-container {
+        width: 100% !important;
+        background-color: #111 !important;
+        margin-bottom: 10px;
+    }
+    .createnewjob-container {
+        background-color: #ddd;
+        margin-bottom: 20px;
+    }
+    .makerportal-collapse-container > .badge-primary {
+        color: white;
+    }
+    .mobile-newjob-title {
+        color: white;
+        float: left;
+        padding-top: .5em;
+        padding-left: 1.0em;
+        font-family: Fjalla One;
+    }
+    .my-events-pagination-bottom > ul > li {
+        position: relative;
+        display: block;
+        float: left;
+        margin: 2px 2px;
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+    }
+    .my-events-pagination-bottom > ul {
+        padding-left: .5em;
+        padding-right: .5em;
+        margin:auto;
     }
 }

@@ -170,11 +170,10 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                 </Alert> : null}
                 {(this.state.productPickerOpen) ?
                 <ProductPicker callback = {this.handleProductUpdate}/> : null}
-            <Form noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
+            <Form className = "createjob-form"noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
                 <Form.Group controlId="formCategory">
                     <Form.Label>Category</Form.Label>
                         <Form.Control as="select" onChange={this.changeHandler} 
-                        value = {this.props.makerPortal.formFields.category}
                         name="category" size="lg">
                             <option hidden>Choose a category...</option>
                             {this.state.categoryList}
