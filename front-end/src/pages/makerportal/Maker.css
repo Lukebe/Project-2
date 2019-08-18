@@ -143,9 +143,12 @@
     -webkit-transform: perspective(1px) translateZ(0) !important;
     transform: perspective(1px) translateZ(0) !important;
     box-shadow: 0 0 1px rgba(0, 0, 0, 0) !important;
-    position: relative !important;
+    position: absolute !important;
     background-color:#FF4136 !important;
     border: 0;
+    bottom: 1em;
+    left: 50%;
+    margin-left: -50px;
   }
   .btn-my-events-data-card:before {
     content: '';
@@ -166,6 +169,44 @@
     bottom: -8px !important;
     left: -8px !important;
   }
+.my-events-data-card > .card-body {
+    padding: 1.0rem;
+}
+.my-events-data-card > .card-body > .form-label {
+    float: left;
+    width: 80%;
+    margin-left: 10%;
+    margin-right:10%;
+    border-bottom: 1px dashed #bbb;
+    margin-bottom: 0.2em;
+    font-weight:400;
+    font-size: 0.75em;
+    margin-top: 0.5em;
+    font-family: 'Roboto', sans-serif;
+
+}
+.my-events-data-card > .card-body > .form-text > p {
+    font-size: 0.85em;
+    margin-bottom: 0.5em;
+    display: block;
+    width: 100%;
+    text-align:center;
+    float: left;
+    font-weight:300;
+    font-family: 'Roboto', sans-serif;
+
+}
+.my-events-data-card > .card-body > .form-text >p> a > .material-icons {
+    margin-left:0.5em;
+    font-size: 1.5em;
+
+}
+.my-events-data-card > .card-body > .form-text > p > a {
+    color: black !important;
+}
+.my-events-data-card > .card-body > .form-text >p> a > .small-icons {
+    font-size: 1.5em;
+}
 .my-events-error {
     text-align: center;
 }
@@ -256,6 +297,35 @@
     cursor: pointer;
     position: absolute;
 }
+.rating {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    text-align: center;
+  }
+.rating > p {
+    direction:ltr;
+    margin-bottom: 0em;
+}
+  .rating > span {
+    font-size: 1.8em;
+    display: inline-block;
+    color: gold;
+    position: relative;
+    width: 0.8em;
+    cursor:pointer;
+    margin-bottom: 1.0em;
+  }
+  .rating > span:hover,
+  .rating > span:hover ~ span {
+    color: transparent;
+  }
+  .rating > span:hover:before,
+  .rating > span:hover ~ span:before {
+     content: "\2605";
+     position: absolute;
+     left: 0; 
+     color: gold;
+  }
 .formRow p {
     font-size: 1.5em;
 }
@@ -377,7 +447,14 @@
     text-align:left;
     margin-left:1em;
 }
-
+@media only screen and (max-width: 1000px) {
+    .my-events-data-card {
+        min-width:150px;
+    }
+    .my-events-data {
+        flex-wrap: wrap;
+    }
+}
 @media only screen and (max-width: 500px) {
     .my-events-data {
         flex-direction: column;

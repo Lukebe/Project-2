@@ -11,6 +11,7 @@ import { Alert, Card, Button, FormLabel, Form, Spinner } from "react-bootstrap";
 import isMobile from "../../utils/IsMobile";
 import { makerPortalReducer } from "../../reducers/MakerPortal.reducer";
 import { myJobsDoneRefresh } from "../../actions/MakerPortal.action";
+import JobDetailsModal from "../../components/JobDetailsModal";
 const RequestState = APICall.RequestState;
 export interface IAuthProps {
     //data from state store
@@ -28,7 +29,8 @@ interface IState {
     RequestStatus: {
         status: APICall.RequestState,
         errorMsg: string,
-    }
+    },
+    jobDetailsModalIndex: number;
 }
 type IProps = IComponentProps & IAuthProps;
 class MyEvents extends Component <IAuthProps,IState>{
@@ -42,7 +44,8 @@ class MyEvents extends Component <IAuthProps,IState>{
             RequestStatus: {
                 status: RequestState.NOT_ACTIVE,
                 errorMsg: '',
-            }
+            },
+            jobDetailsModalIndex: -1,
         };
     }
     componentDidMount() {
@@ -57,6 +60,9 @@ class MyEvents extends Component <IAuthProps,IState>{
             }
         }
     }
+    closeJobDetailsModal = () => {
+        this.setState({...this.state, jobDetailsModalIndex: -1});
+    }
     goBackClick = (e : any) => {
         e.preventDefault();
         if(!this.state.dataPagination.isFirstPage()){
@@ -67,6 +73,39 @@ class MyEvents extends Component <IAuthProps,IState>{
         e.preventDefault();
         if(!this.state.dataPagination.isLastPage()){
             this.getMyJobs(this.state.dataPagination.getPageNumber() + 1)
+        }
+    }
+    async setRating(rating : number, jobId: number) {
+        this.setState({...this.state, RequestStatus: 
+            {...this.state.RequestStatus, status: RequestState.FETCHING}});
+        const response : any = await APICall.PATCH('/jobs', {jobId, rating}
+            ,this.props.auth.userProfile.getToken());
+
+        if(response instanceof Error){
+            this.setState({...this.state, RequestStatus: 
+                {...this.state.RequestStatus, status: RequestState.ERROR, errorMsg: response.message}});
+        } else {
+                this.setState({...this.state, RequestStatus: 
+                    {...this.state.RequestStatus, status: RequestState.SUCCESSFUL}});
+                this.getMyJobs(this.state.dataPagination.getPageNumber());
+            }
+    }
+    getProperStatus(statusId : number){
+        switch(statusId) {
+            case 1:
+                return (<p>Searching for fulfiller<i className = "material-icons">hourglass_empty</i></p>)
+            case 2:
+                return (<p>Job Assigned<i className = "material-icons">person</i></p>)
+            case 3:
+                return (<p>In Progress<i className = "material-icons">autorenew</i></p>)
+            case 4:
+                return (
+                <p>Completed<i className = "material-icons">done</i></p>)
+            case 5:
+                return (<p>Cancelled<i className = "material-icons">cancel</i></p>)
+            case 6:
+                return (
+                <p>Completed<i className = "material-icons">done</i></p>)
         }
     }
     createPagination = () => {
@@ -110,6 +149,9 @@ class MyEvents extends Component <IAuthProps,IState>{
     render() {
         return (
             <>
+            {(this.state.jobDetailsModalIndex !== -1) ?
+            <JobDetailsModal job = {this.state.data[this.state.jobDetailsModalIndex]} callback = {this.closeJobDetailsModal}/>
+            : null }
                         {this.state.RequestStatus.status === RequestState.ERROR ?
                     <Alert key="request-error" className = "my-events-error" variant="danger">
                     Error retrieving data from server : {this.state.RequestStatus.errorMsg}
@@ -128,19 +170,45 @@ class MyEvents extends Component <IAuthProps,IState>{
             </div>      
               <div className = "my-events-data">
 
-            {(this.state.data[0]) ? this.state.data.map((element: Job) => {
+            {(this.state.data[0]) ? this.state.data.map((element: Job, index : number) => {
 
                 return (
                 <>
                 <Card className = "my-events-data-card">
                     <Card.Img variant="top" src={element.getProduct().getImageUrl()} />
                     <Card.Body>
+                        
                         <Card.Title>{element.getProduct().getItemName()}</Card.Title>
-                        <Card.Text>
-                        <Form.Label>Expected Delivery: </Form.Label> {element.getJobDateTime().getDate() + element.getTimeEstimate().getDate()}
-                        <Form.Label>Status: </Form.Label> {element.getStatus().getStatus()}
-                    </Card.Text>
-                    <Button className = "btn-my-events-data-card" >View Details</Button>
+                        <Form.Label>Status: </Form.Label>
+                        <Form.Text>
+                         {this.getProperStatus(element.getStatus().getStatusId())} </Form.Text>
+                        {(element.getStatus().getStatusId() === 2) ? <>
+                        <Form.Label>Expected Delivery: </Form.Label> 
+                        <Form.Text>
+                        <p>{element.getTimeEstimate()} </p> </Form.Text>
+                        </> : null } 
+                        {(element.getStatus().getStatusId() === 2 || element.getStatus().getStatusId() === 3) ? <>
+                        <Form.Label>Your Fullfiller: </Form.Label> 
+                        <Form.Text>
+                        <p>{element.getUserAccepted().getFirstName()}
+                        <a href= {`tel: ${element.getUserAccepted().getPhone()}`}><i className = "material-icons small-icons">phone</i></a>
+                        <a href= {`mailto: ${element.getUserAccepted().getEmail()}`}><i className = "material-icons small-icons">email</i></a></p>
+                         </Form.Text>
+
+                        </> : null } 
+                         {element.getStatus().getStatusId() === 4 ? <>
+                         <Form.Label>How did {element.getUserAccepted().getFirstName()} do?</Form.Label>
+                        <div className="rating">
+                            <span onClick = {() => this.setRating(5,element.getJobId())}>☆</span>
+                            <span onClick = {() => this.setRating(4, element.getJobId())}>☆</span>
+                            <span onClick = {() => this.setRating(3, element.getJobId())}>☆</span>
+                            <span onClick = {() => this.setRating(2, element.getJobId())}>☆</span>
+                            <span onClick = {() => this.setRating(1, element.getJobId())}>☆</span>
+                        </div> </>
+                        : null }
+                    <Button className = "btn-my-events-data-card" 
+                    onClick = {() => this.setState({...this.state, jobDetailsModalIndex: index})}
+                    >View Details</Button>
                     </Card.Body>
                 </Card> 
             </> )
