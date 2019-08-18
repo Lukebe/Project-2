@@ -48,22 +48,20 @@ export class Header extends Component < IAuthProps, any >  {
                         </Nav>
                     </Navbar>
                 </Col>
-                { this.props.auth.userProfile.getUserId() &&
                     <Col sm={12} md={4} lg={5} xl={3}>
                         <Dropdown>
-                            <Dropdown.Toggle variant="success" id="dropdown-basic">
+                            <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic">
                                 Account
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
                                 {this.state.userFullName}
-                                { this.props.auth.userProfile.getRating() == 0.0 &&
+                                { this.props.auth.userProfile.getRating() != 0.0 &&
                                     this.state.rating
                                 }
                             </Dropdown.Menu>
                         </Dropdown>
                     </Col>
-                }
             </Row>
         </header>
         );
