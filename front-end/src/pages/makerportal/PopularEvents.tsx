@@ -7,12 +7,13 @@ import { Marker, InfoWindow, GoogleMap, withGoogleMap } from "react-google-maps"
 import testData from './MapTestData';
 import * as APICall from '../../utils/APICall';
 import Axios from "axios";
-import { Spinner, Button, Accordion, Card } from "react-bootstrap";
+import { Spinner, Button, Accordion, Card, Alert, Row, Col } from "react-bootstrap";
 import { Job } from "../../models/Job";
 import { Product } from "../../models/Product";
 import { Category } from "../../models/Category";
-import { myJobsRefresh, newJobsPopulate, newJobsReset } from "../../actions/MakerPortal.action";
+import { myJobsRefresh, newJobsPopulate, newJobsReset, openNewJobs } from "../../actions/MakerPortal.action";
 import { makerPortalReducer } from "../../reducers/MakerPortal.reducer";
+import ImageModal from "../../components/ImageModal";
 const RequestState = APICall.RequestState;
 
 //GEOCODE METHOD: https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAlQO3Z1bivIK3irAufKKllvQHtIm1HPgo&address=hello
@@ -69,7 +70,7 @@ const PlacesWithStandaloneSearchBox = compose(
         {props.places.map((currElement : any, index: any) =>
       <Marker
         position={{ lat: currElement.geometry.location.lat, lng: currElement.geometry.location.lng }}
-        onClick={() => {console.log(props.jobDetails);props.onToggleOpen(index)}}
+        onClick={() => {props.updateCallback(index,true); props.onToggleOpen(index)}}
       >
         {props.openInfoWindowMarkerId === index ?
         <InfoWindow key = {index} onCloseClick={()=>props.onToggleOpen(index)}><>
@@ -80,7 +81,7 @@ const PlacesWithStandaloneSearchBox = compose(
           {currElement.formatted_address}
           </p><Button className = "map-picker-info-window-button"
           onClick = {(e : any)=>{e.preventDefault(); console.log(props.jobDetails[index]);
-            props.updateCallback(index); props.onToggleOpen(100000000)}}>
+            props.updateCallback(index,false); props.onToggleOpen(100000000)}}>
               Skip the Line for {props.jobDetails[index].product.itemName}</Button></>
         </InfoWindow> : null}
 
@@ -98,6 +99,7 @@ export interface IAuthProps {
     myJobsRefresh: () => void,
     newJobsPopulate: (name: string, value : any) => void,
     newJobsReset: () => void,
+    openNewJobs: () => void,
     //Action creators from the dispatcher
 }
 export interface IComponentProps {
@@ -110,6 +112,8 @@ interface IState {
       status: APICall.RequestState,
       errorMsg: string,
   }
+    imageModalUrl: string;
+    selectedAccordianIndex: number;
 }
 type IProps = IComponentProps & IAuthProps;
 class PopularEvents extends Component <IAuthProps,IState>{
@@ -120,23 +124,28 @@ class PopularEvents extends Component <IAuthProps,IState>{
             currentPlaces: testData,
             mapCenter: { },
             popularJobDetails: {},
+            imageModalUrl: '',
             RequestStatus: {
               status: RequestState.NOT_ACTIVE,
               errorMsg: '',
               
-          }
+          },
+          selectedAccordianIndex: 0,
         };
         
     }
-     retrieveInformationFromMap = (index : number) => {
+     retrieveInformationFromMap = (index : number,marker: boolean) => {
        console.log(this.state.popularJobDetails[index]);
+       if(!marker) {
        this.props.newJobsReset();
        this.props.newJobsPopulate("productlocation", this.state.popularJobDetails[index].address);
        this.props.newJobsPopulate("category",  this.state.popularJobDetails[index].product.category.categoryId);
        this.props.newJobsPopulate("product",  this.state.popularJobDetails[index].product.productId)
-      this.props.myJobsRefresh();
-
-
+        this.props.myJobsRefresh();
+        this.props.openNewJobs();
+       } else {
+        this.setState({...this.state,selectedAccordianIndex : index});
+       }
     }
     async componentDidMount() {
       let popularLocations = await this.getPopularLocations();
@@ -151,7 +160,14 @@ class PopularEvents extends Component <IAuthProps,IState>{
     }
     changeMapCenter = (index:number) => {
       this.setState({mapCenter: {lat: this.state.currentPlaces[index]['geometry']['location']['lat'],
-       lng: this.state.currentPlaces[index]['geometry']['location']['lng']} });
+       lng: this.state.currentPlaces[index]['geometry']['location']['lng']},
+      selectedAccordianIndex: (this.state.selectedAccordianIndex === index) ? 10000 : index });
+    }
+    closeImageModal = (() => {
+      this.setState({...this.state, imageModalUrl: ''});
+    });
+    openImageModal(url: string) {
+      this.setState({...this.state, imageModalUrl: url});
     }
     async getPopularLocations()  {
       this.setState({...this.state, RequestStatus: 
@@ -187,31 +203,44 @@ class PopularEvents extends Component <IAuthProps,IState>{
   } 
     render() {
         return (<>
-        {console.log(this.state)} 
-        <h2 className = "makerportal-title">Popular Orders</h2>
+        {(this.state.imageModalUrl) ? <ImageModal callback = {this.closeImageModal} imageUrl = {this.state.imageModalUrl}/> : null}
+        <h2 className = "makerportal-title">Popular Orders</h2><Row><Col lg = {this.props.makerPortal.newJobOpen ? 12 : 6} sm = {12}>
         {(this.state.RequestStatus.status === RequestState.FETCHING) ? <Spinner animation = "border" variant = "dark"/> :
+        
 <PlacesWithStandaloneSearchBox updateCallback = {this.retrieveInformationFromMap} 
-places = {this.state.currentPlaces} jobDetails = {this.state.popularJobDetails} center = {this.state.mapCenter}/>
-} 
+places = {this.state.currentPlaces} jobDetails = {this.state.popularJobDetails} center = {this.state.mapCenter}
+zoom = {15}/>
+} </Col><Col lg = {this.props.makerPortal.newJobOpen ? 12 : 6} sm = {12}>
         {(this.state.popularJobDetails[0]) ?
-          <Accordion defaultActiveKey="0" className = "popular-events-list">
+          <Accordion activeKey = {`${this.state.selectedAccordianIndex}`} className = "popular-events-list">
         {this.state.popularJobDetails.map((element: any, index: number) => {
           return (
           <Card>
-            <Accordion.Toggle as={Card.Header} eventKey={""+index} onClick = {()=>this.changeMapCenter(index)}>
-              {element.product.itemName} @ {element.address}
+            <Accordion.Toggle as={Card.Header} eventKey={""+index} 
+              onClick = {()=>{this.changeMapCenter(index);
+               }}>
+              {element.product.itemName} @ {element.address} <i className = "material-icons">menu</i>
             </Accordion.Toggle>
             <Accordion.Collapse eventKey={""+index}>
               <Card.Body>
+                {(element.count > 14) ?
+              <Alert className = "popular-events-warning" variant="warning">  
+              <i className = "material-icons">warning</i>   
+              <p>This location is very popular right now. Successful delivery of product is not guaranteed</p>
+              </Alert> : null}
+              <div className = "popular-events-image-container">
               <img className = "popular-events-list-image" key = {index} src = {element.product.imageUrl}/>
-              <p className = "popular-events-list-description">{element.product.description}</p>
-              <p className = "popular-events-list-category">Category: {element.product.category.name}</p>
-              <p className = "popular-events-list-price">Price: {element.product.price}</p>
-              <p className = "popular-events-list-address"><i className = "material-icons">location_on</i>{element.address}
-              <p className = "popular-events-list-count"><strong>{element.count} Kutsies users are waiting for this product.
-              Get it before it's too late!</strong></p>
-              </p><Button className = "map-picker-info-window-button"
-          onClick = {(e : any)=>{e.preventDefault();}}>
+              <Button className = "expand-image-button" onClick = {()=>{this.openImageModal(element.product.imageUrl)}}>Expand</Button>
+              </div>
+              <div className = "popular-events-product-container">
+                <p className = "popular-events-list-description">{element.product.description}</p>
+                <p className = "popular-events-list-category"><i className = "material-icons">category</i> {element.product.category.name}</p>
+                <p className = "popular-events-list-price"><i className = "material-icons">attach_money</i> ${element.product.price}</p>
+                <p className = "popular-events-list-address"><i className = "material-icons">location_on</i>{element.address}</p>
+              </div>
+              <p className = "popular-events-list-count">{element.count} other Kutsies users are waiting for this product.</p>
+              <Button className = "popular-events-pick-button"
+          onClick = {(e : any)=>{e.preventDefault(); this.retrieveInformationFromMap(index,false)}}>
               Skip the Line for {element.product.itemName}</Button>
               </Card.Body>
             </Accordion.Collapse>
@@ -219,6 +248,8 @@ places = {this.state.currentPlaces} jobDetails = {this.state.popularJobDetails} 
         })}
         </Accordion>
         : null }
+        </Col>
+      </Row>
 
 
 </>
@@ -236,5 +267,6 @@ const mapDispatchToProps = {
   myJobsRefresh: myJobsRefresh,
   newJobsPopulate: newJobsPopulate,
   newJobsReset: newJobsReset,
+  openNewJobs: openNewJobs,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(PopularEvents);

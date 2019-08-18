@@ -31,7 +31,7 @@ interface IState {
     }
 }
 type IProps = IComponentProps & IAuthProps;
-class PopularEvents extends Component <IAuthProps,IState>{
+class MyEvents extends Component <IAuthProps,IState>{
 
     constructor(props: any) {
         super(props);
@@ -50,8 +50,11 @@ class PopularEvents extends Component <IAuthProps,IState>{
     }
     componentWillReceiveProps(props:any){
         if(props.makerPortal.needsRefresh !== this.props.makerPortal.needsRefresh){
-            console.log("yes");
-            if(this.props.makerPortal.needsRefresh){this.getMyJobs(0)}
+            if(props.makerPortal.needsRefresh){
+                this.getMyJobs(0); 
+                this.props.myJobsDoneRefresh();
+                console.log(this);
+            }
         }
     }
     goBackClick = (e : any) => {
@@ -111,7 +114,10 @@ class PopularEvents extends Component <IAuthProps,IState>{
                     <Alert key="request-error" className = "my-events-error" variant="danger">
                     Error retrieving data from server : {this.state.RequestStatus.errorMsg}
                     </Alert> : null}
+            <div className = "my-events-title-container">
             <h2 className = "my-events-title makerportal-title">My Orders</h2>
+            {this.state.RequestStatus.status === RequestState.FETCHING ? <Spinner className = "my-events-loading-spinner"
+            animation = "border" variant = "light"/> : null}</div>
 
                     
             <div className = "my-events-container">
@@ -127,7 +133,7 @@ class PopularEvents extends Component <IAuthProps,IState>{
                 return (
                 <>
                 <Card className = "my-events-data-card">
-                    <Card.Img variant="top" src="https://images-eu.ssl-images-amazon.com/images/I/41tFHNWXlPL._SY300_QL70_.jpg" />
+                    <Card.Img variant="top" src={element.getProduct().getImageUrl()} />
                     <Card.Body>
                         <Card.Title>{element.getProduct().getItemName()}</Card.Title>
                         <Card.Text>
@@ -150,8 +156,7 @@ class PopularEvents extends Component <IAuthProps,IState>{
                 {this.createPagination()}
 			</ul>
             </>
-            {this.state.RequestStatus.status === RequestState.FETCHING ? <Spinner className = "my-events-loading-spinner"
-            animation = "border" variant = "light"/> : null}</div>
+</div>
              </>
 
         )
@@ -168,4 +173,4 @@ const mapStateToProps = (state : IAppState) => {
 const mapDispatchToProps = {
     myJobsDoneRefresh: myJobsDoneRefresh,
 }
-export default connect(mapStateToProps, mapDispatchToProps)(PopularEvents);
+export default connect(mapStateToProps, mapDispatchToProps)(MyEvents);
