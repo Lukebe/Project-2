@@ -1,7 +1,7 @@
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { IAuthState, IAppState, IMakerPortalState } from '../../reducers';
+import { IAuthState, IAppState, IMakerPortalState, IProductPickerState } from '../../reducers';
 import './Maker.css';
 import { loginSuccessful } from '../../actions/Authentication.action';
 import Form from "react-bootstrap/Form";
@@ -13,14 +13,18 @@ import MapPicker from '../../components/MapPicker';
 import { Category } from "../../models/Category";
 import ProductPicker from "../../components/ProductPicker";
 import { myJobsDoneRefresh, newJobsPopulate, newJobsReset, myJobsRefresh } from "../../actions/MakerPortal.action";
+import { resetProduct } from "../../actions/ProductPicker.action";
+import { Product } from "../../models/Product";
 const RequestState = APICall.RequestState;
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
     makerPortal: IMakerPortalState,
+    productPicker: IProductPickerState,
     myJobsRefresh: () => void,
     newJobsPopulate: (name: string, value: any) => void,
     newJobsReset: () => void,
+    resetProduct: () => void,
     //Action creators from the dispatcher
 }
 export interface IComponentProps {
@@ -39,6 +43,7 @@ interface IState {
     isMapModalOpen: boolean;
     openedLocation: string;
     productPickerOpen: boolean;
+    productId: number;
 }
 type IProps = IComponentProps & IAuthProps;
 class CreateNewJob extends Component <IAuthProps,IState>{
@@ -58,7 +63,8 @@ class CreateNewJob extends Component <IAuthProps,IState>{
             categoryList: [],
             categoriesArray: [],
             isAuthorized: false,
-            openedLocation: ''
+            openedLocation: '',
+            productId: 0,
 
         };
     }
@@ -66,6 +72,15 @@ class CreateNewJob extends Component <IAuthProps,IState>{
         this.getCategories();
     }
     componentWillReceiveProps(props:any){
+        if((props.productPicker.product !== this.props.productPicker.product)){
+            if(props.productPicker.product){
+            this.props.newJobsPopulate('product', props.productPicker.product.getItemName());
+            this.setState({productId: props.productPicker.product.getProductId()});
+            } else {
+                this.props.newJobsPopulate('product', '');
+                this.setState({productId: 0});
+            }
+        }
     }
     handleSubmit = async (event : any) => {
         const form = event.currentTarget;
@@ -90,7 +105,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                     category: {categoryId: formData.category.value}, // sends the category id
                     jobEarnings: formData.jobpay.value, // sends amount the worker is payed for the job
                     timeEstimate: ((estimateTimeInHours + estimateTimeInMinutes) * 60 * 1000), // sends an integer of time in milliseconds
-                    product: {productId: formData.product.value}, // sends product id
+                    product: {productId: this.state.productId || formData.product.value}, // sends product id
                     status:  {statusId: 1}
                 }
             
@@ -123,7 +138,6 @@ class CreateNewJob extends Component <IAuthProps,IState>{
         }
     }
     handleProductUpdate = (productId : number) => {
-        this.props.newJobsPopulate("product", productId);
         this.setState({...this.state,productPickerOpen: false});
     }
     changeHandler = (event: any) => {    
@@ -218,10 +232,12 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                     <Form.Label>Requested Product</Form.Label>
                         <Form.Row className="formRow">
                             <Col lg="10">
-                                <Form.Control required onChange={this.changeHandler} size="lg" type="text" 
-                                    value = {this.props.makerPortal.formFields.product.value}
-                                    id = "new-job-product" placeholder = "" name="product"/>
-                                    <Button onClick = {() => {this.setState({productPickerOpen: true})}}>Open Product Picker</Button>
+                                    <Button onClick = {() => { this.props.resetProduct();
+                                        this.setState({productPickerOpen: true})}}>Open Product Picker</Button>
+                                        {(this.props.makerPortal.formFields.product.value) ?
+                                        <p className = "product-selected-text">
+                                            Selected Product: {this.props.makerPortal.formFields.product.value}
+                                        </p> : null }
                                 <Form.Control.Feedback type="invalid">
                                     Please choose a product
                                 </Form.Control.Feedback>
@@ -329,6 +345,7 @@ const mapStateToProps = (state : IAppState) => {
     return {
         auth: state.auth,
         makerPortal: state.makerPortal,
+        productPicker: state.productPicker,
     }
 }
 //This object definition will be used to map action creators to properties
@@ -336,5 +353,6 @@ const mapDispatchToProps = {
     myJobsRefresh: myJobsRefresh,
     newJobsPopulate: newJobsPopulate,
     newJobsReset: newJobsReset,
+    resetProduct: resetProduct,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(CreateNewJob);
