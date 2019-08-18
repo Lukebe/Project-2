@@ -9,6 +9,7 @@ import UserPortal from './pages/userportal/UserPortal';
 import store from './Store';
 import { Provider } from 'react-redux';
 import MakerPortal from './pages/makerportal';
+import Header from './components/Header';
 
 const App: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ const App: React.FC = () => {
             */
           }
           <Route exact path="/" component={Landing} />
+          <Route exact path="/header" component={Header} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/userportal" component={UserPortal} />
           <Route exact path="/postJob" component={PostJob} />
