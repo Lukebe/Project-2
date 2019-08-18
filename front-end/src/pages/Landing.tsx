@@ -19,24 +19,24 @@ import Signup from './account/Signup';
 import ForgotPassword from './account/ForgotPassword';
 import { Redirect } from 'react-router';
 interface IState {
-    buttonClicked : boolean,
-    loginDialogOpen : boolean,
+    buttonClicked: boolean,
+    loginDialogOpen: boolean,
     logoKShow: boolean,
 }
 export interface IReduxProps {
     //data from state store
     auth: IAuthState,
-    accountModal : IAccountState,
+    accountModal: IAccountState,
     //Action creators from the dispatcher
-    openLogin : () => void;
-    setRedirect: (url : string) => void;
+    openLogin: () => void;
+    setRedirect: (url: string) => void;
     startRedirect: () => void;
     finishRedirect: () => void;
     closeModal: () => void;
-    openIsLoggedIn : () => void;
+    openIsLoggedIn: () => void;
 }
-export class Landing extends React.Component<IReduxProps,IState>{
-    constructor(props: any){
+export class Landing extends React.Component<IReduxProps, IState>{
+    constructor(props: any) {
         super(props);
         this.state = {
             buttonClicked: false,
@@ -44,125 +44,128 @@ export class Landing extends React.Component<IReduxProps,IState>{
             logoKShow: true,
         }
     }
-    handleModalClose = (event: any) =>   {
+    handleModalClose = (event: any) => {
         this.props.closeModal();
     }
     handleButtonClick = (event: any) => {
         this.props.setRedirect(event.target.name);
-        if(this.props.auth.userProfile.getUserId()){
+        if (this.props.auth.userProfile.getUserId()) {
             this.props.openIsLoggedIn();
             setTimeout(() => {
                 this.props.startRedirect();
                 this.props.finishRedirect();
                 this.props.closeModal();
-            },500);
+            }, 500);
         } else {
             this.props.openLogin();
         }
     }
     componentDidMount() {
-        if(!IsMobile()){
+        if (!IsMobile()) {
             setTimeout(() => {
-                this.setState({...this.state, logoKShow: false});
-            },2500);
+                this.setState({ ...this.state, logoKShow: false });
+            }, 2500);
         } else {
-            this.setState({...this.state, logoKShow: false});
+            this.setState({ ...this.state, logoKShow: false });
         }
     }
     render() {
-        return(
-            
-            <div className = 'landing-background'>
-                {this.props.accountModal.selectedModal === AccountModalType.LOGIN ? 
-                <Login updateCallback = {this.handleModalClose}/> : null }
-                {this.props.accountModal.selectedModal === AccountModalType.SIGNUP ? 
-                <Signup updateCallback = {this.handleModalClose}/> : null }
-                {this.props.accountModal.selectedModal === AccountModalType.FORGOT_PASSWORD ? 
-                <ForgotPassword updateCallback = {this.handleModalClose}/> : null }
-                {this.props.accountModal.selectedModal === AccountModalType.IS_LOGGED_IN ? 
-                <>
-                    <Modal show  centered backdrop dialogClassName="login-modal"
-                        backdropClassName = "login-modal-backdrop"
-                        size = "sm">
-                        <Modal.Header className = 'custom-redirect-header'>
-                            <h2> Redirecting </h2>
-                        </Modal.Header>
-                        <Modal.Body className = 'custom-redirect-body'>
-                            <p className='is-logged-in-text'>Please wait...</p> 
-                            <Spinner variant = "light" animation = "border"/>
-                        </Modal.Body>
-                    </Modal>
-                    {this.props.auth.redirect.readyToRedirect ? 
-                    <Redirect to = {this.props.auth.redirect.route}/>
-                 : null}
-                </>
-                : null }
-            <Carousel controls = {false} indicators = {false} className = "landing-background-carousel">
+        return (
+
+
+            // Maker Portal, User Portal, My Account. Incorporate logo or plain "Kutsies" title (like in footer) on the left. My Account link should be on right. User portal and maker portal should be in the center.
+
+            <div className='landing-background'>
+                {this.props.accountModal.selectedModal === AccountModalType.LOGIN ?
+                    <Login updateCallback={this.handleModalClose} /> : null}
+                {this.props.accountModal.selectedModal === AccountModalType.SIGNUP ?
+                    <Signup updateCallback={this.handleModalClose} /> : null}
+                {this.props.accountModal.selectedModal === AccountModalType.FORGOT_PASSWORD ?
+                    <ForgotPassword updateCallback={this.handleModalClose} /> : null}
+                {this.props.accountModal.selectedModal === AccountModalType.IS_LOGGED_IN ?
+                    <>
+                        <Modal show centered backdrop dialogClassName="login-modal"
+                            backdropClassName="login-modal-backdrop"
+                            size="sm">
+                            <Modal.Header className='custom-redirect-header'>
+                                <h2> Redirecting </h2>
+                            </Modal.Header>
+                            <Modal.Body className='custom-redirect-body'>
+                                <p className='is-logged-in-text'>Please wait...</p>
+                                <Spinner variant="light" animation="border" />
+                            </Modal.Body>
+                        </Modal>
+                        {this.props.auth.redirect.readyToRedirect ?
+                            <Redirect to={this.props.auth.redirect.route} />
+                            : null}
+                    </>
+                    : null}
+                <Carousel controls={false} indicators={false} className="landing-background-carousel">
                     <Carousel.Item>
                         <img
-                        className="d-block w-100"
-                        src={landing1}
-                        alt="First slide"
+                            className="d-block w-100"
+                            src={landing1}
+                            alt="First slide"
                         />
                     </Carousel.Item>
                     <Carousel.Item>
                         <img
-                        className="d-block w-100"
-                        src={landing2}
-                        alt="Second slide"
+                            className="d-block w-100"
+                            src={landing2}
+                            alt="Second slide"
                         />
                     </Carousel.Item>
                     <Carousel.Item>
                         <img
-                        className="d-block w-100"
-                        src={landing3}
-                        alt="Third slide"
+                            className="d-block w-100"
+                            src={landing3}
+                            alt="Third slide"
                         />
                     </Carousel.Item>
                     <Carousel.Item>
                         <img
-                        className="d-block w-100"
-                        src={landing4}
-                        alt="Fourth slide"
+                            className="d-block w-100"
+                            src={landing4}
+                            alt="Fourth slide"
                         />
                     </Carousel.Item>
                     <Carousel.Item>
                         <img
-                        className="d-block w-100"
-                        src={landing5}
-                        alt="Fifth Slide"
+                            className="d-block w-100"
+                            src={landing5}
+                            alt="Fifth Slide"
                         />
                     </Carousel.Item>
                 </Carousel>
-            <Container className = "landing-container">
-                
-                <Row>
-                    <h1><span className = 'cut-container'>
-                        <img src = {iconWhite}/></span>{this.state.logoKShow ?
-                    <span className = 'hide-later'>K</span> : null}
-                    utsies</h1>
-                    <hr className = 'hr-light'/>
-                </Row>
-                <Row noGutters><Col className = "border-right"><p className = 'landing-description'>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                Reiciendis officia voluptatem nulla nemo temporibus accusantium inventore, labore consequuntur suscipit voluptatum 
-                incidunt sed quisquam, esse dicta qui adipisci doloremque. Deserunt, vel!
+                <Container className="landing-container">
+
+                    <Row>
+                        <h1><span className='cut-container'>
+                            <img src={iconWhite} /></span>{this.state.logoKShow ?
+                                <span className='hide-later'>K</span> : null}
+                            utsies</h1>
+                        <hr className='hr-light' />
+                    </Row>
+                    <Row noGutters><Col className="border-right"><p className='landing-description'>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Reiciendis officia voluptatem nulla nemo temporibus accusantium inventore, labore consequuntur suscipit voluptatum
+                    incidunt sed quisquam, esse dicta qui adipisci doloremque. Deserunt, vel!
                 Quod quas nam quos saepe quisquam culpa tempore dolor laboriosam animi? </p>
-                <Button name = "makerportal" className = "landing-button ripple" onClick = {this.handleButtonClick}>Make</Button>
-                </Col>
-                <Col><p className = 'landing-description'>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                Reiciendis officia voluptatem nulla nemo temporibus accusantium inventore, labore consequuntur suscipit voluptatum 
-                incidunt sed quisquam, esse dicta qui adipisci doloremque. Deserunt, vel!
+                        <Button name="makerportal" className="landing-button ripple" onClick={this.handleButtonClick}>Make</Button>
+                    </Col>
+                        <Col><p className='landing-description'>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Reiciendis officia voluptatem nulla nemo temporibus accusantium inventore, labore consequuntur suscipit voluptatum
+                        incidunt sed quisquam, esse dicta qui adipisci doloremque. Deserunt, vel!
                 Quod quas nam quos saepe quisquam culpa tempore dolor laboriosam animi? </p>
-                <Button name = "userportal" className = "landing-button ripple" onClick = {this.handleButtonClick}>Work</Button>
-                </Col></Row>
-            </Container>
-            <Footer/>
+                            <Button name="userportal" className="landing-button ripple" onClick={this.handleButtonClick}>Work</Button>
+                        </Col></Row>
+                </Container>
+                <Footer />
             </div>
         )
 
     }
 }
-const mapStateToProps = (state : IAppState) => {
+const mapStateToProps = (state: IAppState) => {
     return {
         auth: state.auth,
         accountModal: state.accountModal,
