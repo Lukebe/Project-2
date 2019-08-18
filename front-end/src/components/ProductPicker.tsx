@@ -1,4 +1,4 @@
-import { IAuthState, IAppState } from "../reducers";
+import { IAuthState, IAppState, IProductPickerState } from "../reducers";
 import { Modal, Tabs, Tab, Nav, Col } from "react-bootstrap";
 import React from 'react';
 import { loginSuccessful } from "../actions/Authentication.action";
@@ -9,7 +9,7 @@ import './ProductPicker.css'
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
-    loginSuccessful : () => void;
+    productPicker: IProductPickerState,
     //Action creators from the dispatcher
 }
 export interface IComponentProps {
@@ -33,6 +33,11 @@ class ProductPicker extends React.Component <IProps,IState>{
     updateCallback = (productId : number) =>{
       this.setState({...this.state, productId : productId});
       this.props.callback(productId);
+    }
+    componentWillReceiveProps(props: any){
+        if(this.props.productPicker.product !== props.productPicker.product){
+            this.updateCallback(this.props.productPicker.product.getProductId());
+        }
     }
 
     render() {
@@ -71,11 +76,11 @@ class ProductPicker extends React.Component <IProps,IState>{
 }
 const mapStateToProps = (state : IAppState) => {
     return {
-        auth: state.auth
+        auth: state.auth,
+        productPicker: state.productPicker,
     }
 }
 //This object definition will be used to map action creators to properties
 const mapDispatchToProps = {
-    loginSuccessful : loginSuccessful,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ProductPicker);

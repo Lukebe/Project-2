@@ -1,4 +1,4 @@
-import { IAuthState, IAppState } from "../reducers";
+import { IAuthState, IAppState, IProductPickerState } from "../reducers";
 import { Modal, Tabs, Tab, Card, Alert, Spinner, Form, Button } from "react-bootstrap";
 import React from 'react';
 import { loginSuccessful } from "../actions/Authentication.action";
@@ -6,10 +6,13 @@ import { connect } from "react-redux";
 import Pagination from "../models/Pagination";
 import { Product } from "../models/Product";
 import * as APICall from '../utils/APICall';
+import { chooseProduct } from "../actions/ProductPicker.action";
 
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
+    productPicker : IProductPickerState,
+    chooseProduct : (product : Product) => void;
     //Action creators from the dispatcher
 }
 export interface IComponentProps {
@@ -114,7 +117,9 @@ class ProductList extends React.Component <IProps,IState> {
                             <Card.Text className = "attribute">
                             <i className = "material-icons">category</i><p>{element.getCategory().getName()}</p>
                             </Card.Text>
-                            <Button className = "btn-product-card" >Select Product</Button>
+                            <Button className = "btn-product-card" 
+                            onClick = {(e:any)=> {this.props.chooseProduct(element)}}>
+                                Select Product</Button>
                         </Card.Body>
                     </Card> 
                     </> )
@@ -138,11 +143,12 @@ class ProductList extends React.Component <IProps,IState> {
 }
 const mapStateToProps = (state : IAppState) => {
     return {
-        auth: state.auth
+        auth: state.auth,
+        productPicker: state.productPicker,
     }
 }
 //This object definition will be used to map action creators to properties
 const mapDispatchToProps = {
-    loginSuccessful : loginSuccessful,
+    chooseProduct : chooseProduct,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ProductList);
