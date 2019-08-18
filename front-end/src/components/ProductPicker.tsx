@@ -1,8 +1,10 @@
 import { IAuthState, IAppState } from "../reducers";
-import { Modal } from "react-bootstrap";
+import { Modal, Tabs, Tab } from "react-bootstrap";
 import React from 'react';
 import { loginSuccessful } from "../actions/Authentication.action";
 import { connect } from "react-redux";
+import ProductList from "./ProductList";
+import CreateProduct from "./CreateProduct";
 
 export interface IAuthProps {
     //data from state store
@@ -39,7 +41,14 @@ class ProductPicker extends React.Component <IProps,IState>{
             onHide = {() => this.props.callback(this.state.productId)}>
           <Modal.Header closeButton><h2>Product Portal</h2></Modal.Header>
                 <Modal.Body>
-                    Product picker in progress
+                <Tabs defaultActiveKey="profile" className = "product-picker-tabs" id = "product-picker-tabs">
+                    <Tab eventKey="list" title="Select a Product">
+                        <ProductList/>
+                    </Tab>
+                    <Tab eventKey="create" title="Create a Product">
+                        <CreateProduct/>
+                    </Tab>
+                </Tabs>
                 </Modal.Body> 
             </Modal>     )
     }

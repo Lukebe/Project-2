@@ -1,3 +1,34 @@
+.headerHoldsLinks{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.headerNavBar{
+  width: 100%;
+}
+
+.headerLinks{
+
+display:flex;
+float:right;
+text-align: center;
+
+}
+
+
+.headerLogo{
+  background:#212529;
+  margin-left: 1em;
+  font-family: 'Kalam', cursive;
+  font-weight: 400;
+  font-size: 2.2rem;
+  transition: color .75s ease;
+}
+
+
+
+
 #root{
   z-index:-2;
   min-height: 100%;

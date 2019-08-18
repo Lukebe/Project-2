@@ -11,7 +11,7 @@ import { Spinner, Button, Accordion, Card, Alert, Row, Col } from "react-bootstr
 import { Job } from "../../models/Job";
 import { Product } from "../../models/Product";
 import { Category } from "../../models/Category";
-import { myJobsRefresh, newJobsPopulate, newJobsReset, openNewJobs } from "../../actions/MakerPortal.action";
+import { myJobsRefresh, newJobsPopulate, newJobsReset, openNewJobs, closeNewJobs } from "../../actions/MakerPortal.action";
 import { makerPortalReducer } from "../../reducers/MakerPortal.reducer";
 import ImageModal from "../../components/ImageModal";
 const RequestState = APICall.RequestState;
@@ -100,6 +100,7 @@ export interface IAuthProps {
     newJobsPopulate: (name: string, value : any) => void,
     newJobsReset: () => void,
     openNewJobs: () => void,
+    closeNewJobs: () => void,
     //Action creators from the dispatcher
 }
 export interface IComponentProps {
@@ -159,6 +160,7 @@ class PopularEvents extends Component <IAuthProps,IState>{
      }
     }
     changeMapCenter = (index:number) => {
+      this.props.closeNewJobs();
       this.setState({mapCenter: {lat: this.state.currentPlaces[index]['geometry']['location']['lat'],
        lng: this.state.currentPlaces[index]['geometry']['location']['lng']},
       selectedAccordianIndex: (this.state.selectedAccordianIndex === index) ? 10000 : index });
@@ -268,5 +270,6 @@ const mapDispatchToProps = {
   newJobsPopulate: newJobsPopulate,
   newJobsReset: newJobsReset,
   openNewJobs: openNewJobs,
+  closeNewJobs: closeNewJobs,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(PopularEvents);

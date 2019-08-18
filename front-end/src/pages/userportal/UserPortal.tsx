@@ -4,6 +4,7 @@ import LeftUserPortal from './LeftUserPortal';
 import RightUserPortal from './RightUserPortal'
 import './UserPortal.css';
 import { Footer } from '../../components/Footer'; 
+import Header from '../../components/Header';
 
 export default class AllUsers extends Component <any, any>{
     constructor(props: any) {
@@ -17,6 +18,7 @@ export default class AllUsers extends Component <any, any>{
     render() {
         return(
                 <> 
+                    <Header/>
                      <Container className = "userportal-container">
                          
                          <Row>
