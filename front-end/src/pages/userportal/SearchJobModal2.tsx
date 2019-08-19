@@ -16,7 +16,8 @@ export class AcceptJobView extends Component <IProps, any>{
         super(props);
         this.state = {
             jobId:"",
-            data: [] 
+            data: [],
+            shouldRedirect: false
         }
 
         this.componentDidMount = this.componentDidMount.bind(this);
