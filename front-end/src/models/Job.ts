@@ -16,7 +16,7 @@ class Job {
     private category : Category;
     private timeEstimate: string;
     private product : Product;
-    private status : Status;
+    private status : Status; 
 
     constructor(data : any) {
         this.jobId = data.jobId;

@@ -6,6 +6,7 @@ import { makerPortalReducer } from "./MakerPortal.reducer";
 import { productPickerReducer } from "./ProductPicker.reducer";
 import { Product } from "../models/Product";
 import { viewJobReducer } from "./ViewJob.reducer";
+import { Job } from "../models/Job";
 //This is the IAuthState interface defined in the Authentication reducer. This defines the structure
 //of the gloabl authentication state. The initial state in Authentication reducer follows the exact
 //format below.
@@ -31,7 +32,7 @@ export interface IProductPickerState {
 }
 
 export interface IJobViewState {
-    jobId: any
+    job: Job;
 }
 
 //Access to authorization information should be state.auth....

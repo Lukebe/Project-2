@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import * as APICall from '../../utils/APICall';
 import Modal from './SearchJobModal';
 import { Job } from "../../models/Job";
-import Axios from 'axios';
 
 export interface IAuthProps {
     user: IAuthState;

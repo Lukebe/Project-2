@@ -2,7 +2,7 @@ class User {
     private userId : number;
     private userName : string;
     private firstName : string;
-    private lastName : string;
+    private lastName : string; 
     private email : string;
     private phone : string;
     private rating : number;
