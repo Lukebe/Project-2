@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { IAuthState, IAppState, IMakerPortalState, IProductPickerState } from '../../reducers';
 import './Maker.css';
+import './CreateNewJob.css';
 import { loginSuccessful } from '../../actions/Authentication.action';
 import Form from "react-bootstrap/Form";
 import * as APICall from '../../utils/APICall';
@@ -212,7 +213,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                             </Form.Control.Feedback>
                         </Col><Col lg="2">
                             <a href = "productlocation" about="productlocation" onClick = {(e)=> {this.openMap(e,'productlocation')}}>
-                                <i className = "material-icons large">map</i>
+                                <i className = "material-icons large maps">map</i>
                             </a>
                         </Col>
                     </Form.Row>
@@ -228,8 +229,8 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                                 Please provide a valid address
                             </Form.Control.Feedback>
                         </Col><Col lg="2">
-                            <a href = "dropofflocation" about="dropofflocation" onClick = {(e)=> {this.openMap(e,'dropofflocation')}}>
-                                <i className = "material-icons large">map</i>
+                            <a  href = "dropofflocation" about="dropofflocation" onClick = {(e)=> {this.openMap(e,'dropofflocation')}}>
+                                <i className = "material-icons large maps">map</i>
                             </a>
                         </Col>
                     </Form.Row>
@@ -239,7 +240,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                         <Form.Row className="formRow">
                             <Col lg="10">
                                     <Button onClick = {() => { this.props.resetProduct();
-                                        this.setState({productPickerOpen: true})}}>Open Product Picker</Button>
+                                        this.setState({productPickerOpen: true})}} className="buttons">Open Product Picker</Button>
                                         {(this.props.makerPortal.formFields.product.value) ?
                                         <p className = "product-selected-text">
                                             Selected Product: {this.props.makerPortal.formFields.product.value}
@@ -304,24 +305,24 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                         <Form.Label>Job Time Estimate</Form.Label>
                         
                         <Form.Row className="formRow">
-                            <Col sm="2" lg="2">
-                            <p>Hours</p>
-                            </Col>
-                            <Col sm="2" lg="2">
+                            <Col sm="3" lg="3">
                                 <Form.Control required onChange={this.changeHandler} size="lg" type="number"
                                     step="1" min="1" max="23" value={this.props.makerPortal.formFields.timeEstimateHour.value}
-                                    id="new-job-jobhour" placeholder="1" name="timeEstimateHour" />
+                                    id="new-job-jobhour" placeholder="0" name="timeEstimateHour" />
                             </Col>
                             <Col sm="2" lg="2">
-                                <p>Minutes</p>
+                            <p className="smallText">Hours</p>
                             </Col>
-                            <Col sm="2" lg="2">
+                            <Col sm="3" lg="3">
                                 <Form.Control required onChange={this.changeHandler} size="lg" type="number"
                                     step="1" min="0" max="59" value={this.props.makerPortal.formFields.timeEstimateMinute.value}
                                     id="new-job-jobminute" placeholder="00" name="timeEstimateMinute" />
                                 <Form.Control.Feedback type="invalid">
                                     Please enter an estimated time for your job.
                                 </Form.Control.Feedback>
+                            </Col>
+                            <Col sm="3" lg="3">
+                                <p className="smallText">Minutes</p>
                             </Col>
                         </Form.Row>
                     </Form.Group>
@@ -330,7 +331,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                 <Form.Group controlId="formGroupDescription">
                     <Form.Label>Comments</Form.Label>
                     <Form.Control optional onChange={this.changeHandler} as="textarea" rows="4" 
-                                    placeholder = "Drop off at the front gate..." value= {this.props.makerPortal.formFields.description.value}
+                                    value= {this.props.makerPortal.formFields.description.value}
                                     name = "description"/>
                     <Form.Control.Feedback type="invalid">
                         Please enter some comments about your reimbursement request.
@@ -338,6 +339,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                 </Form.Group>
                 <Link onClick = {this.handleSubmit}
                 smooth to = "#createnewjob"><Button variant="primary" type="submit">
+
                 Submit
                 </Button></Link>
                 <span id = 'login-loading-container'>

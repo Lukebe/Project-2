@@ -12,8 +12,12 @@
     color: #aaa !important;
 }
 .buttonColor{
-    color: #FF4136 !important;
-    background-color: #FF4136 !important;
+    border-color: #6f42c1;
+    background-color: #6f42c1;
+}
+.buttonColor :hover{
+    border-color: #6610f2 !important;
+    background-color: #6610f2 !important;
 }
 .center{
     width: 60%;
