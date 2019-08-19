@@ -97,6 +97,8 @@ export class Login extends Component <IProps,IState>{
                 {...this.state.RequestStatus,
                     status: RequestState.SUCCESSFUL}});
             this.props.loginSuccessful(new User(response));
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('userid', response.userid);
             this.props.startRedirect();
             this.props.closeModal();
             this.props.finishRedirect();
