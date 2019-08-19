@@ -15,6 +15,7 @@ import { myJobsRefresh, newJobsPopulate, newJobsReset, openNewJobs, closeNewJobs
 import { makerPortalReducer } from "../../reducers/MakerPortal.reducer";
 import ImageModal from "../../components/ImageModal";
 import { HashLink as Link } from 'react-router-hash-link';
+import { chooseProduct } from "../../actions/ProductPicker.action";
 const RequestState = APICall.RequestState;
  
  
@@ -103,6 +104,7 @@ export interface IAuthProps {
     newJobsReset: () => void,
     openNewJobs: () => void,
     closeNewJobs: () => void,
+    chooseProduct: (product :Product) => void,
     //Action creators from the dispatcher
 }
 export interface IComponentProps {
@@ -143,7 +145,8 @@ class PopularEvents extends Component <IAuthProps,IState>{
        this.props.newJobsReset();
        this.props.newJobsPopulate("productlocation", this.state.popularJobDetails[index].address);
        this.props.newJobsPopulate("category",  this.state.popularJobDetails[index].product.category.categoryId);
-       this.props.newJobsPopulate("product",  this.state.popularJobDetails[index].product.productId)
+       this.props.newJobsPopulate("product",  this.state.popularJobDetails[index].product.itemName)
+       this.props.chooseProduct(new Product(this.state.popularJobDetails[index].product));
         this.props.myJobsRefresh();
         this.props.openNewJobs();
        } else {
@@ -272,6 +275,7 @@ const mapDispatchToProps = {
   newJobsPopulate: newJobsPopulate,
   newJobsReset: newJobsReset,
   openNewJobs: openNewJobs,
+  chooseProduct: chooseProduct,
   closeNewJobs: closeNewJobs,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(PopularEvents);
