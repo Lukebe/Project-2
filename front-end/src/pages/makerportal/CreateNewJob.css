@@ -1,0 +1,18 @@
+.buttons{
+    background-color: #FF4136;
+    border-color: #FF4136;
+}
+.buttons :hover{
+    background-color: #fa5951 !important;
+    border-color: #fa5951 !important; 
+}
+.maps{
+    color: #FF4136;
+}
+.center{
+    width: 60%;
+    margin: auto;
+}
+.smallText{
+    font-size: 1em !important;
+}

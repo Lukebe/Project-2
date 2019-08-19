@@ -157,7 +157,7 @@ class CreateProduct extends Component <IProps,IState>{
                                 <Col lg="12">
                                 <Form.Control required onChange={this.changeHandler} size="lg" type="string"
                                         value={this.state.formFields.productName.value}
-                                        id="new-product-productname" placeholder="Samsung Galazy Note 10" name="productName" />
+                                        id="new-product-productname" name="productName" />
                                     <Form.Control.Feedback type="invalid">
                                         Please provide a name for the product
                                     </Form.Control.Feedback>
@@ -204,13 +204,13 @@ class CreateProduct extends Component <IProps,IState>{
                     <Form.Group controlId="formGroupDescription">
                         <Form.Label>Product Description</Form.Label>
                         <Form.Control optional onChange={this.changeHandler} as="textarea" rows="4"
-                            placeholder="Phone color aura blue..." value={this.state.formFields.description.value}
+                            value={this.state.formFields.description.value}
                             name="description"/>
                         <Form.Control.Feedback type="invalid">
                             Please enter some comments about your reimbursement request.
                     </Form.Control.Feedback>
                     </Form.Group>
-                    <Button type="submit">
+                    <Button type="submit" className="buttonColor">
                         Submit
                 </Button>
                     <span id='login-loading-container'>
