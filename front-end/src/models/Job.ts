@@ -62,7 +62,7 @@ class Job {
     getJobId() : number {
         return this.jobId;
     }
-    getUserCreated() : User | undefined {
+    getUserCreated() : User {
         return this.userCreated;
     }
     getAddress() : string {

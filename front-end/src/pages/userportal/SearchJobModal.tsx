@@ -1,31 +1,28 @@
 import React, { Component } from 'react';
 import { ListGroup, Button, Card, Badge, Modal } from 'react-bootstrap';
-import { IAuthState } from '../../reducers';
+import { IAppState, IAuthState, IJobViewState } from '../../reducers';
 import { Job } from "../../models/Job";
+import { connect } from 'react-redux';
 
 interface ModalProps {
-    user: IAuthState;
     show: boolean,
     onHide: ()=>void,
     onaccept: ()=>void,
-    job: Job
+    job: IJobViewState
 }
 
-export default class SearchJobModal extends Component <ModalProps, any>{
+export class SearchJobModal extends Component <ModalProps, any>{
     constructor(props: any) {
         super(props);
         this.state={
-            jobSeen:[],
-            address:"",
+            
         }
         this.handleAccept = this.handleAccept.bind(this);
     }
 
     handleAccept(event:any){
-         this.props.job.getJobId();
-         this.setState({
-             address: this.props.job.getAddress()
-         })
+         this.props.onaccept();
+         this.props.onHide();
     } 
     
     
@@ -79,3 +76,10 @@ export default class SearchJobModal extends Component <ModalProps, any>{
         );
     }
 }
+
+const mapStateToProps = (state:IAppState) => ({
+    job: state.viewJob
+});
+
+ 
+export default connect(mapStateToProps)(SearchJobModal); 
