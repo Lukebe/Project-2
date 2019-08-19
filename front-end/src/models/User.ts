@@ -9,10 +9,10 @@ class User {
     private token : string;
 
     constructor(data : any) {
-        this.userId = data.userId | data.userid;
-        this.userName = data.username;
-        this.firstName = data.firstname;
-        this.lastName = data.lastname;
+        this.userId = data.userId || data.userid;
+        this.userName = data.username || data.userName;
+        this.firstName = data.firstname || data.firstName;
+        this.lastName = data.lastname || data.lastName;
         this.email = data.email;
         this.phone = data.phone;
         this.rating = data.rating;

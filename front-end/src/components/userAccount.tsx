@@ -12,12 +12,14 @@ import { Form, Button, Card } from 'react-bootstrap';
 import './userAccount.css';
 import Profile from '../resources/images/profile.jpg';
 import { ListGroup } from 'react-bootstrap';
+import { User } from '../models/User';
 //'./components/userAccount';
 
 
 
 
 interface IState {
+    userData : User;
 }
 //Props interface for component. Defines the variables you want from the global store to be accessed via this.props
 //At least one interface is necessary to implement redux.
@@ -27,21 +29,17 @@ export interface IAuthProps {
     //Action creators from the dispatcher
 
 }
-export class UserAccount extends Component<IAuthProps, IState> {
+class UserAccount extends Component<IAuthProps, IState> {
     constructor(props: any) {
         super(props);
         this.state = {
-            userName: "tampastudent",
-            password: "revature",
-            phone: "813-555-1212",
-            firstName: "Katie",
-            lastName: "Class",
-            rating: .80
-
-
-
+            userData: new User({userId: 0,username:'',firstname:'',lastname:'',email:'',phone:'',rating:0}),
         }
     }
+    componentDidMount() {
+        
+    }
+    
 
     render() {
         return (

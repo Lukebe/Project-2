@@ -2,7 +2,8 @@ import React, { Component, unstable_Profiler } from 'react';
 import { IAppState, IAuthState } from '../reducers';
 import {
     loginSuccessful, toggleAuthStatus,
-    authTimerTick
+    authTimerTick,
+    logout
 } from '../actions/Authentication.action';
 import { connect } from 'react-redux';
 import { Form, Button, Card, Col, Navbar, Nav, Dropdown, Row } from 'react-bootstrap';
@@ -19,6 +20,7 @@ interface IState {
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
+    logout: () => void,
     //Action creators from the dispatcher
 
 }
@@ -59,6 +61,8 @@ export class Header extends Component < IAuthProps, any >  {
                                 { this.props.auth.userProfile.getRating() != 0.0 &&
                                     this.state.rating
                                 }
+                                <a href = "#" onClick = {(e) => {e.preventDefault(); this.props.logout();}}>
+                                    Logout</a>
                             </Dropdown.Menu>
                         </Dropdown>
                     </Col>
@@ -77,5 +81,6 @@ const mapDispatchToProps = {
     loginSuccessful: loginSuccessful,
     toggleAuthStatus: toggleAuthStatus,
     authTimerTick: authTimerTick,
+    logout: logout,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

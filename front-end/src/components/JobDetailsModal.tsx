@@ -7,6 +7,7 @@ import ProductList from "./ProductList";
 import CreateProduct from "./CreateProduct";
 import './ProductPicker.css'
 import { Job } from "../models/Job";
+import * as Time from "../utils/Time";
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
@@ -58,12 +59,18 @@ class JobDetailsModal extends React.Component <IProps,IState>{
                 <Modal.Body className = "job-details-modal-body">
                     <Col lg = {6} sm = {12}>
                     <Form.Label>Job Reference Number </Form.Label> <p>{this.props.job.getJobId()}</p>
-                    <Form.Label>Date Created: </Form.Label> <p>{this.props.job.getDateCreated().getDate()}</p>
+                    <Form.Label>Date Created: </Form.Label> <p>
+                    {Time.readableTime(this.props.job.getDateCreated())}</p>
                     {(this.props.job.getDateAccepted()) ?<>
-                    <Form.Label>Date Created: </Form.Label> <p>{this.props.job.getDateCreated().getDate()}</p> </>: null}
+                    <Form.Label>Date Accepted: </Form.Label> <p>
+                        {Time.readableTime(this.props.job.getDateCreated())}
+                        </p> </>: null}
                     {(this.props.job.getUserAccepted().getUserId()) ? <>
-                    <Form.Label>User Accepted </Form.Label> <p>{this.props.job.getUserAccepted().getFirstName()}</p> </>
-                    : null }
+                    <Form.Label>User Accepted </Form.Label> <p>{}</p> </>
+                    : null } 
+                    <Form.Label>Estimated Delivery Time: </Form.Label> <p>{this.props.job.getJobDateTime().getMilliseconds()
+                     + parseInt(this.props.job.getTimeEstimate())}
+                    </p>
                     <Form.Label>Status </Form.Label> {this.getProperStatus(this.props.job.getStatus().getStatusId())} 
                     </Col>
                     <Col lg = {6} sm = {12}>
