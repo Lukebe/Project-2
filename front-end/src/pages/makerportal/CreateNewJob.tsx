@@ -3,18 +3,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { IAuthState, IAppState, IMakerPortalState, IProductPickerState } from '../../reducers';
 import './Maker.css';
+import './CreateNewJob.css';
 import { loginSuccessful } from '../../actions/Authentication.action';
 import Form from "react-bootstrap/Form";
 import * as APICall from '../../utils/APICall';
 import { Button, Spinner, Col, Alert } from "react-bootstrap";
 import InputGroup from 'react-bootstrap/InputGroup';
-import StandaloneSearchBox from "react-google-maps/lib/components/places/StandaloneSearchBox";
 import MapPicker from '../../components/MapPicker';
 import { Category } from "../../models/Category";
 import ProductPicker from "../../components/ProductPicker";
 import { myJobsDoneRefresh, newJobsPopulate, newJobsReset, myJobsRefresh } from "../../actions/MakerPortal.action";
 import { resetProduct } from "../../actions/ProductPicker.action";
-import { Product } from "../../models/Product";
+import { HashLink as Link } from 'react-router-hash-link';
 const RequestState = APICall.RequestState;
 export interface IAuthProps {
     //data from state store
@@ -44,6 +44,7 @@ interface IState {
     openedLocation: string;
     productPickerOpen: boolean;
     productId: number;
+    isValidationError: boolean;
 }
 type IProps = IComponentProps & IAuthProps;
 class CreateNewJob extends Component <IAuthProps,IState>{
@@ -65,6 +66,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
             isAuthorized: false,
             openedLocation: '',
             productId: 0,
+            isValidationError: false,
         };
     }
     componentDidMount() {
@@ -82,9 +84,10 @@ class CreateNewJob extends Component <IAuthProps,IState>{
         }
     }
     handleSubmit = async (event : any) => {
-        const form = event.currentTarget;
+        const form = document.getElementById('create-form') as HTMLSelectElement;
         event.preventDefault();
         if (form.checkValidity() === false) {
+            this.setState({validated: true, isValidationError: true})
             event.stopPropagation();
         } else {
             this.setState({...this.state, RequestStatus: 
@@ -114,12 +117,12 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                 this.setState({...this.state, RequestStatus: 
                     {...this.state.RequestStatus, status: RequestState.ERROR, errorMsg: `Could not complete request. Try again.`}});
             } else {
-                this.setState({...this.state, RequestStatus:{...this.state.RequestStatus, status: RequestState.SUCCESSFUL}, validated: false});
+                this.setState({...this.state, RequestStatus:{...this.state.RequestStatus, status: RequestState.SUCCESSFUL}});
                 this.props.myJobsRefresh();
                 this.props.newJobsReset();
             }
-        }
-        this.setState({...this.state, validated: true});
+            this.setState({...this.state, validated: false});
+                }
     };
     openMap = (event: any,location: string) => {
         event.preventDefault();
@@ -143,6 +146,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
         const name = event.target.name;
         const value = event.target.value;
         this.props.newJobsPopulate(name,value);
+        this.setState({isValidationError: false});
     }
     async getCategories() {
         const response = await APICall.GET('/categories'
@@ -177,13 +181,17 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                     <Alert key="request-type" className = "create-job-error" variant="danger">
                     {this.state.RequestStatus.errorMsg}
                     </Alert> : null}
+            {this.state.isValidationError ?
+                    <Alert key="request-type" className = "create-job-error" variant="danger">
+                        There were errors in your submission
+                    </Alert> : null}
             {(this.state.RequestStatus.status === RequestState.SUCCESSFUL) ?
                 <Alert key="request-type" className = "create-job-success" variant="success">
                 New Job Created. You will be notified when we find somebody to fulfill your job request.
                 </Alert> : null}
                 {(this.state.productPickerOpen) ?
                 <ProductPicker callback = {this.handleProductUpdate}/> : null}
-            <Form className = "createjob-form"noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
+            <Form className = "createjob-form" id ="create-form" noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
                 <Form.Group controlId="formCategory">
                     <Form.Label>Category</Form.Label>
                         <Form.Control as="select" onChange={this.changeHandler} 
@@ -205,7 +213,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                             </Form.Control.Feedback>
                         </Col><Col lg="2">
                             <a href = "productlocation" about="productlocation" onClick = {(e)=> {this.openMap(e,'productlocation')}}>
-                                <i className = "material-icons large">map</i>
+                                <i className = "material-icons large maps">map</i>
                             </a>
                         </Col>
                     </Form.Row>
@@ -221,8 +229,8 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                                 Please provide a valid address
                             </Form.Control.Feedback>
                         </Col><Col lg="2">
-                            <a href = "dropofflocation" about="dropofflocation" onClick = {(e)=> {this.openMap(e,'dropofflocation')}}>
-                                <i className = "material-icons large">map</i>
+                            <a  href = "dropofflocation" about="dropofflocation" onClick = {(e)=> {this.openMap(e,'dropofflocation')}}>
+                                <i className = "material-icons large maps">map</i>
                             </a>
                         </Col>
                     </Form.Row>
@@ -232,7 +240,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                         <Form.Row className="formRow">
                             <Col lg="10">
                                     <Button onClick = {() => { this.props.resetProduct();
-                                        this.setState({productPickerOpen: true})}}>Open Product Picker</Button>
+                                        this.setState({productPickerOpen: true})}} className="buttons">Open Product Picker</Button>
                                         {(this.props.makerPortal.formFields.product.value) ?
                                         <p className = "product-selected-text">
                                             Selected Product: {this.props.makerPortal.formFields.product.value}
@@ -297,24 +305,24 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                         <Form.Label>Job Time Estimate</Form.Label>
                         
                         <Form.Row className="formRow">
-                            <Col sm="2" lg="2">
-                            <p>Hours</p>
-                            </Col>
-                            <Col sm="2" lg="2">
+                            <Col sm="3" lg="3">
                                 <Form.Control required onChange={this.changeHandler} size="lg" type="number"
                                     step="1" min="1" max="23" value={this.props.makerPortal.formFields.timeEstimateHour.value}
-                                    id="new-job-jobhour" placeholder="1" name="timeEstimateHour" />
+                                    id="new-job-jobhour" placeholder="0" name="timeEstimateHour" />
                             </Col>
                             <Col sm="2" lg="2">
-                                <p>Minutes</p>
+                            <p className="smallText">Hours</p>
                             </Col>
-                            <Col sm="2" lg="2">
+                            <Col sm="3" lg="3">
                                 <Form.Control required onChange={this.changeHandler} size="lg" type="number"
                                     step="1" min="0" max="59" value={this.props.makerPortal.formFields.timeEstimateMinute.value}
                                     id="new-job-jobminute" placeholder="00" name="timeEstimateMinute" />
                                 <Form.Control.Feedback type="invalid">
                                     Please enter an estimated time for your job.
                                 </Form.Control.Feedback>
+                            </Col>
+                            <Col sm="3" lg="3">
+                                <p className="smallText">Minutes</p>
                             </Col>
                         </Form.Row>
                     </Form.Group>
@@ -323,15 +331,17 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                 <Form.Group controlId="formGroupDescription">
                     <Form.Label>Comments</Form.Label>
                     <Form.Control optional onChange={this.changeHandler} as="textarea" rows="4" 
-                                    placeholder = "Drop off at the front gate..." value= {this.props.makerPortal.formFields.description.value}
+                                    value= {this.props.makerPortal.formFields.description.value}
                                     name = "description"/>
                     <Form.Control.Feedback type="invalid">
                         Please enter some comments about your reimbursement request.
                     </Form.Control.Feedback>   
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <Link onClick = {this.handleSubmit}
+                smooth to = "#createnewjob"><Button variant="primary" type="submit">
+
                 Submit
-                </Button>
+                </Button></Link>
                 <span id = 'login-loading-container'>
                 {this.state.RequestStatus.status === RequestState.FETCHING ?<Spinner variant = 'dark' animation='border'/> : null}
                 </span>

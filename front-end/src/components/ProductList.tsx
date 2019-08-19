@@ -25,7 +25,7 @@ interface IState {
         status: APICall.RequestState,
         errorMsg: string,
     },
-    searchValue: string,
+    search: any,
 }
 const RequestState = APICall.RequestState;
 type IProps = IComponentProps & IAuthProps;
@@ -40,9 +40,12 @@ class ProductList extends React.Component <IProps,IState> {
                 status: RequestState.NOT_ACTIVE,
                 errorMsg: '',
             },
-            searchValue: '',
+            search: '',
+            
         }       
+
     }
+    
     componentDidMount() {
         this.getProducts(0);
     }
@@ -70,19 +73,18 @@ class ProductList extends React.Component <IProps,IState> {
             this.getProducts(this.state.dataPagination.getPageNumber() + 1)
         }
     }
-    searchValueChange = (e : any) => {
-        e.preventDefault();
-        this.setState({...this.state, searchValue: e.target.value});
-        if(e.target.value){
-            this.getProducts(0,e.target.value);
-        }
-        console.log(this.state.searchValue);
+    searchValueChange = (event : any) => {
+            if(event.target.value !== undefined){
+                this.getProducts(0,event.target.value);
+            }
+            this.setState({...this.state, [event.target.id]: event.target.value});
+
     }
     async getProducts(page : number, search : string = '') {
         this.setState({...this.state, RequestStatus: 
             {...this.state.RequestStatus, status: RequestState.FETCHING}});
         const url = (search) ? '/products/search?query=itemName:' + search + '&page=' + page + '&size=6&sort=itemName,desc'
-        : '/products?page=' + page + '&size=8&sort=itemName,desc';
+        : '/products?page=' + page + '&size=6&sort=itemName,desc';
         const response = await APICall.GET(url
         ,this.props.auth.userProfile.getToken());
         if(await response instanceof Error){
@@ -110,11 +112,13 @@ class ProductList extends React.Component <IProps,IState> {
                     <Spinner className = "my-events-loading-spinner"
                     animation = "border" variant = "light"/> : null}
                 <div className = "product-list-container">     
-                <div className = "pagination-left">
-                    <a href = '#' className = {(this.state.dataPagination.isFirstPage()) ? "pagination-disabled" : ""}
-                    onClick={this.goBackClick}><i className = "material-icons large" style = {{fontSize: '50px'}}>arrow_back</i></a>
-                </div>
-                <Form.Label>Search</Form.Label><input type = "text" onChange = {this.searchValueChange} value = {this.state.searchValue}></input>
+                <Form.Control 
+                            type="text" 
+                            size = "lg"
+                            id = "search"
+                            placeholder="Search..." 
+                            value={this.state.search}
+                            onChange={this.searchValueChange}/>
                 <div className = "product-list-data">
                     {(this.state.data[0]) ? this.state.data.map((element: Product) => {
     
@@ -141,16 +145,22 @@ class ProductList extends React.Component <IProps,IState> {
                     </> )
                     }) : <p className = "loadingNoResults">No Products Found</p> }
                 </div>
-                <div className = "pagination-right">
-                    <a href = '#' className = {(this.state.dataPagination.isLastPage()) ? "pagination-disabled" : ""}
-                    onClick={this.goForwardClick}><i className = "large material-icons" style = {{fontSize: '50px'}}>arrow_forward</i></a>
-                </div>
+
+
             <div className = "my-events-pagination-bottom">   
             <>
+            <div className = "pagination-left">
+                    <a href = '#' className = {(this.state.dataPagination.isFirstPage()) ? "pagination-disabled" : ""}
+                    onClick={this.goBackClick}><i className = "material-icons large" style = {{fontSize: '50px'}}>arrow_back</i></a>
+                </div>
                 <ul>
                     {this.createPagination()}
                 </ul>
             </>
+            <div className = "pagination-right">
+                    <a href = '#' className = {(this.state.dataPagination.isLastPage()) ? "pagination-disabled" : ""}
+                    onClick={this.goForwardClick}><i className = "large material-icons" style = {{fontSize: '50px'}}>arrow_forward</i></a>
+                </div>
             </div>
             </div>
         </>
