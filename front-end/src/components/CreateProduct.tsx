@@ -9,6 +9,7 @@ import { chooseProduct } from "../actions/ProductPicker.action";
 import { Product } from "../models/Product";
 import { async } from "q";
 import ProductPicker from "./ProductPicker";
+import "./CreateProduct.css";
 const RequestState = APICall.RequestState;
 
 export interface IAuthProps {
@@ -140,9 +141,9 @@ class CreateProduct extends Component <IProps,IState>{
     render() {
         return (
             <>
-                <Form className="createjob-form, darkBackground" noValidate validated={this.state.validated} onSubmit={(e:any) => this.handleSubmit(e)}>
+                <Form className="createjob-form, darkBackground, center" noValidate validated={this.state.validated} onSubmit={(e:any) => this.handleSubmit(e)}>
                     <Form.Group controlId="formCategory">
-                        <Form.Label>Category</Form.Label>
+                        <Form.Label className="mt-3">Category</Form.Label>
                         <Form.Control as="select" value={this.state.formFields.category.value} onChange={this.changeHandler}
                             name="category" size="lg">
                             <option hidden>Choose a category...</option>
@@ -150,11 +151,11 @@ class CreateProduct extends Component <IProps,IState>{
 
                         </Form.Control>
                     </Form.Group>
-                    <Form.Group controlId="formProductName" className="lightGrayBackground">
+                    <Form.Group controlId="formProductName">
                         <Form.Label>Product Name</Form.Label>
                             <Form.Row className="formRow">
                                 <Col lg="12">
-                                <Form.Control required onChange={this.changeHandler} size="lg" type="string" className="darkColor"
+                                <Form.Control required onChange={this.changeHandler} size="lg" type="string"
                                         value={this.state.formFields.productName.value}
                                         id="new-product-productname" placeholder="Samsung Galazy Note 10" name="productName" />
                                     <Form.Control.Feedback type="invalid">
@@ -164,31 +165,32 @@ class CreateProduct extends Component <IProps,IState>{
                             </Form.Row>
                     </Form.Group>
                     <Form.Group controlId="formProductImageUrl">
-                        <Form.Label>Image URL:</Form.Label>
+                        <Form.Label>Image URL</Form.Label>
                             <Form.Row className="formRow">
                                 <Col lg="12">
                                     <Form.Control required onChange={this.changeHandler} size="lg" type="string"
-                                        value={this.state.formFields.imageUrl.value}
-                                    id="new-product-imageurl" placeholder="https://i-cdn.phonearena.com/images/article/118249-two_lead/Samsungs-Aura-Blue-Galaxy-Note-10-is-reportedly-coming-to-Europe.jpg" name="imageUrl" />
+                                    value={this.state.formFields.imageUrl.value}
+                                    id="new-product-imageurl" name="imageUrl" />
                                     <Form.Control.Feedback type="invalid">
                                         Please provide a URL of an image
                                     </Form.Control.Feedback>
+                                    <img src={this.state.formFields.imageUrl} className="imageurl mt-4"/>
                                 </Col>
                             </Form.Row>
                     </Form.Group>
                     <Form.Group controlId="formProductPrice">
                         <Form.Label>Product Cost</Form.Label>
                         <InputGroup className="mb-3">
-                            <Form.Row className="formRow">
+                            <Form.Row className="formRow, center, floatLeft">
                                 <Col sm="1" lg="1">
                                     <InputGroup.Prepend>
                                         <p>$</p>
                                     </InputGroup.Prepend>
                                 </Col>
-                                <Col sm="6" lg="9">
+                                <Col sm="8" lg="11">
                                     <Form.Control required onChange={this.changeHandler} size="lg" type="number"
                                         step="0.01" min="0" max="10000" value={this.state.formFields.productPrice.value}
-                                        id="new-product-productcost" placeholder="0.00" name="productPrice" />
+                                        id="new-product-productcost" placeholder="0.00" name="productPrice"/>
                                     <Form.Control.Feedback type="invalid">
                                         Please provide a valid product cost
                                 </Form.Control.Feedback>
@@ -203,7 +205,7 @@ class CreateProduct extends Component <IProps,IState>{
                         <Form.Label>Product Description</Form.Label>
                         <Form.Control optional onChange={this.changeHandler} as="textarea" rows="4"
                             placeholder="Phone color aura blue..." value={this.state.formFields.description.value}
-                            name="description" />
+                            name="description"/>
                         <Form.Control.Feedback type="invalid">
                             Please enter some comments about your reimbursement request.
                     </Form.Control.Feedback>
