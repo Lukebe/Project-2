@@ -39,7 +39,7 @@ export class MyJobs extends Component <IAuthProps, any>{
     }
     async handleRequest() {
         const userid = this.props.user.userProfile.getUserId();
-        const response = await APICall.GET('/jobs/useraccepted/2'
+        const response = await APICall.GET('/jobs/useraccepted/' + this.props.user.userProfile.getUserId()
         ,this.props.user.userProfile.getToken());
 
         if(await response instanceof Error){
@@ -85,7 +85,7 @@ export class MyJobs extends Component <IAuthProps, any>{
     }
 
     render() {
-
+      
         const list = this.state.data.map((item:Job, i:any) => {
             return <ListGroup.Item className="list" key={i}>
 
@@ -99,7 +99,7 @@ export class MyJobs extends Component <IAuthProps, any>{
                             <Col  md="4">
                                 <Card.Text className="userCardText">{item.getDescription()}<br></br>{item.getAddress()}<br></br>{item.getJobDateTime().toTimeString()}</Card.Text>
                             </Col>
-                            <Col  md="3"><br></br>Status<br></br>{item.getStatus().getStatusId()}</Col>
+                            <Col  md="3"><br></br>Status<br></br>{item.getStatus().getStatus()}</Col>
                             <Col  md="3"><br></br><Button onClick={()=>this.handleJobRequest(item.getJobId())}>View/Edit</Button></Col>
                         </Row> 
                         </Container> 
@@ -110,13 +110,19 @@ export class MyJobs extends Component <IAuthProps, any>{
 
         return(
             <React.Fragment>
+
                 {this.state.shouldRedirect ?
                     <Redirect to = "/userportal/jobview"></Redirect>
                     : null}
 
                 <h1>My Jobs</h1>
                 <ListGroup>
+                {(!this.state.data[0]) ?
+
+<p>You have no jobs. Go to search jobs to get some.</p> 
+: null }
                     <ListGroup.Item>
+                        
                     <Card>
                         {list}
                     </Card>

@@ -41,7 +41,7 @@ export class ByStatus extends Component <IAuthProps, any>{
     }
     async handleRequest(num:any) {
         const userid = this.props.user.userProfile.getUserId();
-        const response = await APICall.GET('/jobs/status/' + num
+        const response = await APICall.GET('/jobs/useraccepted/'+ userid + '?status=' + num
         ,this.props.user.userProfile.getToken());
 
         if(await response instanceof Error){
@@ -111,7 +111,7 @@ export class ByStatus extends Component <IAuthProps, any>{
                             <Col  md="4">
                                 <Card.Text className="userCardText">{item.getDescription()}<br></br>{item.getAddress()}<br></br>{item.getJobDateTime().toTimeString()}</Card.Text>
                             </Col> 
-                            <Col md="3"><br></br>Status<br></br>{item.getStatus().getStatusId()}</Col>
+                            <Col md="3"><br></br>Status<br></br>{item.getStatus().getStatus()}</Col>
                             <Col md="3"><br></br><Button onClick={()=>this.handleJobRequest(item.getJobId())}>View</Button></Col>
                         </Row> 
                         </Container> 
@@ -142,6 +142,10 @@ export class ByStatus extends Component <IAuthProps, any>{
                 </Form.Group>
                 </Form>
                 <ListGroup>
+                {(!this.state.data[0]) ?
+
+<p>You have no jobs. Go to search jobs to get some.</p> 
+: null }
                     <ListGroup.Item>
                     <Card>
                         {list}

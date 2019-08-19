@@ -99,7 +99,7 @@ export class MyJobView extends Component <IProps, any>{
                                     <ListGroupItem>JobPay:{this.props.job.job.getJobEarnings()}</ListGroupItem>
                                     <ListGroupItem>Time Estimate:{this.props.job.job.getTimeEstimate()}</ListGroupItem>
                                     <ListGroupItem>Dropoff Location:{this.props.job.job.getDropoffAddress()}</ListGroupItem>
-                                    <ListGroupItem>User Posted:{}</ListGroupItem>
+                                    <ListGroupItem>User Posted:{this.props.job.job.getUserCreated().getUsername()}</ListGroupItem>
                                     <ListGroupItem>Category:{this.props.job.job.getCategory().getName()}</ListGroupItem>
                                 </ListGroup>    
                                 </Col>

@@ -17,7 +17,7 @@ export default class RightUserPortal extends Component <any, any>{
             <BrowserRouter>
                 <div> 
                     <Navigation />
-                        <Route exact path="/" component={Home} />
+                        <Route exact path="/userportal" component={Home} />
                         <Route exact path="/userportal/search" component={Search} />
                         <Route exact path="/userportal/search/category" component={SearchCategory} />
                         <Route exact path="/userportal/myjobs" component={MyJobs} /> 
