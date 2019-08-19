@@ -5,6 +5,7 @@ import {
     SET_REDIRECT,
     START_REDIRECT,
     FINISH_REDIRECT,
+    LOGOUT,
   } from '../actions/Authentication.action';
   import {IAuthState} from './index';
 import { User } from '../models/User';
@@ -38,6 +39,8 @@ const initialState : IAuthState = {
             return {...state, redirect: {...state.redirect, readyToRedirect: true}}
         case FINISH_REDIRECT:
             return {...state, redirect: {...state.redirect, readyToRedirect: false}}
+        case LOGOUT:
+            return {...state, userProfile: initialState.userProfile}
         default: break;
 
     }

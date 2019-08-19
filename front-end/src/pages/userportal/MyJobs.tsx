@@ -9,8 +9,8 @@ import { updateJob } from '../../actions/JobView.action';
 
 export interface IAuthProps {
     user: IAuthState;
-
-    updateJob: (id: any) => void;
+    job: IJobViewState; 
+    updateJob: (job: any) => void;
 }
 
 export class MyJobs extends Component <IAuthProps, any>{
@@ -20,7 +20,7 @@ export class MyJobs extends Component <IAuthProps, any>{
         this.state = { 
             data: [],
             jobClick: "",
-            job: []
+            data2: []
         } 
         this.handleRequest = this.handleRequest.bind(this);
         this.handleJobRequest = this.handleJobRequest.bind(this);
@@ -50,7 +50,7 @@ export class MyJobs extends Component <IAuthProps, any>{
     }
 
 
-    handleLink(event:any){
+    handleLink=(event:any) =>{
         console.log("link clicked");
         const target = event.target;
         const value = target.value;
@@ -58,21 +58,21 @@ export class MyJobs extends Component <IAuthProps, any>{
             jobClick: value
         })
         console.log(this.state.jobClick);
-        this.props.updateJob(this.state.jobClick);
-        //this.handleJobRequest(value);
+        this.handleJobRequest(value);
     }
 
-    async handleJobRequest(num : any) {
-        const response = await APICall.GET('/jobs/' + num
-        ,this.props.user.userProfile.getToken());
+
+    async handleJobRequest(num: any) {
+        const response = await APICall.GET('/jobs/'  + num
+        ,this.props.user.userProfile.getToken()); 
 
         if(await response instanceof Error){
         } else { 
-            this.setState({
-                job: new Job(response)
+            let res = response.data;
+            this.setState({ 
+                data2: new Job(response)
             })
-            console.log(this.state.job);
-
+            console.log(this.state.data2);
         }
         console.log(await response);
     }

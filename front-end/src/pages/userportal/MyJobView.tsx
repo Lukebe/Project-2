@@ -44,9 +44,9 @@ export class MyJobView extends Component <IProps, any>{
         console.log(this.state.jobId);
         const response = await APICall.PATCH('/jobs/'
         ,{
-            jobId: 3,
+            jobId: 39,
             status:{
-                statusId:3
+                statusId:5
             }
         }
         ,this.props.user.userProfile.getToken()); 
@@ -58,9 +58,9 @@ export class MyJobView extends Component <IProps, any>{
         console.log(this.state.jobId);
         const response = await APICall.PATCH('/jobs/'
         ,{
-            jobId: 3,
+            jobId: 39,
             status:{
-                statusId:3
+                statusId:4
             }
         }
         ,this.props.user.userProfile.getToken()); 

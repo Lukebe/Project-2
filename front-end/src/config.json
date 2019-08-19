@@ -1,7 +1,7 @@
 
 {
     "backend": {
-        "serverURL": "https://cors-anywhere.herokuapp.com/http://3.17.147.229:3333"
+        "serverURL": "http://3.17.147.229:3333"
     },
     "messages": {
         "noAccess" : "You do not have access to this resource",
