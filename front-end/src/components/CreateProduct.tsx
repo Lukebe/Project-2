@@ -177,7 +177,7 @@ class CreateProduct extends Component <IProps,IState>{
                             </Form.Row>
                     </Form.Group>
                     <Form.Group controlId="formProductPrice">
-                        <Form.Label>Job Pay</Form.Label>
+                        <Form.Label>Product Cost</Form.Label>
                         <InputGroup className="mb-3">
                             <Form.Row className="formRow">
                                 <Col sm="1" lg="1">
@@ -208,7 +208,7 @@ class CreateProduct extends Component <IProps,IState>{
                             Please enter some comments about your reimbursement request.
                     </Form.Control.Feedback>
                     </Form.Group>
-                    <Button className="buttonColor" type="submit">
+                    <Button type="submit">
                         Submit
                 </Button>
                     <span id='login-loading-container'>
