@@ -89,9 +89,9 @@ export class MyJobView extends Component <IProps, any>{
                                 <ListGroup className="list-group-flush">
                                     <ListGroupItem>Product/Event:{this.props.job.job.getProduct().getItemName()}</ListGroupItem>
                                     <ListGroupItem>Address:{this.props.job.job.getAddress()}</ListGroupItem>
-                                    <ListGroupItem>DateAccepted:{}</ListGroupItem>
+                                    <ListGroupItem>DateAccepted:{this.props.job.job.getDateAccepted().toLocaleString()}</ListGroupItem>
                                     <ListGroupItem>Status:{this.props.job.job.getStatus().getStatus()}</ListGroupItem>
-                                    <ListGroupItem>DatePosted:{this.props.job.job.getDateCreated().toString()}</ListGroupItem>
+                                    <ListGroupItem>DatePosted:{this.props.job.job.getDateCreated().toLocaleString()}</ListGroupItem>
                                 </ListGroup>
                                 </Col> 
                                 <Col>
