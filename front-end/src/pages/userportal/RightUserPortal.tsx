@@ -7,6 +7,7 @@ import Search from './Search';
 import MyJobs from './MyJobs';
 import SearchCategory from './SearchCategory';
 import MyJobView from './MyJobView';
+import ByStatus from './ByStatus';
 
 export default class RightUserPortal extends Component <any, any>{
 
@@ -20,6 +21,7 @@ export default class RightUserPortal extends Component <any, any>{
                         <Route exact path="/userportal/search/category" component={SearchCategory} />
                         <Route exact path="/userportal/myjobs" component={MyJobs} /> 
                         <Route exact path="/userportal/jobview" component={MyJobView} />
+                        <Route exact path="/userportal/byStatus" component={ByStatus} />
                 </div>
             </BrowserRouter>      
         );

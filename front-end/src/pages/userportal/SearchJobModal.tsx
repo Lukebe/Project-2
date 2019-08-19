@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { ListGroup, Button, Card, Badge, Modal } from 'react-bootstrap';
 import { IAuthState } from '../../reducers';
 import { Job } from "../../models/Job";
-import { thisTypeAnnotation } from '@babel/types';
 
 interface ModalProps {
     user: IAuthState;
@@ -23,9 +22,7 @@ export default class SearchJobModal extends Component <ModalProps, any>{
     }
 
     handleAccept(event:any){
-         console.log(this.props.job);
-         console.log(this.props.job.getJobEarnings());
-         console.log(this.props.job.getAddress()); 
+         this.props.job.getJobId();
          this.setState({
              address: this.props.job.getAddress()
          })
