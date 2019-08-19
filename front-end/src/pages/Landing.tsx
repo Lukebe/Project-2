@@ -157,13 +157,15 @@ export class Landing extends React.Component<IReduxProps, IState>{
                     Reiciendis officia voluptatem nulla nemo temporibus accusantium inventore, labore consequuntur suscipit voluptatum
                     incidunt sed quisquam, esse dicta qui adipisci doloremque. Deserunt, vel!
                 Quod quas nam quos saepe quisquam culpa tempore dolor laboriosam animi? </p>
-                        <Button name="makerportal" className="landing-button ripple" onClick={this.handleButtonClick}>Make</Button>
+                        <Button name="makerportal" className="landing-button ripple" onClick={this.handleButtonClick}>
+                            <p>Make</p></Button>
                     </Col>
                         <Col><p className='landing-description'>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                         Reiciendis officia voluptatem nulla nemo temporibus accusantium inventore, labore consequuntur suscipit voluptatum
                         incidunt sed quisquam, esse dicta qui adipisci doloremque. Deserunt, vel!
                 Quod quas nam quos saepe quisquam culpa tempore dolor laboriosam animi? </p>
-                            <Button name="userportal" className="landing-button ripple" onClick={this.handleButtonClick}>Work</Button>
+                            <Button name="userportal" className="landing-button ripple" onClick={this.handleButtonClick}>
+                                <p>Work</p></Button>
                         </Col></Row>
                 </Container>
                 <Footer />

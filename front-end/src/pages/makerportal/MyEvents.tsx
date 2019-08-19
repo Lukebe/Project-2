@@ -12,6 +12,7 @@ import isMobile from "../../utils/IsMobile";
 import { makerPortalReducer } from "../../reducers/MakerPortal.reducer";
 import { myJobsDoneRefresh } from "../../actions/MakerPortal.action";
 import JobDetailsModal from "../../components/JobDetailsModal";
+import * as Time from "../../utils/Time";
 const RequestState = APICall.RequestState;
 export interface IAuthProps {
     //data from state store
@@ -185,7 +186,12 @@ class MyEvents extends Component <IAuthProps,IState>{
                         {(element.getStatus().getStatusId() === 2) ? <>
                         <Form.Label>Expected Delivery: </Form.Label> 
                         <Form.Text>
-                        <p>{element.getTimeEstimate()} </p> </Form.Text>
+                            {console.log(
+                       element.getJobDateTime().getTime())}
+                        <p>{
+                        element.getJobDateTime().setDate(element.getJobDateTime().getTime()
+                     + parseInt(element.getTimeEstimate()))}
+                      </p> </Form.Text>
                         </> : null } 
                         {(element.getStatus().getStatusId() === 2 || element.getStatus().getStatusId() === 3) ? <>
                         <Form.Label>Your Fullfiller: </Form.Label> 

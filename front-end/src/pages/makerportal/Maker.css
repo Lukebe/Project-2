@@ -207,6 +207,9 @@
 .my-events-data-card > .card-body > .form-text >p> a > .small-icons {
     font-size: 1.5em;
 }
+.my-events-data-card > .card-body > .form-text >p> a > .small-icons:hover {
+    color: rgb(255, 107, 99);
+}
 .my-events-error {
     text-align: center;
 }
@@ -301,6 +304,9 @@
     unicode-bidi: bidi-override;
     direction: rtl;
     text-align: center;
+    float: left;
+    display:block;
+    width: 100%;
   }
 .rating > p {
     direction:ltr;
