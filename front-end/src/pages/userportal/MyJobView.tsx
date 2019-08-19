@@ -91,7 +91,7 @@ export class MyJobView extends Component <IProps, any>{
                                     <ListGroupItem>Address:{this.props.job.job.getAddress()}</ListGroupItem>
                                     <ListGroupItem>DateAccepted:{}</ListGroupItem>
                                     <ListGroupItem>Status:{this.props.job.job.getStatus().getStatus()}</ListGroupItem>
-                                    <ListGroupItem>DatePosted:{}</ListGroupItem>
+                                    <ListGroupItem>DatePosted:{this.props.job.job.getDateCreated().toString()}</ListGroupItem>
                                 </ListGroup>
                                 </Col> 
                                 <Col>

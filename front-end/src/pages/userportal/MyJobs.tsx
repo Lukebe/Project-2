@@ -93,14 +93,14 @@ export class MyJobs extends Component <IAuthProps, any>{
                     <Card.Body >
                         <Container>
                         <Row>
-                            <Col  md="auto">
-                                <Card.Text className="userCardText">{item.getJobId()}</Card.Text>
+                            <Col  md="2">
+                                <Card.Text className="userCardText"><br></br>ID<br></br>{item.getJobId()}</Card.Text>
                             </Col> 
-                            <Col  md="auto">
+                            <Col  md="4">
                                 <Card.Text className="userCardText">{item.getDescription()}<br></br>{item.getAddress()}<br></br>{item.getJobDateTime().toTimeString()}</Card.Text>
                             </Col>
-                            <Col  >Status<br></br></Col>
-                            <Col  md="auto"><Button onClick={()=>this.handleJobRequest(item.getJobId())}>View/Edit</Button></Col>
+                            <Col  md="3"><br></br>Status<br></br>{item.getStatus().getStatusId()}</Col>
+                            <Col  md="3"><br></br><Button onClick={()=>this.handleJobRequest(item.getJobId())}>View/Edit</Button></Col>
                         </Row> 
                         </Container> 
                     </Card.Body>
@@ -135,4 +135,4 @@ const mapDispatchToProps = {
     updateJob: updateJob
 }
  
-export default connect(mapStateToProps,mapDispatchToProps)(MyJobs);
+export default connect(mapStateToProps, mapDispatchToProps)(MyJobs);

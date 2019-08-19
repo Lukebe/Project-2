@@ -51,8 +51,8 @@ export class Featured extends Component <any, any>{
                         />
                         <Carousel.Caption>
                         <h3>{item.product.itemName}</h3>
-                        <p>{}</p> 
-                        <Button variant="primary">View</Button>
+                        <p>{item.product.description}</p> 
+                        <p>{item.count} People Are Currently Looking to Get This Item</p>
                         </Carousel.Caption>
                     </Carousel.Item>
         }) 
@@ -72,7 +72,7 @@ export class Featured extends Component <any, any>{
                             <Carousel.Caption>
                             <h3>NEW NOTE 10 Release</h3>
                             <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                            <Button variant="primary">View</Button>
+                            <p></p>
                             </Carousel.Caption>   
                         </Carousel.Item>
                         {caro}

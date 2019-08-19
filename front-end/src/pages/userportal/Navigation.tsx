@@ -18,7 +18,7 @@ export default class LeftUserPortal extends Component<any, any>{
                         </NavDropdown>
                         <NavDropdown title="Search Jobs" id="nav-dropdown">
                             <NavDropdown.Item as={Link} to="/userportal/search/category">By Category</NavDropdown.Item>
-                            <NavDropdown.Item as={Link} to="/">other</NavDropdown.Item>  
+                            
                         </NavDropdown>
                     </Nav>  
                 </Navbar> 
