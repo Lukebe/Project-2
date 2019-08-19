@@ -3,6 +3,7 @@ import { Accordion, Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { IAppState, IAuthState } from '../../reducers';
 import * as APICall from '../../utils/APICall';
 import { connect } from 'react-redux';
+import { Job } from '../../models/Job';
 
 
 export interface IAuthProps {
@@ -34,7 +35,9 @@ export class ActiveJobs extends Component <IAuthProps, any>{
         } else { 
             let responseArray = response.content;
             this.setState({
-                data : responseArray
+                data : responseArray.map((item:Job, key:any) =>{
+                    return new Job(item)
+                })
             })
             console.log(this.state.data);
         } 
@@ -42,20 +45,20 @@ export class ActiveJobs extends Component <IAuthProps, any>{
     } 
 
     render() {
-        const cards = this.state.data.map((item:any, i:any) => {
+        const cards = this.state.data.map((item:Job, i:any) => {
             return <Card className="card" key={i}>
-                        <Accordion.Toggle as={Card.Header} eventKey="1">
-                            <h6>{}</h6>
-                            <p className="datetime">{} {}</p>
+                        <Accordion.Toggle as={Card.Header} eventKey={i}>
+                            <h6>{item.getProduct().getItemName()}</h6>
+                            <p className="datetime">{}|{item.getAddress()}</p> 
                             </Accordion.Toggle>
-                            <Accordion.Collapse eventKey="1">
+                            <Accordion.Collapse eventKey={i}> 
                             <Card.Body className="cardbody">
-                                <Card.Img variant="top" src="holder.js/100px180" />
+                                <Card.Img variant="top" src={item.getProduct().getImageUrl()} />
                                 <ListGroup className="list-group-flush">
-                                    <ListGroupItem>{}</ListGroupItem>
-                                    <ListGroupItem>{}</ListGroupItem>
-                                    <ListGroupItem>Expected Wait Time</ListGroupItem>
-                                    <ListGroupItem>{}</ListGroupItem>
+                                    <ListGroupItem>{item.getDescription()}</ListGroupItem>
+                                    <ListGroupItem>{item.getJobPrice()}</ListGroupItem>
+                                    <ListGroupItem>{item.getDropoffAddress()}</ListGroupItem>
+                                    <ListGroupItem>Expected Wait Time: {item.getTimeEstimate()}</ListGroupItem>
                                 </ListGroup>
                             </Card.Body>    
                         </Accordion.Collapse>
@@ -64,7 +67,7 @@ export class ActiveJobs extends Component <IAuthProps, any>{
         return( 
             <div>
                 <React.Fragment>
-                    <Accordion defaultActiveKey="1">
+                    <Accordion defaultActiveKey="0">
                         {cards}
                     </Accordion>
                 </React.Fragment>

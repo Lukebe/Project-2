@@ -49,7 +49,7 @@ function timeToWords(time : any, lang : any = '') {
       var n = Math.round(diff / timespan);
   
       return lang[timespan][n > 1 ? 'plural' : 'singular']
-        .replace('#', n) + postfix;
+        .replace('#', n) + postfix; 
     }
   }
 export {readableTime, timeToWords}
