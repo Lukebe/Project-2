@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { Form, ListGroup, Card, Button, Row, Col } from 'react-bootstrap';
-import { IAppState, IAuthState } from '../../reducers';
+import { IAppState, IAuthState, IJobViewState } from '../../reducers';
 import { connect } from 'react-redux';
 import * as APICall from '../../utils/APICall';
 import Modal from './SearchJobModal';
 import { Job } from "../../models/Job";
+import { updateJob } from '../../actions/JobView.action';
 
 export interface IAuthProps {
     user: IAuthState;
+    job: IJobViewState;
+    updateJob: (job: Job) => void;
 }
 
 export class SearchCategory extends Component <IAuthProps, any>{
@@ -98,6 +101,7 @@ export class SearchCategory extends Component <IAuthProps, any>{
             })
         }
         console.log(await response);
+        this.props.updateJob(this.state.job);
     }
 
 
@@ -160,4 +164,8 @@ const mapStateToProps = (state:IAppState) => ({
     user: state.auth
 });
 
-export default connect(mapStateToProps)(SearchCategory);
+const mapDispatchToProps = {
+    updateJob: updateJob
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchCategory);

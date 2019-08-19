@@ -8,9 +8,7 @@ export const jobTypes = {
 
 export const updateJob = (job: Job) => (dispatch: any) => {
     dispatch({
-        payload: {
-            job
-        },
+        payload: {job},
         type: jobTypes.JOB_UPDATE
     })
 } 

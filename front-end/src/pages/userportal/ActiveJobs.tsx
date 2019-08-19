@@ -16,7 +16,10 @@ export class ActiveJobs extends Component <IAuthProps, any>{
 
         this.state = { 
             data: [
-            ]
+            ],
+            activeKey:
+            '0'
+
         }
         this.componentDidMount = this.componentDidMount.bind(this);
         this.handleRequest = this.handleRequest.bind(this);
@@ -40,7 +43,7 @@ export class ActiveJobs extends Component <IAuthProps, any>{
                 })
             })
             console.log(this.state.data);
-        } 
+        }  
         console.log(await response);
     } 
 
@@ -56,10 +59,10 @@ export class ActiveJobs extends Component <IAuthProps, any>{
                                 <Card.Img variant="top" src={item.getProduct().getImageUrl()} />
                                 <ListGroup className="list-group-flush">
                                     <ListGroupItem>{item.getDescription()}</ListGroupItem>
-                                    <ListGroupItem>{item.getJobPrice()}</ListGroupItem>
+                                    <ListGroupItem>{item.getJobEarnings()}</ListGroupItem>
                                     <ListGroupItem>{item.getDropoffAddress()}</ListGroupItem>
                                     <ListGroupItem>Expected Wait Time: {item.getTimeEstimate()}</ListGroupItem>
-                                </ListGroup>
+                                </ListGroup> 
                             </Card.Body>    
                         </Accordion.Collapse>
             </Card>

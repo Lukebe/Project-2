@@ -9,14 +9,14 @@ import { Status } from "../models/Status";
 const initialState: IJobViewState = {
     job : new Job({
         jobId: 0, 
-        userCreated: new User({userId:0, userName:"", firstName:"", lastName:"", emai:"", phone:"", rating:"", string:""}),
+        userCreated: new User({userId:0, userName:"", firstName:"", lastName:"", email:"", phone:"", rating:"", token:""}),
         address: "",
         dropoffAddress:"",
         description: "",
         dateCreated: "",
         dateAccepted: "",
         jobDateTime: "",
-        userAccepted: new User({userId:0, userName:"", firstName:"", lastName:"", emai:"", phone:"", rating:"", string:""}),
+        userAccepted: new User({userId:0, userName:"", firstName:"", lastName:"", email:"", phone:"", rating:"", token:""}),
         jobPrice : "",
         category: new Category({categoryId: 0, name: '', description: ''}),
         timeEstimate: "",
@@ -31,7 +31,7 @@ export const viewJobReducer = (state = initialState, action: any) => {
         case jobTypes.JOB_UPDATE:
             return {
                 ...state,
-                job: action.payload.id
+                job: action.payload.job
             }
         default: break;
     }

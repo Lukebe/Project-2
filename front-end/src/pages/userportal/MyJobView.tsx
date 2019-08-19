@@ -9,14 +9,12 @@ import { Job } from '../../models/Job';
 export interface IProps {
     user: IAuthState;
     job: IJobViewState;
-    updateJob: (id: any) => void;
 }
 
 export class MyJobView extends Component <IProps, any>{
     constructor(props: any) {
         super(props);
         this.state = {
-            jobPulled:[],
             jobId:"",
             data: []
         }
@@ -24,10 +22,9 @@ export class MyJobView extends Component <IProps, any>{
         this.componentDidMount = this.componentDidMount.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.handleComplete = this.handleComplete.bind(this);
-        this.handleRequestJob = this.handleRequestJob.bind(this);
     }
     componentDidMount(){
-        //this.handleRequestJob(39); 
+        console.log(this.props.job);
     }
 
     handleComplete(even:any){
@@ -41,10 +38,12 @@ export class MyJobView extends Component <IProps, any>{
     }
 
     async requestUpdateCancel(){
-        console.log(this.state.jobId);
+        const id = this.props.job.job.getJobId();
+        console.log(id);
+
         const response = await APICall.PATCH('/jobs/'
         ,{
-            jobId: 39,
+            jobId: id,
             status:{
                 statusId:5
             }
@@ -55,10 +54,11 @@ export class MyJobView extends Component <IProps, any>{
     }
 
     async requestUpdateComplete(){
-        console.log(this.state.jobId);
+        const id = this.props.job.job.getJobId();
+        console.log(id);
         const response = await APICall.PATCH('/jobs/'
         ,{
-            jobId: 39,
+            jobId: id,
             status:{
                 statusId:4
             }
@@ -68,30 +68,15 @@ export class MyJobView extends Component <IProps, any>{
         console.log(response);
     }
 
-    async handleRequestJob(num: any) {
-        const response = await APICall.GET('/jobs/'  + num
-        ,this.props.user.userProfile.getToken()); 
-
-        if(await response instanceof Error){
-        } else { 
-            let res = response.data;
-            this.setState({ 
-                data: new Job(response)
-            })
-            console.log(this.state.data);
-        }
-        console.log(await response);
-    }
-
     render() {
         return(
             <React.Fragment>
                 <h1>Job View</h1>
                 <div className="jobViewContainer">
                     <Card className="jobViewCard" border="primary" style={{ width: '38rem' }}>
-                        <Card.Header><h3><Badge pill variant="success">${}</Badge></h3></Card.Header>
+                        <Card.Header><h3><Badge pill variant="success">${this.props.job.job.getJobEarnings()}</Badge></h3></Card.Header>
                         <Card.Body>
-                        <Card.Title>JobDateTime</Card.Title>
+                        <Card.Title>{}</Card.Title>
                         <Container>
                             <Row>
                             <ButtonGroup className="myJobViewButtonGroup" aria-label="Basic example">
@@ -102,21 +87,21 @@ export class MyJobView extends Component <IProps, any>{
                             <Row>
                                 <Col>
                                 <ListGroup className="list-group-flush">
-                                    <ListGroupItem>Product</ListGroupItem>
-                                    <ListGroupItem>Address</ListGroupItem>
-                                    <ListGroupItem>userCreated</ListGroupItem>
-                                    <ListGroupItem>Status</ListGroupItem>
-                                    <ListGroupItem>DateCreated</ListGroupItem>
+                                    <ListGroupItem>Product/Event:{this.props.job.job.getProduct().getItemName()}</ListGroupItem>
+                                    <ListGroupItem>Address:{this.props.job.job.getAddress()}</ListGroupItem>
+                                    <ListGroupItem>DateAccepted:{}</ListGroupItem>
+                                    <ListGroupItem>Status:{this.props.job.job.getStatus().getStatus()}</ListGroupItem>
+                                    <ListGroupItem>DatePosted:{}</ListGroupItem>
                                 </ListGroup>
                                 </Col> 
                                 <Col>
                                 <ListGroup className="list-group-flush">
-                                    <ListGroupItem>Earnings</ListGroupItem>
-                                    <ListGroupItem>TimeEstimate</ListGroupItem>
-                                    <ListGroupItem>DropoffAddress</ListGroupItem>
-                                    <ListGroupItem>userCreated</ListGroupItem>
-                                    <ListGroupItem>category</ListGroupItem>
-                                </ListGroup>
+                                    <ListGroupItem>JobPay:{this.props.job.job.getJobEarnings()}</ListGroupItem>
+                                    <ListGroupItem>Time Estimate:{this.props.job.job.getTimeEstimate()}</ListGroupItem>
+                                    <ListGroupItem>Dropoff Location:{this.props.job.job.getDropoffAddress()}</ListGroupItem>
+                                    <ListGroupItem>User Posted:{}</ListGroupItem>
+                                    <ListGroupItem>Category:{this.props.job.job.getCategory().getName()}</ListGroupItem>
+                                </ListGroup>    
                                 </Col>
                             </Row>
                         </Container>

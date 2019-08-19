@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, ListGroup, Button, Container, Row, Col } from 'react-bootstrap';
+import { Card, ListGroup, Button, Container, Row, Col, Form } from 'react-bootstrap';
 import * as APICall from '../../utils/APICall';
 import { IAppState, IAuthState, IJobViewState } from '../../reducers';
 import { connect } from 'react-redux';
@@ -13,7 +13,7 @@ export interface IAuthProps {
     updateJob: (job: Job) => void;
 }
 
-export class MyJobs extends Component <IAuthProps, any>{
+export class ByStatus extends Component <IAuthProps, any>{
     constructor(props: any) {
         super(props);
 
@@ -30,6 +30,7 @@ export class MyJobs extends Component <IAuthProps, any>{
     }
 
     componentDidMount(){
+        console.log("by status linked");
         this.handleRequest();
     }
 
@@ -66,6 +67,16 @@ export class MyJobs extends Component <IAuthProps, any>{
         })
         console.log(this.state.jobClick);
         this.handleJobRequest(value);
+    }
+
+    handleChange(event:any){
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        this.setState({ 
+            [name]: value
+        });
+        //this.handleStatusRequest(num:any);
     }
 
 
@@ -110,9 +121,24 @@ export class MyJobs extends Component <IAuthProps, any>{
 
         return(
             <React.Fragment>
+
                 {this.state.shouldRedirect ?
                     <Redirect to = "/userportal/jobview"></Redirect>
                     : null}
+                
+                <Form className="searchCategoryForm">
+                <Form.Group as= {Row}>
+                    <Form.Label className="searchCatLabel" column>Category:</Form.Label>
+                    <Col>
+                    <Form.Control as="select" onChange={this.handleChange} name="input">
+                        <option value="1">Accepted</option>
+                        <option value="2">Completed</option>
+                        <option value="3">Cancelled</option>
+                    </Form.Control>
+                    </Col>
+                    
+                </Form.Group>
+                </Form>
 
                 <h1>My Jobs</h1>
                 <ListGroup>
@@ -135,4 +161,4 @@ const mapDispatchToProps = {
     updateJob: updateJob
 }
  
-export default connect(mapStateToProps,mapDispatchToProps)(MyJobs);
+export default connect(mapStateToProps,mapDispatchToProps)(ByStatus);
