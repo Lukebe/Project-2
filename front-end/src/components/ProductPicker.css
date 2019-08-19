@@ -161,6 +161,86 @@ background-color: rgb(84, 33, 160) !important;
     margin-left: -3.6em;
     left: 50%;
 }
+.btn-product-card {
+    display: inline-block;
+    background-color: rgb(84, 33, 160) !important;
+    border:1px solid rgb(59,19,97);
+    vertical-align: middle;
+    -webkit-transform: perspective(1px) translateZ(0);
+    transform: perspective(1px) translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-product-card:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 51%;
+    right: 51%;
+    bottom: 0;
+    background: rgb(59,19,97);
+    height: 4px;
+    -webkit-transition-property: left, right;
+    transition-property: left, right;
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    -webkit-transition-timing-function: ease-out;
+    transition-timing-function: ease-out;
+  }
+  .btn-product-card:hover:before, .btn-product-card:focus:before, .btn-product-card:active:before {
+    left: 0;
+    right: 0;
+    border:0 !important;
+  }
+  .btn-product-card:hover {
+      border:1px solid rgb(59,19,97) !important;
+  }
+  .my-events-data-card > .card-body {
+    padding: 1.0rem;
+}
+.job-details-modal-body > .row > .col-lg-6 > .form-label {
+    width: 80%;
+    margin-left: 10%;
+    margin-right:10%;
+    border-bottom: 1px dashed #bbb;
+    margin-bottom: 0.2em;
+    font-weight:400;
+    font-size: 0.75em;
+    margin-top: 0.5em;
+    font-family: 'Roboto', sans-serif;
+
+}
+.job-details-modal-body > .row > .col-lg-6 > p {
+    font-size: 0.85em;
+    margin-bottom: 0.8em;
+    display: flex;
+    justify-content: center;
+    text-align:left;
+    font-weight:300;
+    font-family: 'Roboto', sans-serif;
+
+}
+.job-details-modal-body > .row > .col-lg-6 >p> a > .material-icons {
+    margin-left:0.5em;
+    font-size: 1.5em;
+
+}
+.product-side {
+    background-color: #555;
+    border-radius: 10px 0px 0px 10px;
+    padding: 10px;
+    color: white;
+}
+.job-details-modal-body > .row > .col-lg-6 > p > a {
+    color: black !important;
+}
+.job-details-modal-body > .row > .col-lg-6 >p> a > .small-icons {
+    font-size: 1.5em;
+}
+.job-details-modal-body > .row > .col-lg-6 >p> a > .small-icons:hover {
+    color: rgb(255, 107, 99);
+}
 @media only screen and (max-width: 1000px) {
     .product-list-data > .product-card {
         width: 48%;

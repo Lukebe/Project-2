@@ -338,8 +338,8 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                     </Form.Control.Feedback>   
                 </Form.Group>
                 <Link onClick = {this.handleSubmit}
-                smooth to = "#createnewjob"><Button variant="primary" type="submit">
-
+                smooth to = "#createnewjob"><Button className = "create-job-button"
+                variant="primary" type="submit">
                 Submit
                 </Button></Link>
                 <span id = 'login-loading-container'>

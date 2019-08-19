@@ -71,6 +71,13 @@ class Job {
     getDropoffAddress() : string {
         return this.dropoffAddress;
     }
+    getExpectedTime() : Date {
+        let dateObj : any = this.jobDateTime.getTime();
+        dateObj += parseInt(this.timeEstimate);
+// create a new Date object, using the adjusted time
+        dateObj = new Date(dateObj);
+        return dateObj;
+    }
     getDescription() : string {
         return this.description;
     }

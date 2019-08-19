@@ -1,6 +1,7 @@
 import { IAuthState, IAppState, IProductPickerState } from "../reducers";
-import { Modal, Tabs, Tab, Nav, Col, Form } from "react-bootstrap";
+import { Modal, Tabs, Tab, Nav, Col, Form, Button, Row } from "react-bootstrap";
 import React from 'react';
+import './ProductPicker.css';
 import { loginSuccessful } from "../actions/Authentication.action";
 import { connect } from "react-redux";
 import ProductList from "./ProductList";
@@ -8,17 +9,25 @@ import CreateProduct from "./CreateProduct";
 import './ProductPicker.css'
 import { Job } from "../models/Job";
 import * as Time from "../utils/Time";
+import * as APICall from '../utils/APICall';
+import { myJobsRefresh } from "../actions/MakerPortal.action";
 export interface IAuthProps {
     //data from state store
     auth: IAuthState,
+    myJobsRefresh: () => void;
     //Action creators from the dispatcher
 }
+const RequestState = APICall.RequestState;
 export interface IComponentProps {
     job : Job;
     callback: Function;
 
 }
 interface IState {
+    RequestStatus: {
+        status: APICall.RequestState,
+        errorMsg: string,
+    }
 }
 type IProps = IComponentProps & IAuthProps;
 class JobDetailsModal extends React.Component <IProps,IState>{
@@ -26,11 +35,23 @@ class JobDetailsModal extends React.Component <IProps,IState>{
     constructor(props: any) {
         super(props);
         this.state = {
-            isFetching: false,
-            productId: 0,
+            RequestStatus: {
+                status: RequestState.NOT_ACTIVE,
+                errorMsg: '',
+            }
         };
     }
-
+    cancelJob = async () => {
+        const response : any = await APICall.PATCH('/jobs',{jobId: this.props.job.getJobId(), status: {statusId: 5}}
+        ,this.props.auth.userProfile.getToken());
+        if(await response instanceof Error){
+            this.setState({...this.state, RequestStatus: 
+                {...this.state.RequestStatus, status: RequestState.ERROR, errorMsg: response.message}});
+        } else {
+            this.props.myJobsRefresh();
+            this.props.callback();
+        }
+    }
     getProperStatus(statusId : number){
         switch(statusId) {
             case 1:
@@ -54,9 +75,10 @@ class JobDetailsModal extends React.Component <IProps,IState>{
             <Modal className = "job-details-modal" size="lg" show animation keyboard 
             onHide = {() => this.props.callback()}>
           <Modal.Header><i className="large material-icons"></i>
-                <h2> Login </h2>  <i className="large material-icons" onClick = {(e : any) => this.props.callback()}>close</i>
+                <h2> Job Details </h2>  <i className="large material-icons" onClick = {(e : any) => this.props.callback()}>close</i>
                 </Modal.Header>
                 <Modal.Body className = "job-details-modal-body">
+                    <Row>
                     <Col lg = {6} sm = {12}>
                     <Form.Label>Job Reference Number </Form.Label> <p>{this.props.job.getJobId()}</p>
                     <Form.Label>Date Created: </Form.Label> <p>
@@ -68,12 +90,11 @@ class JobDetailsModal extends React.Component <IProps,IState>{
                     {(this.props.job.getUserAccepted().getUserId()) ? <>
                     <Form.Label>User Accepted </Form.Label> <p>{}</p> </>
                     : null } 
-                    <Form.Label>Estimated Delivery Time: </Form.Label> <p>{this.props.job.getJobDateTime().getMilliseconds()
-                     + parseInt(this.props.job.getTimeEstimate())}
+                    <Form.Label>Estimated Delivery Time: </Form.Label> <p>{this.props.job.getExpectedTime().toString()}
                     </p>
                     <Form.Label>Status </Form.Label> {this.getProperStatus(this.props.job.getStatus().getStatusId())} 
                     </Col>
-                    <Col lg = {6} sm = {12}>
+                    <Col  className = "product-side" lg = {6} sm = {12}>
                         <img src = {this.props.job.getProduct().getImageUrl()}/>
                         <Form.Label>Product Name</Form.Label><p>{this.props.job.getProduct().getItemName()}</p>
                         <Form.Label>Product Price</Form.Label><p>{this.props.job.getProduct().getPrice()}</p>
@@ -82,6 +103,11 @@ class JobDetailsModal extends React.Component <IProps,IState>{
                         <Form.Label>Product Address:</Form.Label><p> {this.props.job.getAddress()}</p>
                         <Form.Label>Dropoff Address:</Form.Label><p> {this.props.job.getDropoffAddress()}</p>
                     </Col>
+                    </Row>
+                    {this.props.job.getStatus().getStatusId() === 1 || this.props.job.getStatus().getStatusId() === 2 ?
+                    <Col sm = {12} lg = {12}>
+                        <Button className = 'delete-job-button' onClick = {() => this.cancelJob()}>Cancel Job</Button>
+                    </Col> : null }
                 </Modal.Body> 
             </Modal>     )
     }
@@ -94,5 +120,6 @@ const mapStateToProps = (state : IAppState) => {
 }
 //This object definition will be used to map action creators to properties
 const mapDispatchToProps = {
+    myJobsRefresh: myJobsRefresh,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(JobDetailsModal);

@@ -41,12 +41,12 @@ class Header extends Component < IAuthProps, any >  {
         return(
         <header className='main-header'>
             <Row className='header-nav'>
-                <Col sm={12} md={12} lg={12} xl={3}>
+                <Col sm={12} md={3} lg={3} xl={3}>
                     <Navbar.Brand className="Logo" href="#/">
                         <img  className="sissorImage" src={iconWhite} />
                     </Navbar.Brand>
                 </Col>
-                <Col sm={12} md={8} lg={7} xl={6}>
+                <Col sm={12} md={6} lg={6} xl={6}>
                     <Navbar className='nav-black'>
                         <Nav className="">
                             <Link to="/">Home</Link>
@@ -55,8 +55,8 @@ class Header extends Component < IAuthProps, any >  {
                         </Nav>
                     </Navbar>
                 </Col>
-                    <Col sm={12} md={4} lg={5} xl={3}>
-                        <Dropdown>
+                    <Col sm={12} md={3} lg={3} xl={3}>
+                        <Dropdown className = "header-dropdown">
                             <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic">
                                 Account
                             </Dropdown.Toggle>
@@ -64,7 +64,7 @@ class Header extends Component < IAuthProps, any >  {
                             <Dropdown.Menu>
                                 {this.state.userFullName}
                                 { this.props.auth.userProfile.getRating() != 0.0 &&
-                                    this.state.rating
+                                    <a href = "#">Rating{parseFloat(''+this.props.auth.userProfile.getRating()).toFixed(2)}</a>
                                 }
                                 <a href = "#" onClick = {(e) => {e.preventDefault(); this.logoutUser()}}>
                                     Logout</a>

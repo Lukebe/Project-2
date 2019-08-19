@@ -83,8 +83,9 @@ class ProductList extends React.Component <IProps,IState> {
     async getProducts(page : number, search : string = '') {
         this.setState({...this.state, RequestStatus: 
             {...this.state.RequestStatus, status: RequestState.FETCHING}});
-        const url = (search) ? '/products/search?query=itemName:' + search + '&page=' + page + '&size=6&sort=itemName,desc'
+        const url = (search) ? '/products/search?query=itemName:' + encodeURI(search) + '&page=' + page + '&size=6'
         : '/products?page=' + page + '&size=6&sort=itemName,desc';
+        console.log(url);
         const response = await APICall.GET(url
         ,this.props.auth.userProfile.getToken());
         if(await response instanceof Error){
