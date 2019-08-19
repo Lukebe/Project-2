@@ -189,8 +189,7 @@ class MyEvents extends Component <IAuthProps,IState>{
                             {console.log(
                        element.getJobDateTime().getTime())}
                         <p>{
-                        element.getJobDateTime().setDate(element.getJobDateTime().getTime()
-                     + parseInt(element.getTimeEstimate()))}
+                       element.getExpectedTime().toLocaleString()}
                       </p> </Form.Text>
                         </> : null } 
                         {(element.getStatus().getStatusId() === 2 || element.getStatus().getStatusId() === 3) ? <>
