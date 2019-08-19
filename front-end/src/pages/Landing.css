@@ -5,7 +5,7 @@
     color: white;
 }
 .landing-container{
-    background-color: #000000aa;
+    background-color: rgba(0, 0, 0, 0.705);
     font-family: Verdana, Geneva, Tahoma, sans-serif !important;
     min-height: 80%;
     margin-top: 5%;
@@ -88,6 +88,11 @@
     transition-property: color;
     -webkit-transition-duration: 0.3s;
     transition-duration: 0.3s;
+  }
+  .landing-button > p {
+      text-align: center;
+      width: 100%;
+      margin: auto 0;
   }
 .landing-button:before {
     content: "";
@@ -187,7 +192,7 @@
         position: static;
     }
     .landing-container {
-        background-color: #000000bb;
+        background-color: rgba(0, 0, 0, 0.685);
     }
     .landing-container > .row > .col > .landing-description {
         color: #ddd;

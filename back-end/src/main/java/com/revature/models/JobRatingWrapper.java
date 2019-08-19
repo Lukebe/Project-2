@@ -31,7 +31,7 @@ public class JobRatingWrapper {
     private Users userAccepted;
 	private BigDecimal jobEarnings;
 	private Category category;
-	private Duration timeEstimate;
+	private long timeEstimate;
 	private Product product;
 	private Status status;	    
 	private double rating;
@@ -108,10 +108,10 @@ public class JobRatingWrapper {
 	public void setCategory(Category category) {
 		this.category = category;
 	}
-	public Duration getTimeEstimate() {
+	public long getTimeEstimate() {
 		return timeEstimate;
 	}
-	public void setTimeEstimate(Duration timeEstimate) {
+	public void setTimeEstimate(long timeEstimate) {
 		this.timeEstimate = timeEstimate;
 	}
 	public Product getProduct() {
@@ -154,7 +154,7 @@ public class JobRatingWrapper {
 		temp = Double.doubleToLongBits(rating);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
-		result = prime * result + ((timeEstimate == null) ? 0 : timeEstimate.hashCode());
+		result = prime * result + (int) (timeEstimate ^ (timeEstimate >>> 32));
 		result = prime * result + ((userAccepted == null) ? 0 : userAccepted.hashCode());
 		result = prime * result + ((userCreated == null) ? 0 : userCreated.hashCode());
 		return result;
@@ -222,10 +222,7 @@ public class JobRatingWrapper {
 				return false;
 		} else if (!status.equals(other.status))
 			return false;
-		if (timeEstimate == null) {
-			if (other.timeEstimate != null)
-				return false;
-		} else if (!timeEstimate.equals(other.timeEstimate))
+		if (timeEstimate != other.timeEstimate)
 			return false;
 		if (userAccepted == null) {
 			if (other.userAccepted != null)
@@ -247,6 +244,7 @@ public class JobRatingWrapper {
 				+ ", jobEarnings=" + jobEarnings + ", category=" + category + ", timeEstimate=" + timeEstimate
 				+ ", product=" + product + ", status=" + status + ", rating=" + rating + "]";
 	}
+
 	
 	    
 }

@@ -24,7 +24,8 @@ interface IState {
     RequestStatus: {
         status: APICall.RequestState,
         errorMsg: string,
-    }
+    },
+    searchValue: string,
 }
 const RequestState = APICall.RequestState;
 type IProps = IComponentProps & IAuthProps;
@@ -38,8 +39,12 @@ class ProductList extends React.Component <IProps,IState> {
             RequestStatus: {
                 status: RequestState.NOT_ACTIVE,
                 errorMsg: '',
-            }
+            },
+            searchValue: '',
         }       
+    }
+    componentDidMount() {
+        this.getProducts(0);
     }
     createPagination = () => {
         if(this.state.dataPagination.getPageNumber() === undefined){
@@ -65,10 +70,20 @@ class ProductList extends React.Component <IProps,IState> {
             this.getProducts(this.state.dataPagination.getPageNumber() + 1)
         }
     }
-    async getProducts(page : number) {
+    searchValueChange = (e : any) => {
+        e.preventDefault();
+        this.setState({...this.state, searchValue: e.target.value});
+        if(e.target.value){
+            this.getProducts(0,e.target.value);
+        }
+        console.log(this.state.searchValue);
+    }
+    async getProducts(page : number, search : string = '') {
         this.setState({...this.state, RequestStatus: 
             {...this.state.RequestStatus, status: RequestState.FETCHING}});
-        const response = await APICall.GET('/products?page=' + page + '&size=8&sort=itemName,desc'
+        const url = (search) ? '/products/search?query=itemName:' + search + '&page=' + page + '&size=6&sort=itemName,desc'
+        : '/products?page=' + page + '&size=8&sort=itemName,desc';
+        const response = await APICall.GET(url
         ,this.props.auth.userProfile.getToken());
         if(await response instanceof Error){
             this.setState({...this.state, RequestStatus: 
@@ -98,7 +113,8 @@ class ProductList extends React.Component <IProps,IState> {
                 <div className = "pagination-left">
                     <a href = '#' className = {(this.state.dataPagination.isFirstPage()) ? "pagination-disabled" : ""}
                     onClick={this.goBackClick}><i className = "material-icons large" style = {{fontSize: '50px'}}>arrow_back</i></a>
-                </div>      
+                </div>
+                <Form.Label>Search</Form.Label><input type = "text" onChange = {this.searchValueChange} value = {this.state.searchValue}></input>
                 <div className = "product-list-data">
                     {(this.state.data[0]) ? this.state.data.map((element: Product) => {
     

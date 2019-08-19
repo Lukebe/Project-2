@@ -62,10 +62,8 @@ public class Job {
     @JoinColumn(name = "category")
 	@NotNull
 	private Category category;
-	@DurationMin(minutes = 10)
-	@DurationMax(days = 7)	
 	@NotNull
-	private Duration timeEstimate;
+	private long timeEstimate;
 	@OneToOne()
     @JoinColumn(name = "product")
 	@NotNull
@@ -80,7 +78,7 @@ public class Job {
 			@Length(min = 5, max = 150) @NotNull String dropoffAddress, @Length(max = 500) @NotNull String description,
 			@NotNull Date dateCreated, Date dateAccepted, @NotNull Date jobDateTime, Users userAccepted,
 			@NotNull @Range(min = 1, max = 100000) BigDecimal jobEarnings, @NotNull Category category,
-			@DurationMin(minutes = 10) @DurationMax(days = 7) @NotNull Duration timeEstimate, @NotNull Product product,
+			@DurationMin(minutes = 10) @DurationMax(days = 7) @NotNull long timeEstimate, @NotNull Product product,
 			@NotNull Status status) {
 		super();
 		this.jobId = jobId;
@@ -100,15 +98,6 @@ public class Job {
 	}
 
 
-	@Override
-	public String toString() {
-		return "Job [jobId=" + jobId + ", userCreated=" + userCreated + ", address=" + address + ", dropoffAddress="
-				+ dropoffAddress + ", description=" + description + ", dateCreated=" + dateCreated + ", dateAccepted="
-				+ dateAccepted + ", jobDateTime=" + jobDateTime + ", userAccepted=" + userAccepted + ", jobEarnings="
-				+ jobEarnings + ", category=" + category + ", timeEstimate=" + timeEstimate + ", product=" + product
-				+ ", status=" + status + "]";
-	}
-
 
 	@Override
 	public int hashCode() {
@@ -125,11 +114,12 @@ public class Job {
 		result = prime * result + jobId;
 		result = prime * result + ((product == null) ? 0 : product.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
-		result = prime * result + ((timeEstimate == null) ? 0 : timeEstimate.hashCode());
+		result = prime * result + (int) (timeEstimate ^ (timeEstimate >>> 32));
 		result = prime * result + ((userAccepted == null) ? 0 : userAccepted.hashCode());
 		result = prime * result + ((userCreated == null) ? 0 : userCreated.hashCode());
 		return result;
 	}
+
 
 
 	@Override
@@ -193,10 +183,7 @@ public class Job {
 				return false;
 		} else if (!status.equals(other.status))
 			return false;
-		if (timeEstimate == null) {
-			if (other.timeEstimate != null)
-				return false;
-		} else if (!timeEstimate.equals(other.timeEstimate))
+		if (timeEstimate != other.timeEstimate)
 			return false;
 		if (userAccepted == null) {
 			if (other.userAccepted != null)
@@ -212,9 +199,22 @@ public class Job {
 	}
 
 
+
+	@Override
+	public String toString() {
+		return "Job [jobId=" + jobId + ", userCreated=" + userCreated + ", address=" + address + ", dropoffAddress="
+				+ dropoffAddress + ", description=" + description + ", dateCreated=" + dateCreated + ", dateAccepted="
+				+ dateAccepted + ", jobDateTime=" + jobDateTime + ", userAccepted=" + userAccepted + ", jobEarnings="
+				+ jobEarnings + ", category=" + category + ", timeEstimate=" + timeEstimate + ", product=" + product
+				+ ", status=" + status + "]";
+	}
+
+
+
 	public int getJobId() {
 		return jobId;
 	}
+
 
 
 	public void setJobId(int jobId) {
@@ -222,9 +222,11 @@ public class Job {
 	}
 
 
+
 	public Users getUserCreated() {
 		return userCreated;
 	}
+
 
 
 	public void setUserCreated(Users userCreated) {
@@ -232,9 +234,11 @@ public class Job {
 	}
 
 
+
 	public String getAddress() {
 		return address;
 	}
+
 
 
 	public void setAddress(String address) {
@@ -242,9 +246,11 @@ public class Job {
 	}
 
 
+
 	public String getDropoffAddress() {
 		return dropoffAddress;
 	}
+
 
 
 	public void setDropoffAddress(String dropoffAddress) {
@@ -252,9 +258,11 @@ public class Job {
 	}
 
 
+
 	public String getDescription() {
 		return description;
 	}
+
 
 
 	public void setDescription(String description) {
@@ -262,9 +270,11 @@ public class Job {
 	}
 
 
+
 	public Date getDateCreated() {
 		return dateCreated;
 	}
+
 
 
 	public void setDateCreated(Date dateCreated) {
@@ -272,9 +282,11 @@ public class Job {
 	}
 
 
+
 	public Date getDateAccepted() {
 		return dateAccepted;
 	}
+
 
 
 	public void setDateAccepted(Date dateAccepted) {
@@ -282,9 +294,11 @@ public class Job {
 	}
 
 
+
 	public Date getJobDateTime() {
 		return jobDateTime;
 	}
+
 
 
 	public void setJobDateTime(Date jobDateTime) {
@@ -292,9 +306,11 @@ public class Job {
 	}
 
 
+
 	public Users getUserAccepted() {
 		return userAccepted;
 	}
+
 
 
 	public void setUserAccepted(Users userAccepted) {
@@ -302,9 +318,11 @@ public class Job {
 	}
 
 
+
 	public BigDecimal getJobEarnings() {
 		return jobEarnings;
 	}
+
 
 
 	public void setJobEarnings(BigDecimal jobEarnings) {
@@ -312,9 +330,11 @@ public class Job {
 	}
 
 
+
 	public Category getCategory() {
 		return category;
 	}
+
 
 
 	public void setCategory(Category category) {
@@ -322,14 +342,17 @@ public class Job {
 	}
 
 
-	public Duration getTimeEstimate() {
+
+	public long getTimeEstimate() {
 		return timeEstimate;
 	}
 
 
-	public void setTimeEstimate(Duration timeEstimate) {
+
+	public void setTimeEstimate(long timeEstimate) {
 		this.timeEstimate = timeEstimate;
 	}
+
 
 
 	public Product getProduct() {
@@ -337,9 +360,11 @@ public class Job {
 	}
 
 
+
 	public void setProduct(Product product) {
 		this.product = product;
 	}
+
 
 
 	public Status getStatus() {
@@ -347,9 +372,11 @@ public class Job {
 	}
 
 
+
 	public void setStatus(Status status) {
 		this.status = status;
 	}
+
 
 
 	@Autowired
