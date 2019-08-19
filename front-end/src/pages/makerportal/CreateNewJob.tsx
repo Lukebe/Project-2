@@ -91,8 +91,8 @@ class CreateNewJob extends Component <IAuthProps,IState>{
             this.setState({...this.state, RequestStatus: 
                 {...this.state.RequestStatus, status: RequestState.FETCHING}});
             const formData = this.props.makerPortal.formFields;
-            const estimateTimeInHours: number = formData.timeEstimateHour.value/1;
-            const estimateTimeInMinutes: number = formData.timeEstimateMinute.value / 60;
+            const estimateTimeInHours: number = parseInt(formData.timeEstimateHour.value,10);
+            const estimateTimeInMinutes: number = parseInt(formData.timeEstimateMinute.value,10);
             const data =
                 {
                     userCreated: {userId: this.props.auth.userProfile.getUserId()}, // sends user id of the user logged in
@@ -104,7 +104,7 @@ class CreateNewJob extends Component <IAuthProps,IState>{
                     userAccepted: null,
                     category: {categoryId: formData.category.value}, // sends the category id
                     jobEarnings: formData.jobpay.value, // sends amount the worker is payed for the job
-                    timeEstimate: ((estimateTimeInHours + estimateTimeInMinutes) * 60 * 1000), // sends an integer of time in milliseconds
+                    timeEstimate: (((estimateTimeInHours*60) + estimateTimeInMinutes) * 60 * 1000), // sends an integer of time in milliseconds
                     product: {productId: this.state.productId || formData.product.value}, // sends product id
                     status:  {statusId: 1}
                 }

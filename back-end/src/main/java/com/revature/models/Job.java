@@ -62,8 +62,6 @@ public class Job {
     @JoinColumn(name = "category")
 	@NotNull
 	private Category category;
-	@DurationMin(minutes = 10)
-	@DurationMax(days = 7)	
 	@NotNull
 	private long timeEstimate;
 	@OneToOne()
