@@ -4,6 +4,7 @@ import { IAppState, IAuthState, IJobViewState } from '../../reducers';
 import { connect } from 'react-redux';
 import * as APICall from '../../utils/APICall';
 import { Job } from '../../models/Job';
+import { Redirect } from 'react-router-dom';
 
 
 export interface IProps {
@@ -16,7 +17,8 @@ export class MyJobView extends Component <IProps, any>{
         super(props);
         this.state = {
             jobId:"",
-            data: []
+            data: [],
+            shouldRedirect: false
         }
 
         this.componentDidMount = this.componentDidMount.bind(this);
@@ -29,6 +31,7 @@ export class MyJobView extends Component <IProps, any>{
 
     handleComplete(even:any){
         this.requestUpdateComplete();
+        alert("job has been Accepted");
 
     }
 
@@ -51,6 +54,7 @@ export class MyJobView extends Component <IProps, any>{
         ,this.props.user.userProfile.getToken()); 
 
         console.log(response);
+
     }
 
     async requestUpdateComplete(){
@@ -71,6 +75,9 @@ export class MyJobView extends Component <IProps, any>{
     render() {
         return(
             <React.Fragment>
+                {this.state.shouldRedirect ?
+                    <Redirect to = "/userportal/myjobs"></Redirect>
+                    : null}
                 <h1>Job View</h1>
                 <div className="jobViewContainer">
                     <Card className="jobViewCard" border="primary" style={{ width: '38rem' }}>
@@ -99,7 +106,7 @@ export class MyJobView extends Component <IProps, any>{
                                     <ListGroupItem>JobPay:{this.props.job.job.getJobEarnings()}</ListGroupItem>
                                     <ListGroupItem>Time Estimate:{this.props.job.job.getTimeEstimate()}</ListGroupItem>
                                     <ListGroupItem>Dropoff Location:{this.props.job.job.getDropoffAddress()}</ListGroupItem>
-                                    <ListGroupItem>User Posted:{this.props.job.job.getUserCreated().getUsername()}</ListGroupItem>
+                                    <ListGroupItem>User Posted:{}</ListGroupItem>
                                     <ListGroupItem>Category:{this.props.job.job.getCategory().getName()}</ListGroupItem>
                                 </ListGroup>    
                                 </Col>
