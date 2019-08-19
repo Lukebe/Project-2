@@ -1,36 +1,61 @@
 import React, { Component } from 'react';
 import { Accordion, Card, ListGroup, ListGroupItem } from 'react-bootstrap';
-import { Item } from 'react-bootstrap/lib/Pagination';
+import { IAppState, IAuthState } from '../../reducers';
+import * as APICall from '../../utils/APICall';
+import { connect } from 'react-redux';
 
-export default class ActiveJobs extends Component <any, any>{
+
+export interface IAuthProps {
+    user: IAuthState;
+}
+
+export class ActiveJobs extends Component <IAuthProps, any>{
     constructor(props: any) {
         super(props);
 
         this.state = { 
             data: [
-               {id:"1", product:"product1", Date:"1/1/2019", Time:"2:23PM", Location:"123 W. Avenue, Tampa, FL 60606", Category:"Tech", Earnings:"$9.99"},
-               {id:"2", product:"product2", Date:"1/2/2019", Time:"3:23PM", Location:"122 W. Avenue, Tampa, FL 60606", Category:"Gaming", Earnings:"$9.99"},
-               {id:"3", product:"product3", Date:"1/3/2019", Time:"4:23PM", Location:"124 W. Avenue, Tampa, FL 60606", Category:"Shoes", Earnings:"$9.99"},
-               {id:"4", product:"product4", Date:"1/4/2019", Time:"5:23PM", Location:"125 W. Avenue, Tampa, FL 60606", Category:"Event", Earnings:"$9.99"}
             ]
         }
+        this.componentDidMount = this.componentDidMount.bind(this);
+        this.handleRequest = this.handleRequest.bind(this);
     }
+
+    componentDidMount(){
+        this.handleRequest();
+    }
+
+    async handleRequest() {
+        const userid = this.props.user.userProfile.getUserId();
+        const response = await APICall.GET('/jobs/status/3'
+        ,this.props.user.userProfile.getToken());
+
+        if(await response instanceof Error){
+        } else { 
+            let responseArray = response.content;
+            this.setState({
+                data : responseArray
+            })
+            console.log(this.state.data);
+        } 
+        console.log(await response);
+    } 
 
     render() {
         const cards = this.state.data.map((item:any, i:any) => {
             return <Card className="card" key={i}>
-                        <Accordion.Toggle as={Card.Header} eventKey={item.id}>
-                            <h6>{item.product}</h6>
-                            <p className="datetime">{item.Date} {item.Time}</p>
+                        <Accordion.Toggle as={Card.Header} eventKey="1">
+                            <h6>{}</h6>
+                            <p className="datetime">{} {}</p>
                             </Accordion.Toggle>
-                            <Accordion.Collapse eventKey={item.id}>
+                            <Accordion.Collapse eventKey="1">
                             <Card.Body className="cardbody">
                                 <Card.Img variant="top" src="holder.js/100px180" />
                                 <ListGroup className="list-group-flush">
-                                    <ListGroupItem>{item.Earnings}</ListGroupItem>
-                                    <ListGroupItem>{item.Location}</ListGroupItem>
+                                    <ListGroupItem>{}</ListGroupItem>
+                                    <ListGroupItem>{}</ListGroupItem>
                                     <ListGroupItem>Expected Wait Time</ListGroupItem>
-                                    <ListGroupItem>{item.Category}</ListGroupItem>
+                                    <ListGroupItem>{}</ListGroupItem>
                                 </ListGroup>
                             </Card.Body>    
                         </Accordion.Collapse>
@@ -47,3 +72,9 @@ export default class ActiveJobs extends Component <any, any>{
         );
     }
 }
+
+const mapStateToProps = (state:IAppState) => ({
+    user: state.auth
+});
+
+export default connect(mapStateToProps)(ActiveJobs);

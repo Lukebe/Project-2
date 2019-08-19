@@ -1,13 +1,15 @@
+import { Job } from "../models/Job";
+
 // Definition of actions as constants
 export const jobTypes = {
     JOB_UPDATE: 'JOB_UPDATE'
 };
 
 
-export const updateJob = (id: any) => (dispatch: any) => {
+export const updateJob = (job: Job) => (dispatch: any) => {
     dispatch({
         payload: {
-            id
+            job
         },
         type: jobTypes.JOB_UPDATE
     })

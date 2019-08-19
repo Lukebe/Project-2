@@ -1,16 +1,37 @@
 import { IJobViewState } from ".";
 import { jobTypes } from "../actions/JobView.action";
+import { User } from "../models/User";
+import { Category } from "../models/Category";
+import { Product } from "../models/Product";
+import { Job } from "../models/Job";
+import { Status } from "../models/Status";
  
 const initialState: IJobViewState = {
-    jobId:"5"
-};
+    job : new Job({
+        jobId: 0, 
+        userCreated: new User({userId:0, userName:"", firstName:"", lastName:"", emai:"", phone:"", rating:"", string:""}),
+        address: "",
+        dropoffAddress:"",
+        description: "",
+        dateCreated: "",
+        dateAccepted: "",
+        jobDateTime: "",
+        userAccepted: new User({userId:0, userName:"", firstName:"", lastName:"", emai:"", phone:"", rating:"", string:""}),
+        jobPrice : "",
+        category: new Category({categoryId: 0, name: '', description: ''}),
+        timeEstimate: "",
+        product: new Product({description:0, itemName:"", category: new Category({categoryId: 0, name: '', description: ''}),imageUrl:"",price:""}),
+        status: new Status({statusId:0, Status:""}) 
+    })
+}; 
+
  
 export const viewJobReducer = (state = initialState, action: any) => {
     switch (action.type) {
         case jobTypes.JOB_UPDATE:
             return {
                 ...state,
-                jobId: action.payload.id
+                job: action.payload.id
             }
         default: break;
     }

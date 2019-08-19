@@ -68,7 +68,7 @@ class MyEvents extends Component <IAuthProps,IState>{
         if(!this.state.dataPagination.isFirstPage()){
             this.getMyJobs(this.state.dataPagination.getPageNumber() - 1)
         }
-    }
+    } 
     goForwardClick = (e : any) => {
         e.preventDefault();
         if(!this.state.dataPagination.isLastPage()){
