@@ -27,7 +27,7 @@ export class MyJobView extends Component <IProps, any>{
         this.handleRequestJob = this.handleRequestJob.bind(this);
     }
     componentDidMount(){
-        this.handleRequestJob(39); 
+        //this.handleRequestJob(39); 
     }
 
     handleComplete(even:any){

@@ -24,7 +24,7 @@ export interface IAuthProps {
     //Action creators from the dispatcher
 
 }
-export class Header extends Component < IAuthProps, any >  {
+class Header extends Component < IAuthProps, any >  {
     constructor(props: any) {
         super(props);
         this.state = {
@@ -32,10 +32,15 @@ export class Header extends Component < IAuthProps, any >  {
             rating: <Dropdown.Item>{this.props.auth.userProfile.getRating()}</Dropdown.Item>
         }
     }
+    logoutUser() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userid');
+        this.props.logout();
+    }
     render () {
         return(
-        <header className='main-footer'>
-            <Row className='footer-nav'>
+        <header className='main-header'>
+            <Row className='header-nav'>
                 <Col sm={12} md={12} lg={12} xl={3}>
                     <Navbar.Brand className="Logo" href="#/">
                         <img  className="sissorImage" src={iconWhite} />
@@ -61,7 +66,7 @@ export class Header extends Component < IAuthProps, any >  {
                                 { this.props.auth.userProfile.getRating() != 0.0 &&
                                     this.state.rating
                                 }
-                                <a href = "#" onClick = {(e) => {e.preventDefault(); this.props.logout();}}>
+                                <a href = "#" onClick = {(e) => {e.preventDefault(); this.logoutUser()}}>
                                     Logout</a>
                             </Dropdown.Menu>
                         </Dropdown>

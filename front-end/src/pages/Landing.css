@@ -27,9 +27,9 @@
     padding-bottom: .2em;
     position: relative;
     z-index: 2;
-    left: 0%;
-    top: -300%;
-    -webkit-animation: slide 1.0s forwards;
+    left: -100%;
+    top:  0;
+    -webkit-animation: slide 1.5s forwards;
     -webkit-animation-delay: 1s;
     animation: slide 1.0s forwards;
     animation-delay: 1s;
