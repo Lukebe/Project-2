@@ -101,7 +101,6 @@ export class Login extends Component <IProps,IState>{
             localStorage.setItem('userid', response.userid);
             this.props.startRedirect();
             this.props.closeModal();
-            this.props.finishRedirect();
         }
     }
 

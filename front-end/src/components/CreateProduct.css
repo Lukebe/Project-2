@@ -15,3 +15,18 @@
     color: #FF4136 !important;
     background-color: #FF4136 !important;
 }
+.center{
+    width: 60%;
+    margin: auto;
+}
+.floatLeft{
+    display: flex;
+    justify-content: flex-start;
+}
+.floatLeftInner{
+        float: left;
+    display: block;
+}
+.imageurl{
+    max-width: 18em;
+}

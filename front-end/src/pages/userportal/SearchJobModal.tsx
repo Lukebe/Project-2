@@ -24,7 +24,7 @@ export default class SearchJobModal extends Component <ModalProps, any>{
 
     handleAccept(event:any){
          console.log(this.props.job);
-         console.log(this.props.job.getJobPrice());
+         console.log(this.props.job.getJobEarnings());
          console.log(this.props.job.getAddress()); 
          this.setState({
              address: this.props.job.getAddress()

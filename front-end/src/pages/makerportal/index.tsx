@@ -5,7 +5,7 @@ import { IAuthState, IAppState, IMakerPortalState } from '../../reducers';
 import { Footer } from '../../components/Footer';
 import Header from '../../components/Header';
 import './Maker.css';
-import { loginSuccessful } from '../../actions/Authentication.action';
+import { loginSuccessful, finishRedirect } from '../../actions/Authentication.action';
 import PopularEvents from './PopularEvents';
 import MyEvents from './MyEvents';
 import CreateNewJob from './CreateNewJob';
@@ -18,6 +18,7 @@ export interface IAuthProps {
     makerPortal: IMakerPortalState,
     openNewJobs: () => void;
     closeNewJobs: () => void;
+    finishRedirect: () => void;
     //Action creators from the dispatcher
 }
 export interface IComponentProps {
@@ -33,6 +34,9 @@ class MakerPortal extends Component<IAuthProps, IState>{
         this.state = {
             isNewJobTitle: false,
         };
+    }
+    componentDidMount() {
+        this.props.finishRedirect();
     }
     toggleCreateJob = () => {
         if(this.props.makerPortal.newJobOpen){
@@ -109,5 +113,6 @@ const mapStateToProps = (state: IAppState) => {
 const mapDispatchToProps = {
     openNewJobs: openNewJobs,
     closeNewJobs: closeNewJobs,
+    finishRedirect: finishRedirect,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MakerPortal);

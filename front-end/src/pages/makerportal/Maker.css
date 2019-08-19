@@ -532,4 +532,8 @@
         padding-right: .5em;
         margin:auto;
     }
+    .popular-events-image-container {
+        width:100%;
+        float:none;
+    }
 }

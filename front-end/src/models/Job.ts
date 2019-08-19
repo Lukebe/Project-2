@@ -12,7 +12,7 @@ class Job {
     private dateAccepted : Date;
     private jobDateTime : Date;
     private userAccepted : User;
-    private jobPrice : number;
+    private jobEarnings : number;
     private category : Category;
     private timeEstimate: string;
     private product : Product;
@@ -38,7 +38,7 @@ class Job {
             this.userAccepted = new User({userId: 0, username: '', firstname: '',
             lastname: '', email: '', phone : '', rating: 0});
         }
-        this.jobPrice = data.jobPrice;
+        this.jobEarnings = data.jobEarnings;
         if(data.category) {
             this.category = new Category(data.category);
         } else {
@@ -86,8 +86,8 @@ class Job {
     getUserAccepted() : User {
         return this.userAccepted;
     }
-    getJobPrice() : number {
-        return this.jobPrice;
+    getJobEarnings() : number {
+        return this.jobEarnings;
     }
     getCategory() : Category {
         return this.category;
