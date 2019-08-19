@@ -4,6 +4,7 @@ import { IAppState, IAuthState, IJobViewState } from '../../reducers';
 import { connect } from 'react-redux';
 import * as APICall from '../../utils/APICall';
 import { Job } from '../../models/Job';
+import { Redirect, Link } from 'react-router-dom';
 
 
 export interface IProps {
@@ -52,6 +53,9 @@ export class AcceptJobView extends Component <IProps, any>{
     render() {
         return(
             <React.Fragment>
+                {this.state.shouldRedirect ?
+                    <Redirect to = "/userportal/search/category"></Redirect>
+                    : null}
                 <h1>Job View</h1>
                 <div className="jobViewContainer">
                 <Card className="jobViewCard" border="success" style={{ width: '38rem' }}>

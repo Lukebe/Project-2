@@ -52,7 +52,7 @@ export class SearchCategory extends Component <IAuthProps, any>{
     }
 
     async handleRequest(num: any) {
-        const response = await APICall.GET('/jobs/category/' + num + '?status=2'
+        const response = await APICall.GET('/jobs/category/' + num + '?status=1'
         ,this.props.user.userProfile.getToken()); 
 
         if(await response instanceof Error){
