@@ -22,25 +22,26 @@ export class ByStatus extends Component <IAuthProps, any>{
             jobClick: "",
             data2: [],
             shouldRedirect: false,
+            input: ""
         } 
         this.handleRequest = this.handleRequest.bind(this);
         this.handleJobRequest = this.handleJobRequest.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
         this.handleLink = this.handleLink.bind(this);
-    }
+        this.handleChange = this.handleChange.bind(this);
+    } 
 
     componentDidMount(){
-        console.log("by status linked");
-        this.handleRequest();
+        this.handleRequest(1);
     }
 
     componentDidUpdate() {
         console.log(this.state.data2);
         this.props.updateJob(this.state.data2); 
     }
-    async handleRequest() {
+    async handleRequest(num:any) {
         const userid = this.props.user.userProfile.getUserId();
-        const response = await APICall.GET('/jobs/useraccepted/2'
+        const response = await APICall.GET('/jobs/useraccepted/'+ userid + '?status=' + num
         ,this.props.user.userProfile.getToken());
 
         if(await response instanceof Error){
@@ -69,16 +70,6 @@ export class ByStatus extends Component <IAuthProps, any>{
         this.handleJobRequest(value);
     }
 
-    handleChange(event:any){
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-        this.setState({ 
-            [name]: value
-        });
-        //this.handleStatusRequest(num:any);
-    }
-
 
     async handleJobRequest(num: any) {
         const response = await APICall.GET('/jobs/'  + num
@@ -95,23 +86,33 @@ export class ByStatus extends Component <IAuthProps, any>{
         console.log(await response);
     }
 
+    handleChange(event:any){
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        this.setState({ 
+            [name]: value
+        });
+        this.handleRequest(value);
+    }
+
     render() {
 
         const list = this.state.data.map((item:Job, i:any) => {
             return <ListGroup.Item className="list" key={i}>
 
-                <Card border="info" className="card" key={i}>
+                <Card border="info" className="card" key={i}> 
                     <Card.Body >
                         <Container>
                         <Row>
-                            <Col  md="auto">
-                                <Card.Text className="userCardText">{item.getJobId()}</Card.Text>
+                            <Col md="2">
+                                <Card.Text className="userCardText"><br></br>ID<br></br>{item.getJobId()}</Card.Text>
                             </Col> 
-                            <Col  md="auto">
+                            <Col  md="4">
                                 <Card.Text className="userCardText">{item.getDescription()}<br></br>{item.getAddress()}<br></br>{item.getJobDateTime().toTimeString()}</Card.Text>
-                            </Col>
-                            <Col  >Status<br></br></Col>
-                            <Col  md="auto"><Button onClick={()=>this.handleJobRequest(item.getJobId())}>View/Edit</Button></Col>
+                            </Col> 
+                            <Col md="3"><br></br>Status<br></br>{item.getStatus().getStatus()}</Col>
+                            <Col md="3"><br></br><Button onClick={()=>this.handleJobRequest(item.getJobId())}>View</Button></Col>
                         </Row> 
                         </Container> 
                     </Card.Body>
@@ -121,27 +122,30 @@ export class ByStatus extends Component <IAuthProps, any>{
 
         return(
             <React.Fragment>
-
                 {this.state.shouldRedirect ?
                     <Redirect to = "/userportal/jobview"></Redirect>
                     : null}
                 
+
+                <h1>My Jobs</h1>
                 <Form className="searchCategoryForm">
                 <Form.Group as= {Row}>
                     <Form.Label className="searchCatLabel" column>Category:</Form.Label>
                     <Col>
-                    <Form.Control as="select" onChange={this.handleChange} name="input">
-                        <option value="1">Accepted</option>
-                        <option value="2">Completed</option>
-                        <option value="3">Cancelled</option>
+                    <Form.Control className="searchCatControl"as="select" onChange={this.handleChange} name="input">
+                        <option value="2">Accepted</option>
+                        <option value="3">In Progress</option>
+                        <option value="4">Completed</option>
+                        <option value="5">Cancelled</option>
                     </Form.Control>
                     </Col>
-                    
                 </Form.Group>
                 </Form>
-
-                <h1>My Jobs</h1>
                 <ListGroup>
+                {(!this.state.data[0]) ?
+
+<p>You have no jobs. Go to search jobs to get some.</p> 
+: null }
                     <ListGroup.Item>
                     <Card>
                         {list}
@@ -161,4 +165,4 @@ const mapDispatchToProps = {
     updateJob: updateJob
 }
  
-export default connect(mapStateToProps,mapDispatchToProps)(ByStatus);
+export default connect(mapStateToProps, mapDispatchToProps)(ByStatus);

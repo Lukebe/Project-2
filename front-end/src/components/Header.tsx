@@ -50,8 +50,8 @@ class Header extends Component < IAuthProps, any >  {
                     <Navbar className='nav-black'>
                         <Nav className="">
                             <Link to="/">Home</Link>
-                            <Link to="/userportal">User Portal</Link>
-                            <Link to="/makerportal">Maker Portal</Link>
+                            <Link to="/userportal">Work</Link>
+                            <Link to="/makerportal">Hire</Link>
                         </Nav>
                     </Navbar>
                 </Col>

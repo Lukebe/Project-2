@@ -177,7 +177,7 @@ export class Landing extends React.Component<IReduxProps, IState>{
                     incidunt sed quisquam, esse dicta qui adipisci doloremque. Deserunt, vel!
                 Quod quas nam quos saepe quisquam culpa tempore dolor laboriosam animi? </p>
                         <Button name="makerportal" className="landing-button ripple" onClick={this.handleButtonClick}>
-                            <p>Make</p></Button>
+                            <p>Hire</p></Button>
                     </Col>
                         <Col><p className='landing-description'>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                         Reiciendis officia voluptatem nulla nemo temporibus accusantium inventore, labore consequuntur suscipit voluptatum

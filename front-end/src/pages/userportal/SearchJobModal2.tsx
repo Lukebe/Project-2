@@ -16,56 +16,36 @@ export class AcceptJobView extends Component <IProps, any>{
         super(props);
         this.state = {
             jobId:"",
-            data: []
+            data: [] 
         }
 
         this.componentDidMount = this.componentDidMount.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
-        this.handleComplete = this.handleComplete.bind(this);
+        this.handleAccept = this.handleAccept.bind(this);
+        this.requestAccept = this.requestAccept.bind(this);
     }
     componentDidMount(){
         console.log(this.props.job);
     }
 
-    handleComplete(even:any){
-        this.requestUpdateComplete();
 
-    }
-
-
-    handleCancel(event:any){
-        this.requestUpdateCancel();
-    }
-
-    async requestUpdateCancel(){
+    async requestAccept(){
         const id = this.props.job.job.getJobId();
         console.log(id);
 
         const response = await APICall.PATCH('/jobs/'
         ,{
-            jobId: id,
+            jobId: id, 
             status:{
-                statusId:5
-            }
+                statusId:2            }
         }
         ,this.props.user.userProfile.getToken()); 
 
         console.log(response);
     }
 
-    async requestUpdateComplete(){
-        const id = this.props.job.job.getJobId();
-        console.log(id);
-        const response = await APICall.PATCH('/jobs/'
-        ,{
-            jobId: id,
-            status:{
-                statusId:4
-            }
-        }
-        ,this.props.user.userProfile.getToken()); 
+    handleAccept(e:any){
+        this.requestAccept();
 
-        console.log(response);
     }
 
     render() {
@@ -74,19 +54,19 @@ export class AcceptJobView extends Component <IProps, any>{
                 <h1>Job View</h1>
                 <div className="jobViewContainer">
                 <Card className="jobViewCard" border="success" style={{ width: '38rem' }}>
-                        <Card.Header><h3><Badge pill variant="success">$:</Badge></h3></Card.Header>
+                        <Card.Header><h3><Badge pill variant="success">${this.props.job.job.getJobEarnings()}</Badge></h3></Card.Header>
                         <Card.Body>
                         <Card.Title>{this.props.job.job.getProduct().getItemName()}</Card.Title>
                         <ListGroup>
-                            <ListGroup.Item>Job Description:{}</ListGroup.Item>
+                            <ListGroup.Item>Job Description:{this.props.job.job.getDescription()}</ListGroup.Item>
                             <ListGroup.Item>
-                                {} | {}
-                            </ListGroup.Item>
+                                {this.props.job.job.getJobDateTime().toDateString()} | {this.props.job.job.getAddress()}
+                            </ListGroup.Item> 
                             <ListGroup.Item>
                                 <h5> 
-                                    <Badge pill variant="info">Posted:{}</Badge>
+                                    <Badge pill variant="info">Posted:{this.props.job.job.getDateCreated().toString()}</Badge>
                                     <Badge pill variant="info"></Badge>
-                                    <Badge pill variant="info">TimeEstimate:{}</Badge>
+                                    <Badge pill variant="info">TimeEstimate:{this.props.job.job.getTimeEstimate()}</Badge>
                                 </h5>
                                 <h4><Badge pill variant="light">PostedBy:{}</Badge></h4> 
                             </ListGroup.Item>
@@ -94,6 +74,12 @@ export class AcceptJobView extends Component <IProps, any>{
                         </ListGroup>
                         
                         </Card.Body>
+                        <Card.Footer className="text-muted">
+                            <Button block variant="success" size="lg" onClick={this.handleAccept}>
+                            Accept Job
+                            </Button>
+                            <Button>Close</Button>
+                            </Card.Footer>
                     </Card>
                 </div>
                 

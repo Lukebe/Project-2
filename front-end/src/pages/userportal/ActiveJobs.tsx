@@ -52,7 +52,7 @@ export class ActiveJobs extends Component <IAuthProps, any>{
             return <Card className="card" key={i}>
                         <Accordion.Toggle as={Card.Header} eventKey={i}>
                             <h6>{item.getProduct().getItemName()}</h6>
-                            <p className="datetime">{}|{item.getAddress()}</p> 
+                            <p className="datetime">{item.getJobDateTime().toDateString()}|{item.getAddress()}</p> 
                             </Accordion.Toggle>
                             <Accordion.Collapse eventKey={i}> 
                             <Card.Body className="cardbody">
@@ -60,7 +60,7 @@ export class ActiveJobs extends Component <IAuthProps, any>{
                                 <ListGroup className="list-group-flush">
                                     <ListGroupItem>{item.getDescription()}</ListGroupItem>
                                     <ListGroupItem>{item.getJobEarnings()}</ListGroupItem>
-                                    <ListGroupItem>{item.getDropoffAddress()}</ListGroupItem>
+                                    <ListGroupItem>DropOff at:{item.getDropoffAddress()}</ListGroupItem>
                                     <ListGroupItem>Expected Wait Time: {item.getTimeEstimate()}</ListGroupItem>
                                 </ListGroup> 
                             </Card.Body>    

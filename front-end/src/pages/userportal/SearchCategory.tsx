@@ -3,7 +3,6 @@ import { Form, ListGroup, Card, Button, Row, Col } from 'react-bootstrap';
 import { IAppState, IAuthState, IJobViewState } from '../../reducers';
 import { connect } from 'react-redux';
 import * as APICall from '../../utils/APICall';
-import Modal from './SearchJobModal';
 import { Job } from "../../models/Job";
 import { updateJob } from '../../actions/JobView.action';
 import { Redirect } from 'react-router-dom';
@@ -21,57 +20,60 @@ export class SearchCategory extends Component <IAuthProps, any>{
 
         this.state = { 
             data: [],
-            jobClick: "",
-            data2: [],
-            shouldRedirect: false,
+            input: "",
+            jobVal:"",
+            job: [],
+            shouldRedirect:false
         } 
         this.handleRequest = this.handleRequest.bind(this);
-        this.handleJobRequest = this.handleJobRequest.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
-        this.handleLink = this.handleLink.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleRequestJob = this.handleRequestJob.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount(){
-        this.handleRequest();
+        this.handleRequest(1);
     }
 
     componentDidUpdate() {
-        console.log(this.state.data2);
-        this.props.updateJob(this.state.data2); 
+        console.log(this.state.job);
+        this.props.updateJob(this.state.job); 
     }
-    async handleRequest() {
-        const userid = this.props.user.userProfile.getUserId();
-        const response = await APICall.GET('/jobs/useraccepted/2'
-        ,this.props.user.userProfile.getToken());
+ 
+    handleChange(event:any){
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        this.setState({ 
+            [name]: value
+        });
+        this.handleRequest(value);
+    }
+
+    async handleRequest(num: any) {
+        const response = await APICall.GET('/jobs/category/' + num + '?status=2'
+        ,this.props.user.userProfile.getToken()); 
 
         if(await response instanceof Error){
         } else { 
-            let jobArray = await response.content;
-            let mappedJobArray = jobArray.map((element : any) => {
-                return new Job(element);
-            })
+            let res = response.content;
             this.setState({
-                data: mappedJobArray
+                data: res
             })
             console.log(this.state.data);
         }
-        console.log(await response);
+        console.log(await response); 
     }
 
 
-    handleLink=(event:any) =>{
-        console.log("link clicked");
+    handleClick(event:any){
         const target = event.target;
-        const value = event.target.value;
-        this.setState({
-            jobClick: value
-        })
-        console.log(this.state.jobClick);
-        this.handleJobRequest(value);
+        const value = target.value;
+        this.handleRequestJob(value);
     }
 
-
-    async handleJobRequest(num: any) {
+    async handleRequestJob(num: any) {
         const response = await APICall.GET('/jobs/'  + num
         ,this.props.user.userProfile.getToken()); 
 
@@ -79,12 +81,15 @@ export class SearchCategory extends Component <IAuthProps, any>{
         } else { 
             const res = new Job(await response);
             this.setState({ 
-                data2: res,
+                job: res,
                 shouldRedirect: true,
             })
         }
         console.log(await response);
     }
+
+
+
 
     render() { 
 
@@ -98,7 +103,7 @@ export class SearchCategory extends Component <IAuthProps, any>{
                             {item.description}
                         </Card.Text>  
                         <Button 
-                            onClick={()=>this.handleJobRequest(item.getJobId())} 
+                            onClick=  {this.handleClick} 
                             value= {item.jobId}
                             variant="primary"> 
                             View
@@ -111,7 +116,6 @@ export class SearchCategory extends Component <IAuthProps, any>{
         })
 
         return(
-            
             <React.Fragment>
                 {this.state.shouldRedirect ?
                     <Redirect to = "/userportal/acceptJob"></Redirect>
@@ -121,10 +125,11 @@ export class SearchCategory extends Component <IAuthProps, any>{
                 <Form.Group as= {Row}>
                     <Form.Label className="searchCatLabel" column>Category:</Form.Label>
                     <Col>
-                    <Form.Control as="select"  name="input">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
+                    <Form.Control className="searchCatControl"as="select" onChange={this.handleChange} name="input">
+                        <option value="1">Tech</option>
+                        <option value="3">Shoes</option>
+                        <option value="4">Concert/Events</option>
+                        <option value="2">Other</option>
                     </Form.Control>
                     </Col>
                     

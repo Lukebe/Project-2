@@ -1,10 +1,16 @@
 .userportal-container{
     border: 1px solid #eee;
     background-color: whitesmoke;
+
 }
 
 .searchCatLabel{
     background-color: aliceblue;
+    width: 100px;
+}
+
+.searchCatControl{
+    width: 200px;
 }
 
 .card{
@@ -28,7 +34,7 @@
 }
 
 .searchCategoryForm{
-    width: 180px;
+    width: 300px;
     margin: 0 auto;
 }
 
