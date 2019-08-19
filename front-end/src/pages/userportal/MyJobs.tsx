@@ -3,7 +3,7 @@ import { Card, ListGroup, Button, Container, Row, Col } from 'react-bootstrap';
 import * as APICall from '../../utils/APICall';
 import { IAppState, IAuthState, IJobViewState } from '../../reducers';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Job } from '../../models/Job';
 import { updateJob } from '../../actions/JobView.action';
 
@@ -20,7 +20,8 @@ export class MyJobs extends Component <IAuthProps, any>{
         this.state = { 
             data: [],
             jobClick: "",
-            data2: []
+            data2: [],
+            shouldRedirect: false,
         } 
         this.handleRequest = this.handleRequest.bind(this);
         this.handleJobRequest = this.handleJobRequest.bind(this);
@@ -32,7 +33,9 @@ export class MyJobs extends Component <IAuthProps, any>{
         this.handleRequest();
     }
 
-
+    componentDidUpdate() {
+        console.log(this.state.data2);
+    }
     async handleRequest() {
         const userid = this.props.user.userProfile.getUserId();
         const response = await APICall.GET('/jobs/useraccepted/2'
@@ -40,9 +43,12 @@ export class MyJobs extends Component <IAuthProps, any>{
 
         if(await response instanceof Error){
         } else { 
-            let res = response.content;
+            let jobArray = await response.content;
+            let mappedJobArray = jobArray.map((element : any) => {
+                return new Job(element);
+            })
             this.setState({
-                data: res
+                data: mappedJobArray
             })
             console.log(this.state.data);
         }
@@ -53,7 +59,7 @@ export class MyJobs extends Component <IAuthProps, any>{
     handleLink=(event:any) =>{
         console.log("link clicked");
         const target = event.target;
-        const value = target.value;
+        const value = event.target.value;
         this.setState({
             jobClick: value
         })
@@ -68,31 +74,32 @@ export class MyJobs extends Component <IAuthProps, any>{
 
         if(await response instanceof Error){
         } else { 
-            let res = response.data;
+            const res = new Job(await response);
             this.setState({ 
-                data2: new Job(response)
+                data2: res,
+                shouldRedirect: true,
             })
-            console.log(this.state.data2);
         }
         console.log(await response);
     }
 
     render() {
 
-        const list = this.state.data.map((item:any, i:any) => {
+        const list = this.state.data.map((item:Job, i:any) => {
             return <ListGroup.Item className="list" key={i}>
+
                 <Card border="info" className="card" key={i}>
                     <Card.Body >
                         <Container>
                         <Row>
                             <Col  md="auto">
-                                <Card.Text className="userCardText">{item.jobId}</Card.Text>
+                                <Card.Text className="userCardText">{item.getJobId()}</Card.Text>
                             </Col> 
                             <Col  md="auto">
-                                <Card.Text className="userCardText">{item.description}<br></br>{item.address}<br></br>{item.jobDateTime}</Card.Text>
+                                <Card.Text className="userCardText">{item.getDescription()}<br></br>{item.getAddress()}<br></br>{item.getJobDateTime().toTimeString()}</Card.Text>
                             </Col>
                             <Col  >Status<br></br></Col>
-                            <Col  md="auto"><Link to="/userportal/jobview" className="userCardLink"><Button onClick={this.handleLink}>View/Edit</Button></Link></Col>
+                            <Col  md="auto"><Button onClick={()=>this.handleJobRequest(item.getJobId())}>View/Edit</Button></Col>
                         </Row> 
                         </Container> 
                     </Card.Body>
@@ -102,6 +109,10 @@ export class MyJobs extends Component <IAuthProps, any>{
 
         return(
             <React.Fragment>
+                {this.state.shouldRedirect ?
+                    <Redirect to = "/userportal/jobview"></Redirect>
+                    : null}
+
                 <h1>My Jobs</h1>
                 <ListGroup>
                     <ListGroup.Item>

@@ -5,3 +5,34 @@
 .dropDownMenu{
     color: #9b9b9b;
 }
+.main-header {
+    padding-top: 1.2em;
+    z-index:1000;
+    background-color: #000;
+    color: #9b9b9b;
+  }
+  .main-header > .header-nav-row > .col-sm-12 > a {
+    color: #9b9b9b;
+    z-index: 1000;
+    margin-left: 1em;
+    font-family: 'Kalam', cursive;
+    font-weight: 400;
+    font-size: 2.2rem;
+    transition: color .75s ease;
+  }
+  .main-header > .row > .col-sm-12 > .phone-number > a {
+    color: #9b9b9b;
+    transition: color .75s ease;
+  }
+  
+  .main-header > .row > .col-sm-12 > .nav-black > .navbar-nav > a {
+    color: #9b9b9b;
+    display: block;
+    font-size: 1.0rem;
+    transition: color .75s ease;
+    margin-left: 0.7rem;
+    margin-right: 0.7rem;
+  }
+  .main-header > .row > .col-sm-12 > .nav-black{
+    justify-content: center !important;
+  }
