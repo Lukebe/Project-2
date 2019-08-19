@@ -68,9 +68,8 @@ class JobDetailsModal extends React.Component <IProps,IState>{
                     {(this.props.job.getUserAccepted().getUserId()) ? <>
                     <Form.Label>User Accepted </Form.Label> <p>{}</p> </>
                     : null } 
-                    <Form.Label>Estimated Delivery Time: </Form.Label> <p>{Time.timeToWords(
-                        this.props.job.getJobDateTime().setDate(this.props.job.getJobDateTime().getMilliseconds()
-                     + parseInt(this.props.job.getTimeEstimate())))}
+                    <Form.Label>Estimated Delivery Time: </Form.Label> <p>{this.props.job.getJobDateTime().getMilliseconds()
+                     + parseInt(this.props.job.getTimeEstimate())}
                     </p>
                     <Form.Label>Status </Form.Label> {this.getProperStatus(this.props.job.getStatus().getStatusId())} 
                     </Col>

@@ -8,7 +8,7 @@ import landing4 from '../resources/images/landing4.jpg';
 import landing5 from '../resources/images/landing5.jpg';
 import iconWhite from '../resources/images/icon/icon-white-2.png';
 import { IAuthState, IAppState, IAccountState } from '../reducers';
-import { setRedirect, startRedirect, finishRedirect } from '../actions/Authentication.action';
+import { setRedirect, startRedirect, finishRedirect, loginSuccessful } from '../actions/Authentication.action';
 import { connect } from 'react-redux';
 import Login from './account/Login';
 import IsMobile from '../utils/IsMobile';
@@ -19,6 +19,8 @@ import { AccountModalType } from '../reducers/AccountModal.reducer';
 import Signup from './account/Signup';
 import ForgotPassword from './account/ForgotPassword';
 import { Redirect } from 'react-router';
+import * as APICall from '../utils/APICall';
+import { User } from '../models/User';
 interface IState {
     buttonClicked: boolean,
     loginDialogOpen: boolean,
@@ -35,6 +37,7 @@ export interface IReduxProps {
     finishRedirect: () => void;
     closeModal: () => void;
     openIsLoggedIn: () => void;
+    loginSuccessful: (data : User) => void;
 }
 export class Landing extends React.Component<IReduxProps, IState>{
     constructor(props: any) {
@@ -68,6 +71,22 @@ export class Landing extends React.Component<IReduxProps, IState>{
             }, 2500);
         } else {
             this.setState({ ...this.state, logoKShow: false });
+        }
+        this.checkLogin();
+
+    }
+    async checkLogin() {
+        const response = await APICall.GET(`/users/${localStorage.getItem('userid')}`
+        ,localStorage.getItem('token') as string);
+        //If there is an error, APICall methods will return an Error class instance.
+        //This checks if there is an error and alerts message if there is.
+        if(await response instanceof Error){
+            if(localStorage.getItem('token')){
+                localStorage.removeItem('token');
+                localStorage.removeItem('userid');
+            }
+        } else {
+            this.props.loginSuccessful(new User({...response, token: localStorage.getItem('token')}));
         }
     }
     isLoggedIn(){
@@ -188,5 +207,6 @@ const mapDispatchToProps = {
     closeModal: closeModal,
     openLogin: openLogin,
     setRedirect: setRedirect,
+    loginSuccessful: loginSuccessful,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Landing);
